@@ -1,0 +1,16 @@
+{
+    "title": "Dynamicform",
+    "name": "Dynamicform",
+    "version":"1.0.0",
+    "minimumCoreVersion": "2.0",
+    "author": "Encore CMS",
+    "alias": "dynamicform",
+    "description": "",
+    "keywords": [],
+    "priority": 1,
+    "providers": [
+        "Modules\\Dynamicform\\Providers\\DynamicformServiceProvider",
+        "Modules\\Dynamicform\\Providers\\RouteServiceProvider"
+    ],
+    "files": []
+}

@@ -1,0 +1,16 @@
+{
+    "title": "Apigpswox",
+    "name": "Apigpswox",
+    "version":"1.0.0",
+    "minimumCoreVersion": "2.0",
+    "author": "Encore CMS",
+    "alias": "apigpswox",
+    "description": "",
+    "keywords": [],
+    "priority": 1,
+    "providers": [
+        "Modules\\Apigpswox\\Providers\\ApigpswoxServiceProvider",
+        "Modules\\Apigpswox\\Providers\\RouteServiceProvider"
+    ],
+    "files": []
+}

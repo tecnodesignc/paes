@@ -1,0 +1,9 @@
+url: https://github.com/AsgardCms/Notification
+versions:
+
+    "2.0.0":
+        added:
+            - Laravel 9 compatibility
+    "1.0.0":
+        added:
+            - Initial release

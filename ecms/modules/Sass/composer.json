@@ -1,0 +1,57 @@
+{
+    "name": "tecnodesignc/sass",
+    "description": "The Sass module for EncoreCMS 2.0",
+    "type": "encore-module",
+    "license": "MIT",
+    "keywords": [
+        "encore cms",
+        "Sass"
+    ],
+     "authors": [
+        {
+            "name": "Marcos Rativa",
+            "email": "marcos21.009@gmail.com"
+        }
+    ],
+    "support": {
+        "email": "support@tecnodesign.com.co",
+        "issues": "https://github.com/tecnodesignc/encorecms/issues",
+        "source": "https://github.com/tecnodesignc/Sass-module"
+    },
+    "require": {
+        "php": ">=8.0",
+        "composer/installers": "^2.1",
+        "tecnodesignc/core-module": "^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "orchestra/testbench": "3.8.*"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Sass\\": ".",
+            "Modules\\": "modules/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Marcos Rativa",
+            "email": "soporte@tecnodesign.com.co"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Sass\\": ""
+        }
+    }
+}

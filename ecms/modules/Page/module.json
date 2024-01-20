@@ -1,0 +1,25 @@
+{
+    "title": "Page",
+    "name": "Page",
+    "alias": "page",
+    "description": "Managing pages.",
+    "keywords": [
+        "EncoreCMS",
+        "Page"
+    ],
+    "author": "Marcos Rativa",
+    "require": {},
+    "version": "2.1.0",
+    "active": 1,
+    "priority": 9999,
+    "providers": [
+        "Modules\\Page\\Providers\\RouteServiceProvider",
+        "Modules\\Page\\Providers\\PageServiceProvider"
+    ],
+    "files": [
+        "composers.php"
+    ],
+    "minimumCoreVersion": "2.1",
+    "compatibility": "2.1",
+    "authors": ["Marcos Rativa"]
+}

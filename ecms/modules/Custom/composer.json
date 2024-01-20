@@ -1,0 +1,42 @@
+{
+    "name": "tecnodesignc/custom",
+    "description": "",
+    "type": "encore-module",
+    "license": "MIT",
+    "require": {
+        "php": "^7.1.3",
+        "composer/installers": "~1.0",
+        "tecnodesignc/core-module": "~1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "orchestra/testbench": "3.8.*"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Custom\\": ".",
+            "Modules\\": "modules/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Custom\\": ""
+        }
+    }
+}

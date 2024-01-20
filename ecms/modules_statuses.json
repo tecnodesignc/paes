@@ -1,0 +1,18 @@
+{
+    "Core": true,
+    "Dashboard": true,
+    "Media": true,
+    "Menu": true,
+    "Page": true,
+    "Setting": true,
+    "Tag": true,
+    "Translation": true,
+    "User": true,
+    "Workshop": true,
+    "Cache": true,
+    "Apigpswox": true,
+    "Sass": true,
+    "Transport": true,
+    "Dynamicform": true,
+    "Maintenance": true
+}

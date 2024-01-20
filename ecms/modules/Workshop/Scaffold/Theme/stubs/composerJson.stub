@@ -1,0 +1,22 @@
+{
+  "name": "{{vendor}}/{{theme-name}}-theme",
+  "type": "encore-theme",
+  "description": "",
+  "keywords": [
+    "encore-cms"
+  ],
+  "license": "MIT",
+  "require": {
+    "php": ">=8.0",
+    "composer/installers": "~2.1"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "php artisan stylist:publish"
+    ],
+    "post-update-cmd": [
+      "php artisan stylist:publish"
+    ]
+  },
+  "minimum-stability": "dev"
+}

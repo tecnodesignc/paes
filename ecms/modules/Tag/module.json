@@ -1,0 +1,27 @@
+{
+    "title": "Tag",
+    "name": "Tag",
+    "alias": "tag",
+    "description": "Tag management in EncoreCMS",
+    "keywords": [
+        "Tag",
+        "EncoreCMS",
+        "taggable"
+    ],
+    "author": "Marcos Rativa",
+    "require": {},
+    "version": "2.1.0",
+    "active": 1,
+    "priority": 1,
+    "providers": [
+        "Modules\\Tag\\Providers\\TagServiceProvider",
+        "Modules\\Tag\\Providers\\RouteServiceProvider"
+    ],
+    "aliases":{
+        "TagWidget": "Modules\\Tag\\Blade\\Facades\\TagWidget"
+    },
+    "files": [],
+    "minimumCoreVersion": "2.1",
+    "compatibility": "2.1",
+    "authors": ["Marcos Rativa"]
+}

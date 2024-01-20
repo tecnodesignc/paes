@@ -1,0 +1,23 @@
+{
+    "title": "Notification",
+    "name": "Notification",
+    "alias": "notification",
+    "description": "Module handling the real time notifications",
+    "version": "2.0.0",
+    "keywords": [
+        "encorecms",
+        "notifications",
+        "pusher"
+    ],
+    "author": "Marcos Rativa",
+    "active": 1,
+    "priority": 0,
+    "providers": [
+        "Modules\\Notification\\Providers\\NotificationServiceProvider",
+        "Modules\\Notification\\Providers\\RouteServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+    ],
+    "minimumCoreVersion": "2.0"
+}

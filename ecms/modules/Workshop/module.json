@@ -1,0 +1,26 @@
+{
+    "title": "Workshop",
+    "name": "Workshop",
+    "alias": "workshop",
+    "description": "Module used to handle the create of new modules.",
+    "keywords": [
+        "EncoreCMS",
+        "Workshop"
+    ],
+    "author": "Marcos Rativa",
+    "require": {},
+    "version": "2.1.1",
+    "active": 1,
+    "priority": 1,
+    "providers": [
+        "Modules\\Workshop\\Providers\\RouteServiceProvider",
+        "Modules\\Workshop\\Providers\\WorkshopServiceProvider"
+    ],
+    "files": [
+        "composers.php",
+        "helpers.php"
+    ],
+    "minimumCoreVersion": "2.1",
+    "compatibility": "2.1",
+    "authors": ["Marcos Rativa"]
+}

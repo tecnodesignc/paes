@@ -1,0 +1,11 @@
+url: https://github.com/tecnodesignc/translation-module
+versions:
+  "2.1.0":
+    changed:
+      - Laravel 10 compatibility
+  "2.0.0":
+    changed:
+      - Laravel 9 compatibility
+    "1.0.0":
+        added:
+            - Initial version Module

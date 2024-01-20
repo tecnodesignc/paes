@@ -1,0 +1,43 @@
+{
+    "name": "tecnodesignc/dashboard-module",
+    "type": "encore-module",
+    "description": "Dashboard module for EncoreCMS 2.1. Handles the display of the dashboard.",
+    "keywords": [
+        "encorecms",
+        "dashboard"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marcos Rativa",
+            "email": "info@tecnodesign.com.co",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "support@tecnodesign.com.co",
+        "issues": "https://github.com/tecnodesignc/encorecms/issues",
+        "source": "https://github.com/tecnodesignc/dashboard-module"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1.x-dev"
+        }
+    },
+    "require": {
+        "php": ">=8.0",
+        "composer/installers": "^2.1",
+        "tecnodesignc/workshop-module": "^2.1.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.14"
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Dashboard\\": ".",
+            "Modules\\": "modules/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

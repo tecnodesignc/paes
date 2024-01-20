@@ -1,0 +1,16 @@
+{
+    "title": "Maintenance",
+    "name": "Maintenance",
+    "version":"1.0.0",
+    "minimumCoreVersion": "2.0",
+    "author": "Encore CMS",
+    "alias": "maintenance",
+    "description": "",
+    "keywords": [],
+    "priority": 1,
+    "providers": [
+        "Modules\\Maintenance\\Providers\\MaintenanceServiceProvider",
+        "Modules\\Maintenance\\Providers\\RouteServiceProvider"
+    ],
+    "files": []
+}

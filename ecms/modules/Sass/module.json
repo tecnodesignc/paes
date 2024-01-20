@@ -1,0 +1,18 @@
+{
+    "title": "Sass",
+    "name": "Sass",
+    "version":"1.0.0",
+    "minimumCoreVersion": "2.0",
+    "author": "Encore CMS",
+    "alias": "sass",
+    "description": "",
+    "keywords": [],
+    "priority": 1,
+    "providers": [
+        "Modules\\Sass\\Providers\\SassServiceProvider",
+        "Modules\\Sass\\Providers\\RouteServiceProvider"
+    ],
+    "files": [
+        "helpers.php"
+    ]
+}

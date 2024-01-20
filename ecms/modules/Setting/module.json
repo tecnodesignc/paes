@@ -1,0 +1,31 @@
+{
+    "title": "Core",
+    "name": "Setting",
+    "alias": "setting",
+    "description": "Module for handling all site settings.",
+    "keywords": [
+        "encorecms",
+        "settings"
+    ],
+    "author": "Marcos Rativa",
+    "require": {},
+    "version": "2.1.0",
+    "active": 1,
+    "priority": 1,
+    "providers": [
+        "Modules\\Setting\\Providers\\SettingServiceProvider",
+        "Modules\\Setting\\Providers\\ThemeServiceProvider",
+        "Modules\\Setting\\Providers\\RouteServiceProvider",
+        "Modules\\Setting\\Providers\\EventServiceProvider"
+    ],
+    "aliases": {
+        "Setting": "Modules\\Setting\\Facades\\Settings",
+        "SettingDirective": "Modules\\Setting\\Blade\\Facades\\SettingDirective"
+    },
+    "files": [
+        "helpers.php"
+    ],
+    "minimumCoreVersion": "2.1",
+    "compatibility": "2.1",
+    "authors": ["Marcos Rativa"]
+}

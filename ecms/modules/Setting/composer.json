@@ -1,0 +1,44 @@
+{
+    "name": "tecnodesignc/setting-module",
+    "type": "encore-module",
+    "description": "Setting module for EncoreCMS 2.1. Handles all the site settings.",
+    "keywords": [
+        "encorecms",
+        "settings"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marcos Rativa",
+            "email": "info@tecnodesign.com.co",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "support@tecnodesign.com.co",
+        "issues": "https://github.com/tecnodesignc/encorecms/issues",
+        "source": "https://github.com/tecnodesignc/setting-module"
+    },
+    "require": {
+        "php": ">=8.1",
+        "composer/installers": "^2.1",
+        "doctrine/dbal": "^3.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "orchestra/testbench": "^v8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Setting\\": ".",
+            "Modules\\": "modules/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

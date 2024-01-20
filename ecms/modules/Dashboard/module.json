@@ -1,0 +1,24 @@
+{
+    "title": "Dashboard",
+    "name": "Dashboard",
+    "alias": "dashboard",
+    "description": "The module responsible for the admin dashboard page.",
+    "keywords": [
+        "EncoreCMS",
+        "Dashboard"
+    ],
+    "author": "Marcos Rativa",
+    "require": {},
+    "version": "2.1.0",
+    "active": 1,
+    "priority": 1,
+    "providers": [
+        "Modules\\Dashboard\\Providers\\DashboardServiceProvider",
+        "Modules\\Dashboard\\Providers\\RouteServiceProvider",
+        "Modules\\Dashboard\\Providers\\WidgetServiceProvider"
+    ],
+    "files": [],
+    "minimumCoreVersion": "2.1",
+    "compatibility": "2.1",
+    "authors": ["Marcos Rativa"]
+}

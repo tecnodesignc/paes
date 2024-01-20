@@ -1,0 +1,20 @@
+{
+    "title": "Transport",
+    "name": "Transport",
+    "version":"1.0.0",
+    "minimumCoreVersion": "2.0",
+    "author": "Encore CMS",
+    "alias": "transport",
+    "description": "",
+    "keywords": [],
+    "priority": 1,
+    "providers": [
+        "Modules\\Transport\\Providers\\TransportServiceProvider",
+        "Modules\\Transport\\Providers\\EventServiceProvider",
+        "Modules\\Transport\\Providers\\RouteServiceProvider"
+    ],
+    "files": [
+        "helpers.php"
+    ],
+    "id": "15"
+}
