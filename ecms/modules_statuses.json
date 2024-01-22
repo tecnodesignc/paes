@@ -1,5 +1,6 @@
 {
     "Core": true,
+    "Custom": true,
     "Dashboard": true,
     "Media": true,
     "Menu": true,
@@ -13,6 +14,7 @@
     "Apigpswox": true,
     "Sass": true,
     "Transport": true,
-    "Dynamicform": true,
-    "Maintenance": true
+    "Notification": true,
+    "Maintenance": true,
+    "Dynamicform": true
 }
