@@ -1,0 +1,35 @@
+{
+  "name": "tecnodesignc/encore-theme",
+  "type": "encore-theme",
+  "description": "An EncoreCMS 2 encore bootswatch theme",
+  "keywords": [
+    "encore-cms"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Marcos Rativa",
+      "email": "supoert@tecnodesign.com.co",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=8.0",
+    "composer/installers": "^2.1"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "php artisan stylist:publish"
+    ],
+    "post-update-cmd": [
+      "php artisan stylist:publish"
+    ]
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "2.0.x-dev"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
