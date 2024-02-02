@@ -49,9 +49,16 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
                 $orderWay = $filter->order->way ?? 'desc';//Default way
                 $query->orderBy($orderByField, $orderWay);//Add order to query
             }
+
+            // Filter by companies
             if(isset($filter->companies)){
                 $companies = is_array($filter->companies) ? $filter->companies : [$filter->companies];
                 $query->whereIn('company_id',$companies);
+            }
+            
+            // Filter by form id
+            if(isset($filter->form_id)){
+                $query->where('form_id', $filter->form_id);
             }
 
             //add filter by search
@@ -79,6 +86,5 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
             return $query->get();
         }
     }
-
 
 }

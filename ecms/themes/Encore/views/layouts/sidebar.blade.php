@@ -42,6 +42,25 @@
                         <span class="menu-item" data-key="t-dashboards">{{ trans('dashboard::dashboard.name') }}</span>
                     </a>
                 </li>
+                
+                {{-- Inicio componentes de formularios --}}
+                <li class="menu-title" data-key="t-menu">Formularios</li>
+                {{-- dashboard --}}
+                <li>
+                    <a href="{{ route('dynamicform.dashboard') }}">
+                        <i class="mdi mdi-chart-bar icon nav-icon"></i>
+                        <span class="menu-item" data-key="t-dashboards">Dashboard</span>
+                    </a>
+                </li>
+                {{-- preoperativo form --}}
+                <li>
+                    <a href="{{ route('dynamicform.form.index') }}">
+                        <i class="mdi mdi-notebook-edit icon nav-icon"></i>
+                        <span class="menu-item" data-key="t-business">Formularios</span>
+                    </a>
+                </li>
+                {{-- Fin de componentes de formularios --}}
+
                 @if($currentUser->hasAccess('sass.companies.index'))
 
                 <li class="menu-title" data-key="t-applications">Empresas</li>

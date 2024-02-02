@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Mockery\CountValidator\Exception;
 use Modules\Dynamicform\Entities\Field;
+use Modules\Dynamicform\Entities\Form;
 use Modules\Dynamicform\Http\Requests\CreateFieldRequest;
 use Modules\Dynamicform\Http\Requests\UpdateFieldRequest;
 use Modules\Dynamicform\Repositories\FieldRepository;
@@ -31,12 +32,12 @@ class FieldApiController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request, Form $form): JsonResponse
     {
         try {
             $includes = explode(',', $request->input('include'));
 
-            $params = json_decode(json_encode(['filter' => ['search' => $request->input('search'), 'companies' => $request->input('companies')], 'include' => $includes, 'page' => $request->input('page'), 'take' => $request->input('limit')]));
+            $params = json_decode(json_encode(['filter' => ['search' => $request->input('search'), 'companies' => $request->input('companies'), 'form_id' => $form->id, 'order'=>$request->input('order')], 'include' => $includes, 'page' => $request->input('page'), 'take' => $request->input('limit')]));
 
             $fields = $this->field->getItemsBy($params);
 

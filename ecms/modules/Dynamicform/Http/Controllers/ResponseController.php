@@ -20,8 +20,13 @@ class ResponseController extends AdminBaseController
     {
         parent::__construct();
         $this->form_response = $form_response;
-
     }
+
+    public function index(Form $form)
+    {
+        return view('modules.dynamic-form.response.index', compact('form'));
+    }
+
 
     /**
      * Show the form_response for editing the specified resource.
@@ -29,9 +34,21 @@ class ResponseController extends AdminBaseController
      * @param Field $form_response
      * @return Application|Factory|View
      */
-    public function edit(Form $form, FormResponse $form_response): Application|Factory|View
+    public function show(Form $form, FormResponse $form_response): Application|Factory|View
     {
-        return view('modules.dynamic-form.response.edit', compact('form_response', 'form'));
+        return view('modules.dynamic-form.response.show', compact('form_response', 'form'));
+    }
+
+
+    /**
+     * Download the view from responses to pdf
+     * 
+     * @param FormResponse $form_response
+     * @return Pdf
+     */
+    public function downloadpdf(Form $form, FormResponse $form_response)
+    {
+      
     }
 
 }

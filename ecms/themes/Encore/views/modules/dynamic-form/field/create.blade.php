@@ -41,16 +41,15 @@
                                     </div>
                                 </div>
                                 <div class="flex-grow-1 overflow-hidden">
-                                    <h5 class="font-size-16 mb-1"> Crear Fila para formulario {{$form->name}}</h5>
+                                    <h5 class="font-size-16 mb-1"> Crear fila para {{$form->name ?? "Formulario"}}</h5>
                                     <p class="text-muted text-truncate mb-0">Complete toda la información a
                                         continuación</p>
                                 </div>
                                 <div class="flex-shrink-0">
                                     <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
                                 </div>
-
                             </div>
-
+                            
                         </div>
                     </a>
                     <div id="addproduct-productinfo-collapse" class="collapse show"
@@ -60,76 +59,44 @@
                                 <div class="col-lg-8">
                                     <div class="card">
                                         <div class="card-body">
-                                            <div class="mb-3 {{ $errors->has("label") ? ' was-validated' : '' }}">
+                                            <div class="mb-3 {{ $errors->has('label') ? 'was-validated' : '' }}">
                                                 <label class="form-label" for="label">Etiqueta</label>
-                                                <input id="label" name="label"
-                                                       placeholder="Agrega la etiqueta al campo"
-                                                       type="text"
-                                                       value="{{old('label')}}"
-                                                       class="form-control">
+                                                <input id="label" name="label" placeholder="Agrega la etiqueta al campo" type="text" value="{{ old('label') }}" class="form-control">
                                                 {!! $errors->first('label', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                            <div class="mb-3 {{ $errors->has("name") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="name">Nombre</label>
-                                                <input id="name" name="name"
-                                                       placeholder="Agrega Nombre al campo"
-                                                       type="text"
-                                                       value="{{old('name')}}"
-                                                       class="form-control">
-                                                {!! $errors->first('name', '<div class="invalid-feedback">:message</div>') !!}
-                                            </div>
-                                            <div class="mb-3 {{ $errors->has("order") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="caption">Order</label>
-                                                <input id="order"
-                                                       placeholder="Agrega orden"
-                                                       type="number"
-                                                       value="{{old('order')}}"
-                                                       class="form-control">
+                                            <div class="mb-3 {{ $errors->has('order') ? 'was-validated' : '' }}">
+                                                <label class="form-label" for="caption">Posición</label>
+                                                <input id="order" placeholder="Agrega orden" name="order" type="number" value="{{ old('order',$lastOrder+1) }}" class="form-control">
                                                 {!! $errors->first('order', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                                <div class="mb-3 {{ $errors->has("selectable") ? ' was-validated' : '' }}">
-                                                    <label for="companies" class="form-label font-size-13 text-muted">Opciones del Campo</label>
-                                                    <input class="form-control" id="selectable" name="selectable[]" type="text"
-                                                           value="" placeholder="Agregar Opciones "
-                                                    />
-                                                    </select>
-                                                    {!! $errors->first('selectable', '<div class="invalid-feedback">:message</div>') !!}
-                                                </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="card">
-                                        <div class="card-body">
                                             <div class="mb-3">
                                                 <label class="form-label">Tipo de Campo</label>
-                                                <select class="form-select shadow-none" name="type"
-                                                        id="type" required>
+                                                <select class="form-select shadow-none" name="type" id="type" required>
                                                     <option value="0">Texto</option>
                                                     <option value="1">Area de Texto</option>
                                                     <option value="2">Numero</option>
                                                     <option value="3">Teléfono</option>
                                                     <option value="4">Email</option>
-                                                    <option value="5">Si/No</option>
+                                                    <option value="5">Si/No/No Aplica</option>
                                                     <option value="6">Selector</option>
                                                     <option value="7">Selector Multiple</option>
-                                                    <option value="8">Opciones</option>
-                                                    <option value="9">Caja de Selección</option>
-                                                    <option value="9">Imagen</option>
+                                                    <option value="8">Imagen</option>
                                                     <option value="9">Firma</option>
+                                                    <option value="10">Caja de Selección</option>
+                                                    <option value="11">Opciones</option>
                                                 </select>
                                             </div>
-                                            <div class="checkbox{{ $errors->has('required') ? ' was-validated' : '' }}">
+                                            <div class="checkbox {{ $errors->has('required') ? 'was-validated' : '' }}">
                                                 <label for="required">
-                                                    <input id="required"
-                                                           name="required"
-                                                           type="checkbox"
-                                                           class="form-check-input"
-                                                           {{ old('required')?'checked':"" }}
-                                                           value="1"/>
-                                                    Activo
-                                                    {!! $errors->first('activated', '<div class="invalid-feedback">:message</div>') !!}
+                                                    <input id="required" name="required" type="checkbox" class="form-check-input" {{ old('required') ? 'checked' : '' }}  checked value="1">
+                                                    Campo requerido?
+                                                    {!! $errors->first('required', '<div class="invalid-feedback">:message</div>') !!}
                                                 </label>
+                                            </div>
+                                            <div id="limits" class="mb-3" style="display: none;">
+                                                <label for="selectable" class="form-label font-size-13 text-muted">Opciones del Campo</label>
+                                                <input class="form-control" id="selectable" name="selectable[]" type="text" value="{{ old('selectable') }}" placeholder="Agregar Opciones">
+                                                {!! $errors->first('selectable', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                         </div>
                                     </div>
@@ -158,20 +125,29 @@
     <script src="{{ Theme::url('libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{Theme::url('libs/choices.js/choices.js.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="application/javascript" async>
-        (function () {
-            'use strict';
-            let token = "{{$currentUser->getFirstApiKey() }}";
-            window.addEventListener('load', function () {
-                // choices-text-unique-values
-                var textUniqueVals = new Choices('#selectable', {
-                    paste: false,
-                    duplicateItemsAllowed: false,
-                    editItems: true,
-                });
-            })
-        })();
+
+
+
+    <script type="application/javascript">
+        document.addEventListener("DOMContentLoaded", function (event) {
+            // Inicializar Choices para el campo de opciones
+            var textUniqueVals = new Choices('#selectable', {
+                paste: false,
+                duplicateItemsAllowed: false,
+                editItems: true,
+            });
+    
+            // Mostrar u ocultar el campo de opciones según el tipo de campo seleccionado
+            $('#type').change(function () {
+                if (this.value === '6' || this.value === '7' || this.value === '10' || this.value === '11') {
+                    $('#limits').css('display', 'block');
+                } else {
+                    $('#limits').css('display', 'none');
+                }
+            });
+        });
     </script>
+
     <style>
         .fade:not(.show) {
             opacity: 1;

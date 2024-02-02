@@ -12,5 +12,7 @@
         "Modules\\Dynamicform\\Providers\\DynamicformServiceProvider",
         "Modules\\Dynamicform\\Providers\\RouteServiceProvider"
     ],
-    "files": []
+    "files": [
+        "helpers.php"
+    ]
 }

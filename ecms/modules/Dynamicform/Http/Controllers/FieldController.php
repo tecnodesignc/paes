@@ -8,6 +8,7 @@ use Illuminate\Contracts\View\View;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\Dynamicform\Entities\Field;
 use Modules\Dynamicform\Http\Requests\CreateFieldRequest;
+use Modules\Dynamicform\Http\Requests\UpdateFieldRequest;
 use Modules\Dynamicform\Repositories\FieldRepository;
 use Modules\Dynamicform\Entities\Form;
 
@@ -28,7 +29,8 @@ class FieldController extends AdminBaseController
      */
     public function create(Form $form):Application|Factory|View
     {
-        return view('modules.dynamic-form.field.create',compact('form'));
+        $lastOrder = Field::where('form_id', $form->id)->orderByDesc('order')->value('order');
+        return view('modules.dynamic-form.field.create',compact('form', 'lastOrder'));
     }
 
     /**
@@ -53,7 +55,7 @@ class FieldController extends AdminBaseController
      */
     public function edit(Form $form, Field $field)
     {
-        return view('modules.dynamic-form.fields.edit', compact('field'));
+        return view('modules.dynamic-form.field.edit', compact('field', 'form'));
     }
 
     /**
@@ -63,13 +65,15 @@ class FieldController extends AdminBaseController
      * @param  UpdateFieldRequest $request
      * @return Response
      */
-    public function update(Field $field, UpdateFieldRequest $request)
+    public function update($formId, Field $field, UpdateFieldRequest $request)
     {
+
+        // dd($request);
         $this->field->update($field, $request->all());
 
-        return redirect()->route('admin.dynamicfield.field.index')
-            ->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicfield::fields.title.fields')]));
+        return redirect()->route('dynamicform.form.edit', $field->form_id)->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicfield::fields.title.fields')]));
     }
+    
 
     /**
      * Remove the specified resource from storage.

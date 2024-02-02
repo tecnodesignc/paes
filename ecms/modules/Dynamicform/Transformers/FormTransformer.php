@@ -26,7 +26,7 @@ class FormTransformer extends JsonResource
             'caption'=> $this->when($this->caption, $this->caption),
             'icon'=> $this->when($this->icon, $this->icon),
             'color'=> $this->when($this->color, $this->color),
-            'active'=>boolval($this->value),
+            'active'=>boolval($this->active),
             'companies'=> CompanyTransformer::collection($this->whenLoaded('companies')),
             'created_at' => $this->when($this->created_at, $this->created_at),
             'update_at' => $this->when($this->created_at, $this->created_at),

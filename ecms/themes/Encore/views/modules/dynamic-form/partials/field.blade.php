@@ -7,15 +7,15 @@
                     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check" name="btnradio-{{$fiel->fiel_id}}" id="btnradio4" autocomplete="off"
                                disabled {{$fiel->value ===1?'checked':""}}>
-                        <label class="btn btn-outline-secondary" for="btnradio4">Si</label>
+                        <label class="btn btn-outline-dark" for="btnradio4">Si</label>
 
                         <input type="radio" class="btn-check" name="btnradio-{{$fiel->fiel_id}}" id="btnradio5" autocomplete="off"
                                disabled {{$fiel->value ===0?'checked':""}}>
-                        <label class="btn btn-outline-secondary" for="btnradio5">No</label>
+                        <label class="btn btn-outline-dark" for="btnradio5">No</label>
 
                         <input type="radio" class="btn-check" name="btnradio-{{$fiel->fiel_id}}" id="btnradio6" autocomplete="off"
                                disabled {{$fiel->value ===2?'checked':""}}>
-                        <label class="btn btn-outline-secondary" for="btnradio6">N/A</label>
+                        <label class="btn btn-outline-dark" for="btnradio6">N/A</label>
                     </div>
 
                 </td>
@@ -35,7 +35,7 @@
             @break
         @case(1)
             <tr>
-                hola {{$fiel->type}}
+                {{-- hola {{$fiel->type}} --}}
                 <th scope="row">{{$fiel->label}}</th>
                 <td>
                     <div>

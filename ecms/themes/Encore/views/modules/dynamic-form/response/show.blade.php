@@ -21,15 +21,14 @@
             <div class="card">
                 <div class="card-body">
                     <div class="invoice-title">
-                        <h4 class="float-end font-size-15">Formulario {{$form_response->id}}</h4>
+                        <h4 class="float-end font-size-48">Formulario {{$form->name}}</h4>
                         <div class="mb-4">
-                            <img src="{{ Theme::url('images/logo.png') }}" alt="logo" height="28"/>
+                            <img src="{{ Theme::url('images/logo2.jpeg') }}" alt="logo" height="48"/>
                         </div>
                         <div class="text-muted">
                             <p class="mb-1">{{$form_response->company->name}}</p>
-                            <p class="mb-1"><i
-                                        class="mdi mdi-email-outline me-1"></i> {{$form_response->company->email}}</p>
-                            <p><i class="mdi mdi-phone-outline me-1"></i>{{$form_response->company->phone}}</p>
+                            <p class="mb-1"><i class="mdi mdi-email-outline me-1 text-danger mdi-24px"></i> {{$form_response->company->email ?? null}}</p>
+                            <p><i class="mdi mdi-phone-outline me-1 text-primary mdi-24px"></i>{{$form_response->company->phone ?? null}}</p>
                         </div>
                     </div>
 
@@ -38,28 +37,19 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="text-muted">
-                                <h5 class="font-size-16 mb-3">Colaborador:</h5>
-                                <h5 class="font-size-15 mb-2">{{$form_response->data->info->fullName}}</h5>
-                                <p class="mb-1">{{$form_response->data->info->identification}}</p>
+                                <h5 class="font-size-28 mb-3"><strong> Colaborador: </strong></h5>
+                                <h5 class="font-size-15 mb-2">{{$form_response->data->info->fullName ?? null}}</h5>
+                                <p class="mb-1">{{$form_response->data->info->identification ?? null}}</p>
                                 {{-- <p class="mb-1">PrestonMiller@armyspy.com</p>
                                  <p>001-234-5678</p>--}}
-                            </div>
-                        </div>
-                        <!-- end col -->
-                        <div class="col-sm-6">
-                            <div class="text-muted text-sm-end">
-                                <div>
-                                    <h5 class="font-size-15 mb-1">Placa de Vehículo:</h5>
-                                    <p>{{$form_response->data->info->vehicle->label}}</p>
-                                </div>
-                                <div class="mt-4">
-                                    <h5 class="font-size-15 mb-1">Kilometraje del Vehiculo:</h5>
-                                    <p>{{$form_response->data->info->vehicle->millage}}</p>
-                                </div>
-                                <div class="mt-4">
-                                    <h5 class="font-size-15 mb-1">Fecha De registro:</h5>
-                                    <p>{{$form_response->created_at->format('Y-m-d')}}</p>
-                                </div>
+                                 <h5 class="font-size-15 mb-1">Placa de Vehículo:</h5>
+                                 <p>{{$form_response->data->info->vehicle->label ?? null}}</p>
+                    
+                                 <h5 class="font-size-15 mb-1">Kilometraje del Vehiculo:</h5>
+                                 <p>{{$form_response->data->info->vehicle->millage ?? null}}</p>
+                         
+                                 <h5 class="font-size-15 mb-1">Fecha De registro:</h5>
+                                 <p>{{$form_response->created_at->format('Y-m-d') ?? null}}</p>
                             </div>
                         </div>
                         <!-- end col -->
@@ -69,15 +59,16 @@
                     <div class="py-2">
                         <h5 class="font-size-15">Resumen del Formulario</h5>
 
+
                         <div class="table-responsive mb-5">
                             <table class="table align-middle table-nowrap table-centered mb-0">
                                 <thead>
-                                <tr>
-                                    <th class="fw-bold">Pregunta</th>
-                                    <th class="fw-bold">Respuesta</th>
-                                    <th class="fw-bold">Imagen</th>
-                                    <th class="fw-bold">Comentario</th>
-                                </tr>
+                                    <tr>
+                                        <th class="fw-bold">Pregunta</th>
+                                        <th class="fw-bold">Respuesta</th>
+                                        <th class="fw-bold">Imagen</th>
+                                        <th class="fw-bold">Comentario</th>
+                                    </tr>
                                 </thead><!-- end thead -->
                                 <tbody>
                                 @foreach($form_response->data->answers as $answer)
@@ -90,7 +81,7 @@
                         @foreach($form_response->data->answers as $answer)
                             @if($answer->type === 8)
                                 <div class="popup-gallery">
-                                    <h5 class="font-size-15">{{$answer->label}}</h5>
+                                    <h5 class="font-size-15">{{$answer->label ?? null}}</h5>
                                     <div class="row">
                                         @php
                                             $images=explode(',',$answer->value)
@@ -148,7 +139,7 @@
                             <div class="float-end">
                                 <a href="javascript:window.print()" class="btn btn-success me-1"><i
                                             class="fa fa-print"></i></a>
-                                <a href="{{route('dynamicform.formresponses.pdf',[$form->id,$form_response->id])}}" class="btn btn-primary w-md">Descargar</a>
+                                <a href="{{route('dynamicform.formresponses.downloadpdf', [$form_response,$form_response->id])}}" class="btn btn-primary w-md">Descargar</a>
                             </div>
                         </div>
                     </div>
@@ -160,6 +151,7 @@
 @section('script')
     <script src="{{ Theme::url('libs/glightbox/glightbox.min.js') }}"></script>
     <script src="{{Theme::url('js/app.js')}}"></script>
+
     <script type="application/javascript" async>
         (function () {
             'use strict';

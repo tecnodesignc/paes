@@ -8,11 +8,13 @@ use Illuminate\Contracts\View\View;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\Dynamicform\Entities\Form;
 use Modules\Dynamicform\Http\Requests\CreateFormRequest;
+use Modules\Dynamicform\Http\Requests\UpdateFormRequest;
 use Modules\Dynamicform\Repositories\FormRepository;
 
 class FormController extends AdminBaseController
 {
     private FormRepository $form;
+  
     public function __construct(FormRepository $form)
     {
         parent::__construct();
@@ -49,9 +51,13 @@ class FormController extends AdminBaseController
      */
     public function store(CreateFormRequest $request)
     {
-        $this->form->create($request->all());
+        $form = $this->form->create($request->all());
 
-        return redirect()->route('dynamicform.form.index')
+        // Obtener el ID del formulario recién creado
+        $formId = $form->id;
+
+        // Redirigir al usuario a la página de edición del formulario recién creado
+        return redirect()->route('dynamicform.form.edit', ['form' => $formId])
             ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('dynamicform::forms.title.forms')]));
     }
 
@@ -77,8 +83,7 @@ class FormController extends AdminBaseController
     {
         $this->form->update($form, $request->all());
 
-        return redirect()->route('admin.dynamicform.form.index')
-            ->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicform::forms.title.forms')]));
+        return redirect()->route('dynamicform.form.index')->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicform::forms.title.forms')]));
     }
 
     /**
@@ -91,7 +96,6 @@ class FormController extends AdminBaseController
     {
         $this->form->destroy($form);
 
-        return redirect()->route('admin.dynamicform.form.index')
-            ->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('dynamicform::forms.title.forms')]));
+        return redirect()->route('admin.dynamicform.form.index')->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('dynamicform::forms.title.forms')]));
     }
 }

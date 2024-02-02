@@ -7,6 +7,7 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
         'as' => 'dynamicform.dashboard',
         'uses' => 'PublicController@dashboard',
     ]);
+    // Rutas relacionadas con los formularios
     $router->group(['prefix' =>'/form'], function (Router $router) {
         $router->get('/', [
             'as' => 'dynamicform.form.index',
@@ -38,6 +39,8 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             'uses' => 'FormController@destroy',
             'middleware' => 'can:dynamicform.forms.destroy'
         ]);
+    
+
         $router->group(['prefix' =>'/{form}/field'], function (Router $router) {
             $router->get('/create', [
                 'as' => 'dynamicform.field.create',
@@ -65,20 +68,30 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
                 'middleware' => 'can:dynamicform.fields.destroy'
             ]);
         });
+
+        // Rutas de las respuesta de los formularios
         $router->group(['prefix' =>'/{form}/response'], function (Router $router) {
+
             $router->bind('form_response', function ($id) {
                 return app('Modules\Dynamicform\Repositories\FormResponseRepository')->find($id);
             });
-            $router->get('/{form_response}/edit', [
-                'as' => 'dynamicform.formresponses.edit',
-                'uses' => 'ResponseController@edit',
+
+            $router->get('/', [
+                'as' => 'dynamicform.formresponses.index',
+                'uses' => 'ResponseController@index',
+                'middleware' => 'can:dynamicform.formresponses.index'
+            ]);
+
+            $router->get('/{form_response}/show', [
+                'as' => 'dynamicform.formresponses.show',
+                'uses' => 'ResponseController@show',
                 'middleware' => 'can:dynamicform.formresponses.edit'
             ]);
 
             $router->get('/{form_response}/pdf', [
-                'as' => 'dynamicform.formresponses.pdf',
-                'uses' => 'ResponseController@download',
-                'middleware' => 'can:dynamicform.formresponses.edit'
+                'as' => 'dynamicform.formresponses.downloadpdf',
+                'uses' => 'ResponseController@downloadpdf',
+                // 'middleware' => 'can:dynamicform.formresponses.edit'
             ]);
         });
     });
