@@ -10,7 +10,7 @@ use Modules\Dynamicform\Entities\Form;
 use Modules\Dynamicform\Http\Requests\CreateFormRequest;
 use Modules\Dynamicform\Http\Requests\UpdateFormRequest;
 use Modules\Dynamicform\Repositories\FormRepository;
-
+use Illuminate\Http\Request;
 class FormController extends AdminBaseController
 {
     private FormRepository $form;
@@ -19,7 +19,6 @@ class FormController extends AdminBaseController
     {
         parent::__construct();
         $this->form=$form;
-
     }
 
     /**
@@ -81,7 +80,7 @@ class FormController extends AdminBaseController
      */
     public function update(Form $form, UpdateFormRequest $request)
     {
-        $this->form->update($form, $request->all());
+        // $this->form->update($form, $request->all());
 
         return redirect()->route('dynamicform.form.index')->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicform::forms.title.forms')]));
     }
@@ -94,8 +93,8 @@ class FormController extends AdminBaseController
      */
     public function destroy(Form $form)
     {
-        $this->form->destroy($form);
-
-        return redirect()->route('admin.dynamicform.form.index')->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('dynamicform::forms.title.forms')]));
+        // $this->form->destroy($form);
+        $form->update(['active' => 0]);
+        return redirect()->route('dynamicform.form.index')->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('dynamicform::forms.title.forms')]));
     }
 }

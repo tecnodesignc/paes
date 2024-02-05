@@ -86,6 +86,14 @@ class EloquentFormRepository extends EloquentBaseRepository implements FormRepos
                     $q->whereIn('company_id', $companies);
                 });
             }
+
+            // Filter by status
+            if (isset($filter->status)) {
+                $query->whereHas('companies', function ($q) use ($filter) {
+                    $q->where('dynamicform__form_company.active', $filter->status);
+                });
+                $query->where('active', $filter->status);
+            }
             
             //add filter by search
             if (isset($filter->search) && $filter->search) {

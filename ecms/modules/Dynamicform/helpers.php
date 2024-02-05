@@ -12,6 +12,7 @@ if (function_exists('formsCount') === false) {
 
         return $drivers->count()??0;
     }
+
 }
 
 //Funcion que cuenta los formularios que han sido contestados

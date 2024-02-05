@@ -34,10 +34,10 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             'uses' => 'FormController@update',
             'middleware' => 'can:dynamicform.forms.edit'
         ]);
-        $router->delete('/{form}', [
+        $router->put('/{form}/borrar', [
             'as' => 'dynamicform.form.destroy',
             'uses' => 'FormController@destroy',
-            'middleware' => 'can:dynamicform.forms.destroy'
+            // 'middleware' => 'can:dynamicform.forms.destroy'
         ]);
     
 

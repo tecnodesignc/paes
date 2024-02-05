@@ -46,7 +46,13 @@ class FormResponseApiController extends Controller
         try {
             $includes = explode(',', $request->input('include'));
 
-            $params = json_decode(json_encode(['filter' => ['search' => $request->input('search'), 'companies' => $request->input('companies'),'form_id' => $request->input('form_id')], 'include' => $includes, 'page' => $request->input('page'), 'take' => $request->input('limit')]));
+            $params = json_decode(json_encode(['filter' =>
+             [
+                'search' => $request->input('search'), 
+                'companies' => $request->input('companies'),
+                'form_id' => $request->input('form_id')            
+            ], 
+             'include' => $includes, 'page' => $request->input('page'), 'take' => $request->input('limit')]));
 
             $formresponses = $this->formresponse->getItemsBy($params);
 

@@ -76,7 +76,7 @@
                                 </span>
                     </div>
                     <p class="text-muted mt-4 mb-0">Formularios Activos</p>
-                    <h4 class="mt-1 mb-0">{{formsCount(['companies'=>company()->id])}}</h4>
+                    <h4 class="mt-1 mb-0">{{$forms_active_count??0}}</h4>
                 </div>
             </div>
         </div>
@@ -89,7 +89,7 @@
                                     <i class="mdi mdi-bus-articulated-front text-primary font-size-24"></i>
                                 </span>
                     </div>
-                    <p class="text-muted mt-4 mb-0">Formularios contestados</p>
+                    <p class="text-muted mt-4 mb-0">Formularios contestados hoy</p>
                     <h4 class="mt-1 mb-0">{{responseCount(['companies'=>company()->id])}}</h4>
                 </div>
             </div>
@@ -102,7 +102,7 @@
                                     <i class="mdi mdi-bus-articulated-front text-primary font-size-24"></i>
                                 </span>
                     </div>
-                    <p class="text-muted mt-4 mb-0">Formularios con hallazgos</p>
+                    <p class="text-muted mt-4 mb-0">Formularios contestados con hallazgos</p>
                     <h4 class="mt-1 mb-0">{{negativeResponseCount(['companies'=>company()->id])}}</h4>
                 </div>
             </div>
@@ -195,6 +195,7 @@
     <script type="application/javascript" async>
 
         const gridresponse = new gridjs.Grid({
+      
             language: {
                 'search': {
                     'placeholder': 'Buscar...'
@@ -265,45 +266,10 @@
                     }
     
                 ],
-            pagination: {
-                limit: 12,
-                server: {
-                    url: (prev, page, limit) => `${prev}&limit=${limit}&page=${page + 1}`
-                }
-            },
-            search: {
-                debounceTimeout: 300,
-                server: {
-                    url: (prev, keyword) => `${prev}&search=${keyword}`
-                }
-            },
+            pagination: 12,
+            search: true,
             sort: true,
-            server: {
-                @php
-                    $from = Carbon::now()->setTime(0, 0, 0)->format('Y-m-d H:i:s');
-                    $to = Carbon::now()->format('Y-m-d H:i:s');
-                    // echo($from);
-                    $companies=company()->id?company()->id:array_values(companies()->map(function ($company){
-                        return $company->id;
-                     })->toArray());
-                   $params=['include'=>'form,user,company','companies'=>$companies, 
-                    'filter' => [
-                            'date' => [
-                                'field' => 'created_at',
-                                'from' => $from,
-                                'to' => $to          
-                            ]
-                        ]
-                    ];
-                @endphp
-                url: '{!!route('api.dynamicform.formresponse.index',$params)!!}',
-                headers: {
-                    Authorization: `Bearer {{$currentUser->getFirstApiKey()}}`,
-                    'Content-Type': 'application/json'
-                },
-                then: data => data.data,
-                total: data => data.meta.page.total
-            }
+            data: {!! json_encode($forms_response_negatives) !!}
         }).render(document.getElementById("table-response"));
     </script>
         
