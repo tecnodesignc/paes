@@ -67,6 +67,11 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
                 'uses' => 'FieldController@destroy',
                 'middleware' => 'can:dynamicform.fields.destroy'
             ]);
+            $router->get('/{field}/orden/{orden}', [
+                'as' => 'dynamicform.field.orden',
+                'uses' => 'FieldController@orden',
+                'middleware' => 'can:dynamicform.fields.edit'
+            ]);
         });
 
         // Rutas de las respuesta de los formularios

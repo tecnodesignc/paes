@@ -52,14 +52,38 @@ class PublicController extends AdminBaseController
             
             ], 'include' => ['form','user', 'company'], 'page' => 1, 'take' => 10000
         ]));
+
+        // Obtenemos el modelo de FormResponse y la guardamos en form_response
         $forms_response=$this->form_response->getItemsBy($params);
-        
+        // Convertimos el modelo en una colleccion de datos
         $forms_response=collect(json_decode(json_encode(FormResponseTransformer::collection($forms_response))));
+
+        $forms_response_count = $forms_response->count();
+
+        // dd($forms_response_count);
         
+        // filtramos los formularios que contengan 1 o mas respuestas negativas
         $forms_response_negative = $forms_response->where('negative_num', '>=', 1);
         
-        
-        
+        // ----- Cantidad formularios contestados hoy con hallazgos
+        $conteoPorEmpresa = $forms_response_negative->groupBy('company_id')
+        ->map(function ($items) {
+            return [
+                'name' => $items->first()->form->name,
+                'cantidad' => $items->count(),
+            ];
+        });
+
+        // ----- Cantidad de respuestas negativas x dia
+        $forms_response_negative_count_day = $forms_response_negative->count();
+        // ----- Datos para cargar en la tabla respuestas negativas x dia
+        $forms_response_negatives = [];
+        foreach ($forms_response_negative as $forms_response_n) {
+            $forms_response_negatives[] = $forms_response_n;
+        }
+
+
+
         //consulta para los formularios
         $params_form = json_decode(json_encode([
             'filter' => [
@@ -72,17 +96,11 @@ class PublicController extends AdminBaseController
 
         $forms=$this->form->getItemsBy($params_form);
         
-        //todos los formularios activos
+        // -----todos los formularios activos total
         $forms_active_count=$forms->count();
-
+       
         
-        // $forms_response=FormResponseTransformer::collection($forms_response);
-        
-        foreach ($forms_response_negative as $forms_response_n) {
-            $forms_response_negatives[] = $forms_response_n;
-        }
-        
-        return view('modules.dynamic-form.index', compact('forms_response_negatives', 'forms_active_count', ));
+        return view('modules.dynamic-form.index', compact('forms_response_negatives', 'forms_active_count', 'forms_response_negative_count_day', 'conteoPorEmpresa', 'forms_response_count'));
     }
 
 

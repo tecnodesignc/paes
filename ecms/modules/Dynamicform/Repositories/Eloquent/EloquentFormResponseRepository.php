@@ -2,8 +2,11 @@
 
 namespace Modules\Dynamicform\Repositories\Eloquent;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Modules\Dynamicform\Events\FormResponsesWasCreated;
 use Modules\Dynamicform\Repositories\FormResponseRepository;
 use Modules\Core\Repositories\Eloquent\EloquentBaseRepository;
 
@@ -70,7 +73,6 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
                         $q->where('title', 'LIKE', "%{$term}%");
                     })->orWhere('id', $term);
                 });
-
             }
         }
 
@@ -85,6 +87,20 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
             $params->take ? $query->take($params->take) : false;//Take
             return $query->get();
         }
+    }
+
+    /**
+     * Create a resource
+     * @param  $data
+     * @return Model|Collection|Builder|array|null
+     */
+    public function create($data): Model|Collection|Builder|array|null
+    {
+        $formresponse = $this->model->create($data);
+        event(
+            new FormResponsesWasCreated($formresponse, $data)
+        );
+        return $formresponse;
     }
 
 }

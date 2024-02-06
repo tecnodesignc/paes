@@ -380,7 +380,11 @@
                             enabled: false
                         },
                         formatter: (function (cell) {
-                            return gridjs.html('<div class="d-flex gap-3"><a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="text-success"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a><a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger"><i class="mdi mdi-delete mdi-24px"></i></a></div>');
+                            return gridjs.html('<div class="d-flex gap-3"><a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="text-success"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'
+                                + '<a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger"><i class="mdi mdi-delete mdi-24px"></i></a>'
+                                + '<a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/orden/1" data-bs-toggle="tooltip" data-bs-placement="top" title="Subir" class="text-secondary"><i class="mdi mdi-arrow-up-bold-circle-outline mdi-24px"></i></a>'
+                                + '<a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/orden/-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Bajar" class="text-secondary"><i class="mdi mdi-arrow-down-bold-circle-outline mdi-24px"></i></a>'
+                                + '</div>');
                         })
                     }
 
@@ -421,7 +425,7 @@
     {{-- FIN DE JS DEL RENDERIZADO DE LA TABLA DE CAMPOS --}}
 
 
-
+    {{-- CODIGO PARA HACER LAS IMPORTACIONES DESDE EL FULL DE PREGUNTAS QUE TENGA CREADA ESA EMPRESA --}}
     <script type="application/javascript" async>
     document.addEventListener("DOMContentLoaded", function () {
         // Escuchar el evento mostrado de la modal

@@ -88,4 +88,31 @@ class FieldController extends AdminBaseController
         return redirect()->route('admin.dynamicfield.field.index')
             ->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('dynamicfield::fields.title.fields')]));
     }
+    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Field $field
+     * @param  UpdateFieldRequest $request
+     * @return Response
+     */
+    public function orden($formId, Field $field, UpdateFieldRequest $request, $ordenValue)
+    {
+        if (isset($ordenValue) && $ordenValue == 1) {
+            // $campo_anterior = Field::find($field->id-1);
+            if($field->order > 1 ){
+                $this->field->update($field, ['order'=> $field->order - 1]);
+            }
+            // $this->field->update($campo_anterior, ['order'=> $campo_anterior->order+1]);
+        }
+        if (isset($ordenValue) && $ordenValue == -1) {
+            // $campo_siguiente = Field::find($field->id+1);
+            $this->field->update($field, ['order'=> $field->order + 1]);
+            // $this->field->update($campo_siguiente, ['order'=> $campo_siguiente->order-1]);
+        }
+    
+        return redirect()->route('dynamicform.form.edit', $field->form_id)->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicfield::fields.title.fields')]));
+
+    }
+
 }

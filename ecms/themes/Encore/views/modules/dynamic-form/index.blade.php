@@ -62,6 +62,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
     
@@ -90,77 +91,64 @@
                                 </span>
                     </div>
                     <p class="text-muted mt-4 mb-0">Formularios contestados hoy</p>
-                    <h4 class="mt-1 mb-0">{{responseCount(['companies'=>company()->id])}}</h4>
+                    <h4 class="mt-1 mb-0">{{$forms_response_count??0}}</h4>
                 </div>
             </div>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body"  style="max-height: 250px;">
                     <div class="avatar">
                                 <span class="avatar-title bg-soft-primary rounded">
                                     <i class="mdi mdi-bus-articulated-front text-primary font-size-24"></i>
                                 </span>
                     </div>
-                    <p class="text-muted mt-4 mb-0">Formularios contestados con hallazgos</p>
-                    <h4 class="mt-1 mb-0">{{negativeResponseCount(['companies'=>company()->id])}}</h4>
+                    <p class="text-muted mt-4 mb-0">Formularios contestados con hallazgos hoy</p>
+                    <h4 class="mt-1 mb-0">{{$forms_response_negative_count_day??0}}</h4>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- <div class="row">
+    <div class="row">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex flex-wrap align-items-center">
-                        <h5 class="card-title mb-0">Formularios con respuestas negativas dia actual</h5>
-                        <div class="ms-auto">
-                            <div class="dropdown">
-                                <a class="font-size-16 text-muted dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="mdi mdi-dots-horizontal"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">Action</a>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </div>
-                            </div>
-                        </div>
+                        <h5 class="card-title mb-0">Cantidad formularios contestados hoy con hallazgos</h5>
                     </div>
                 </div>
-
+    
                 <div class="card-body px-0">
-                    <ol class="activity-feed mb-0 px-4" data-simplebar style="max-height: 377px;">
-
-                        @foreach ($forms_response as $response)
-        
-                            <li class="feed-item">
-                                <div class="d-flex justify-content-between feed-item-list">
-                                    <div>
-                                        <h5 class="font-size-15 mb-1">{{$response->form->name}}</h5>
-                                        <p class="text-muted mb-0">{{$response->data->info->fullName}}</p>
-
-                                    </div>
-                                    <div>
-                                        <h5 class="font-size-15 mb-1">Fecha de respuesta: </h5>
-                                        <p class="text-muted mb-0">{{$response->created_at}}</p>
-                                    </div>
-                                </div>
-                            </li>
-                        @endforeach
-                    </ol>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <tbody>
+                                @foreach ($conteoPorEmpresa as $conteoId => $conteo)
+                                    <tr class="items-center text-center">
+                                        <td width="50%">{{ $conteo['name'] ?? null}}</td>
+                                        <td width="50%">{{ $conteo['cantidad'] ?? null}}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
             </div>
         </div>
-    </div> --}}
+    </div>
+    
+
 
     <div class="row">
         <div class="p-4 border-top">
             <div class="row">
                 <div class="col-12">
                     <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex flex-wrap align-items-center">
+                                <h5 class="card-title mb-0">Respuestas x colaborador con cantidad de hallazgos</h5>
+                            </div>
+                        </div>
                         <div class="card-body">
                             <div class="position-relative">
                                 <div class="modal-button mt-2">
