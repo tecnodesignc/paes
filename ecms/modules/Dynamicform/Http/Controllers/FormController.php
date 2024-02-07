@@ -19,6 +19,7 @@ class FormController extends AdminBaseController
     {
         parent::__construct();
         $this->form=$form;
+
     }
 
     /**
@@ -93,7 +94,6 @@ class FormController extends AdminBaseController
      */
     public function destroy(Form $form)
     {
-        // $this->form->destroy($form);
         $form->update(['active' => 0]);
         return redirect()->route('dynamicform.form.index')->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('dynamicform::forms.title.forms')]));
     }

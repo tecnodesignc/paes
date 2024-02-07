@@ -380,8 +380,8 @@
                             enabled: false
                         },
                         formatter: (function (cell) {
-                            return gridjs.html('<div class="d-flex gap-3"><a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="text-success"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'
-                                + '<a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger"><i class="mdi mdi-delete mdi-24px"></i></a>'
+                            return gridjs.html('<div class="d-flex gap-3"><a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'
+                                + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" class="text-danger"  onclick="deleteField(event, '+ cell +')" ><i class="mdi mdi-delete mdi-24px"></i></a>'
                                 + '<a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/orden/1" data-bs-toggle="tooltip" data-bs-placement="top" title="Subir" class="text-secondary"><i class="mdi mdi-arrow-up-bold-circle-outline mdi-24px"></i></a>'
                                 + '<a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/orden/-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Bajar" class="text-secondary"><i class="mdi mdi-arrow-down-bold-circle-outline mdi-24px"></i></a>'
                                 + '</div>');
@@ -421,113 +421,148 @@
                 }
             }
         }).render(document.getElementById("table-fields"));
+
+        function deleteField(event, field) {
+            event.preventDefault(); // Evita que el navegador siga el enlace
+
+            if (confirm("¿Estás seguro de que quieres eliminar este campo?")) {
+                // Realizar la solicitud DELETE con Axios
+                axios.delete(`/preoperativo/form/{{$form->id}}/field/${field}/borrar`, {
+                    headers: {
+                        'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    // Verificar si la solicitud fue exitosa
+                    if (response.status === 200) {
+                        // Manejar la respuesta si la eliminación fue exitosa
+                        console.log(response.data);
+                        alert('Campo eliminado exitosamente');
+                        // Aquí puedes actualizar la tabla después de la eliminación
+                        // mygrid.forceRender();
+                    } else {
+                        // Manejar el caso en que la solicitud no fue exitosa
+                        throw new Error('Error al eliminar el campo');
+                    }
+                })
+                .catch(error => {
+                    // Manejar errores
+                    console.error(error);
+                    alert('Error al eliminar el campo');
+                });
+            }
+        }
+
+
     </script>
     {{-- FIN DE JS DEL RENDERIZADO DE LA TABLA DE CAMPOS --}}
 
 
     {{-- CODIGO PARA HACER LAS IMPORTACIONES DESDE EL FULL DE PREGUNTAS QUE TENGA CREADA ESA EMPRESA --}}
-    <script type="application/javascript" async>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Escuchar el evento mostrado de la modal
-        $('#table-modal').on('shown.bs.modal', function () {
-            // Renderizar la tabla dentro de la modal
-            renderizarTabla();
-        });
+  <script type="application/javascript" async>
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     // Escuchar el evento mostrado de la modal
+    //     $('#table-modal').on('shown.bs.modal', function () {
+    //         // Renderizar la tabla dentro de la modal
+    //         renderizarTabla();
+    //     });
 
-        // Escuchar el evento ocultado de la modal
-        $('#table-modal').on('hidden.bs.modal', function () {
-            // Borrar el contenido de la tabla
-            document.getElementById("table-fields2").innerHTML = '';
-        });
-    });
+    //     // Escuchar el evento ocultado de la modal
+    //     $('#table-modal').on('hidden.bs.modal', function () {
+    //         // Borrar el contenido de la tabla
+    //         document.getElementById("table-fields2").innerHTML = '';
+    //     });
+    // });
 
-function renderizarTabla() {
-    const loading = new Loader();
-    const mygrid = new gridjs.Grid({
-            // Configuración de la tabla...
-            language: {
-                'search': {
-                    'placeholder': 'Buscar...'
-                },
-                'pagination': {
-                    'previous': 'Prev.',
-                    'next': 'Sig.',
-                    'showing': 'Mostrando',
-                    'results': () => 'resultados'
-                }
-            },
-            columns:
-                [
-                    {
-                    id: 'id',
-                    name: '#',
-                    sort: {
-                        enabled: false
-                    },
-                    formatter: (function (cell) {
-                        return gridjs.html('<div class="form-check font-size-16"><input class="form-check-input" type="checkbox" id="orderidcheck' + cell + '"><label class="form-check-label" for="orderidcheck' + cell + '">' + cell + '</label></div>');
-                        })
-                    },
-                    {
-                        id: 'order',
-                        name: 'Orden',
-                    },
-                    {
-                        id: 'label',
-                        name: 'Etiqueta',
+ 
 
-                    },          
-                    {
-                        id: 'required',
-                        name: 'Requerido',
-                        formatter: (function (cell) {
-                            return gridjs.html(cell == '1' ? '<span class="badge badge-pill badge-soft-success font-size-12">Requerido</span>' : '<span class="badge badge-pill badge-soft-secondary font-size-12">Opcional</span>');
-                        })
-                    },
-                    {
-                        id: "created_at",
-                        name: "Creado el",
-                        formatter: (_, cell) => moment(cell).format('YYYY-MM-DD')
-                    }
-                ],
-            pagination: {
-                limit: 12,
-                server: {
-                    url: (prev, page, limit) => `${prev}&limit=${limit}&page=${page + 1}`
-                }
-            },
-            sort: {
-                initialColumn: 'order', // Columna inicial de ordenamiento
-                initialDirection: 'asc' // Dirección inicial de ordenamiento
-            },
-            search: {
-                debounceTimeout: 300, // Tiempo de espera en milisegundos (300 ms = 0.3 segundos)
-                server: {
-                    url: (prev, keyword) => `${prev}&search=${keyword}`
-                }
-            },
-            server: {
-                @php
-                    $params=['include'=>'form','form'=>$form->id, 'order'=>['field'=>'order','way'=>'asc']];
-                @endphp
-                url: '{!!route('api.dynamicform.field.index',$params)!!}',
-                headers: {
-                    Authorization: `Bearer {{$currentUser->getFirstApiKey()}}`,
-                    'Content-Type': 'application/json'
-                },
-                then: data => data.data,
-                total: data => data.meta.page.total
-            },
-            style: {
-                table: {
-                    'overflow-x': 'auto',  // scrolling horizontal
-                    'max-height': '400px', // establece la altura máxima para scrolling vertical
-                }
-            },
-        }).render(document.getElementById("table-fields2"));
-    }
+// function renderizarTabla() {
+    // const loading = new Loader();
+    // const mygrid = new gridjs.Grid({
+    //         // Configuración de la tabla...
+    //         language: {
+    //             'search': {
+    //                 'placeholder': 'Buscar...'
+    //             },
+    //             'pagination': {
+    //                 'previous': 'Prev.',
+    //                 'next': 'Sig.',
+    //                 'showing': 'Mostrando',
+    //                 'results': () => 'resultados'
+    //             }
+    //         },
+    //         columns:
+    //             [
+    //                 {
+    //                 id: 'id',
+    //                 name: '#',
+    //                 sort: {
+    //                     enabled: false
+    //                 },
+    //                 formatter: (function (cell) {
+    //                     return gridjs.html('<div class="form-check font-size-16"><input class="form-check-input" type="checkbox" id="orderidcheck' + cell + '"><label class="form-check-label" for="orderidcheck' + cell + '">' + cell + '</label></div>');
+    //                     })
+    //                 },
+    //                 {
+    //                     id: 'order',
+    //                     name: 'Orden',
+    //                 },
+    //                 {
+    //                     id: 'label',
+    //                     name: 'Etiqueta',
 
-    </script>
+    //                 },          
+    //                 {
+    //                     id: 'required',
+    //                     name: 'Requerido',
+    //                     formatter: (function (cell) {
+    //                         return gridjs.html(cell == '1' ? '<span class="badge badge-pill badge-soft-success font-size-12">Requerido</span>' : '<span class="badge badge-pill badge-soft-secondary font-size-12">Opcional</span>');
+    //                     })
+    //                 },
+    //                 {
+    //                     id: "created_at",
+    //                     name: "Creado el",
+    //                     formatter: (_, cell) => moment(cell).format('YYYY-MM-DD')
+    //                 }
+    //             ],
+    //         pagination: {
+    //             limit: 12,
+    //             server: {
+    //                 url: (prev, page, limit) => `${prev}&limit=${limit}&page=${page + 1}`
+    //             }
+    //         },
+    //         sort: {
+    //             initialColumn: 'order', // Columna inicial de ordenamiento
+    //             initialDirection: 'asc' // Dirección inicial de ordenamiento
+    //         },
+    //         search: {
+    //             debounceTimeout: 300, // Tiempo de espera en milisegundos (300 ms = 0.3 segundos)
+    //             server: {
+    //                 url: (prev, keyword) => `${prev}&search=${keyword}`
+    //             }
+    //         },
+    //         server: {
+    //             @php
+    //                 $params=['include'=>'form','form'=>$form->id, 'order'=>['field'=>'order','way'=>'asc']];
+    //             @endphp
+    //             url: '{!!route('api.dynamicform.field.index',$params)!!}',
+    //             headers: {
+    //                 Authorization: `Bearer {{$currentUser->getFirstApiKey()}}`,
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             then: data => data.data,
+    //             total: data => data.meta.page.total
+    //         },
+    //         style: {
+    //             table: {
+    //                 'overflow-x': 'auto',  // scrolling horizontal
+    //                 'max-height': '400px', // establece la altura máxima para scrolling vertical
+    //             }
+    //         },
+    //     }).render(document.getElementById("table-fields2"));
+    // }
+</script>
 
 
     <style>

@@ -60,17 +60,17 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="mb-3 {{ $errors->has('label') ? 'was-validated' : '' }}">
-                                                <label class="form-label" for="label">Etiqueta</label>
+                                                <label class="form-label" for="label"><strong>*</strong>Etiqueta</label>
                                                 <input id="label" name="label" placeholder="Agrega la etiqueta al campo" type="text" value="{{ old('label') }}" class="form-control">
                                                 {!! $errors->first('label', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has('order') ? 'was-validated' : '' }}">
                                                 <label class="form-label" for="caption">Posición</label>
-                                                <input id="order" placeholder="Agrega orden" name="order" type="number" value="{{ old('order',$lastOrder+1) }}" class="form-control">
+                                                <input id="order" placeholder="Agrega orden" name="order" type="number" value="{{ old('order',$lastOrder+1) }}" class="form-control" readonly>
                                                 {!! $errors->first('order', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label">Tipo de Campo</label>
+                                                <label class="form-label"><strong>*</strong>Tipo de Campo</label>
                                                 <select class="form-select shadow-none" name="type" id="type" required>
                                                     <option value="0">Texto</option>
                                                     <option value="1">Area de Texto</option>
@@ -82,8 +82,8 @@
                                                     <option value="7">Selector Multiple</option>
                                                     <option value="8">Imagen</option>
                                                     <option value="9">Firma</option>
-                                                    <option value="10">Caja de Selección</option>
-                                                    <option value="11">Opciones</option>
+                                                    <option value="10">Opciones</option>
+                                                    <option value="11" title="B/M/Na">Estados</option>
                                                 </select>
                                             </div>
                                             <div class="checkbox {{ $errors->has('required') ? 'was-validated' : '' }}">
@@ -94,8 +94,8 @@
                                                 </label>
                                             </div>
                                             <div id="limits" class="mb-3" style="display: none;">
-                                                <label for="selectable" class="form-label font-size-13 text-muted">Opciones del Campo</label>
-                                                <input class="form-control" id="selectable" name="selectable[]" type="text" value="{{ old('selectable') }}" placeholder="Agregar Opciones">
+                                                <label for="selectable" class="form-label font-size-13 text-muted"><strong>*</strong>Opciones del Campo</label>
+                                                <input class="form-control" id="selectable" name="selectable[]" type="text" value="{{ old('selectable') }}" placeholder="Agregar Opciones" required>
                                                 {!! $errors->first('selectable', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                         </div>
@@ -126,23 +126,55 @@
     <script src="{{Theme::url('libs/choices.js/choices.js.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-
-
     <script type="application/javascript">
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                // Cancela el envío del formulario
+                event.preventDefault();
+            }
+        });
         document.addEventListener("DOMContentLoaded", function (event) {
-            // Inicializar Choices para el campo de opciones
+            // Aquí comienza el nuevo código
+            let token = "{{$currentUser->getFirstApiKey() }}";
             var textUniqueVals = new Choices('#selectable', {
                 paste: false,
                 duplicateItemsAllowed: false,
                 editItems: true,
             });
-    
-            // Mostrar u ocultar el campo de opciones según el tipo de campo seleccionado
-            $('#type').change(function () {
-                if (this.value === '6' || this.value === '7' || this.value === '10' || this.value === '11') {
+
+            // Función para actualizar la visibilidad y opciones del campo de opciones del campo
+            function updateOptionsFieldVisibilityAndOptions() {
+                var typeValue = $('#type').val();
+                if (typeValue === '6' || typeValue === '7' || typeValue === '10' || typeValue === '11') {
                     $('#limits').css('display', 'block');
                 } else {
                     $('#limits').css('display', 'none');
+                }
+
+                // Mostrar las opciones específicas cuando se selecciona 'Estados'
+                if (typeValue === '11') {
+                    textUniqueVals.removeActiveItems();
+                    textUniqueVals.setValue(['BUENO','REGULAR','MALO','NO APLICA', 'NO TIENE'])
+                }
+            }
+
+            // Llamada a la función para actualizar la visibilidad y opciones del campo cuando se carga la página
+            updateOptionsFieldVisibilityAndOptions();
+
+            // Escuchar cambios en el campo de selección de tipo
+            $('#type').change(function () {
+                updateOptionsFieldVisibilityAndOptions();
+            });
+
+
+            // Escuchar el envío del formulario
+            $('form').submit(function(event) {
+                // Verificar si el campo de selección tiene un valor seleccionado
+                if ($('#selectable').val() === null) {
+                    // Mostrar un mensaje de error o realizar alguna acción
+                    alert('Por favor selecciona una opción');
+                    // Detener el envío del formulario
+                    event.preventDefault();
                 }
             });
         });

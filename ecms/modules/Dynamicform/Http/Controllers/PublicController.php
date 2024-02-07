@@ -35,7 +35,6 @@ class PublicController extends AdminBaseController
      */
     public function dashboard():Application|Factory|View
     {
-
         //consulta para las respuestas       
         $from = Carbon::now()->setTime(0, 0, 0)->format('Y-m-d H:i:s');
         $to = Carbon::now()->format('Y-m-d H:i:s');
@@ -60,8 +59,6 @@ class PublicController extends AdminBaseController
 
         $forms_response_count = $forms_response->count();
 
-        // dd($forms_response_count);
-        
         // filtramos los formularios que contengan 1 o mas respuestas negativas
         $forms_response_negative = $forms_response->where('negative_num', '>=', 1);
         
@@ -82,8 +79,6 @@ class PublicController extends AdminBaseController
             $forms_response_negatives[] = $forms_response_n;
         }
 
-
-
         //consulta para los formularios
         $params_form = json_decode(json_encode([
             'filter' => [
@@ -98,7 +93,6 @@ class PublicController extends AdminBaseController
         
         // -----todos los formularios activos total
         $forms_active_count=$forms->count();
-       
         
         return view('modules.dynamic-form.index', compact('forms_response_negatives', 'forms_active_count', 'forms_response_negative_count_day', 'conteoPorEmpresa', 'forms_response_count'));
     }

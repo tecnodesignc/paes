@@ -81,12 +81,11 @@ class FieldController extends AdminBaseController
      * @param  Field $field
      * @return Response
      */
-    public function destroy(Field $field)
+    public function destroy($form, Field $field)
     {
         $this->field->destroy($field);
 
-        return redirect()->route('admin.dynamicfield.field.index')
-            ->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('dynamicfield::fields.title.fields')]));
+        return redirect()->route('dynamicform.form.edit',[$form->id])->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('dynamicfield::fields.title.fields')]));
     }
     
     /**

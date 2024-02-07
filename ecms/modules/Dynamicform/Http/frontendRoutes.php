@@ -62,7 +62,7 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
                 'uses' => 'FieldController@update',
                 'middleware' => 'can:dynamicform.fields.edit'
             ]);
-            $router->delete('/{field}', [
+            $router->delete('/{field}/borrar', [
                 'as' => 'dynamicform.field.destroy',
                 'uses' => 'FieldController@destroy',
                 'middleware' => 'can:dynamicform.fields.destroy'

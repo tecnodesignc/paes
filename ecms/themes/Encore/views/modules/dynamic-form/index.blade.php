@@ -18,23 +18,19 @@
             Dashboard
         @endslot
     @endcomponent
-<div class="row d-relative align-items-stretch">
-    <div class="col-lg-4 col-md-12">
-        <div class="card bg-primary h-100">
-            <div class="card-body  text-center">
-                {{-- <div class="text-center py-1"> --}}
-                    <div class="main-wid position-relative">
-                        <h3 class="text-white mt-5 "> ¡Bienvenido de nuevo, {{ $currentUser->present()->fullname() }}!</h3>
-                        <p class="text-white-50 mt-4 text-size-100">Puedes ver el resumen de los formularios a la fecha :
-                            <br>
-                            <strong class="text-white"> {{date('d M Y H:i:s')}}</strong>
-                        </p>
-                    </div>
-                {{-- </div> --}}
+<div class="row d-relative h-100">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card bg-primary">
+            <div class="card-body text-center">
+                <h3 class="text-white "> ¡Bienvenido de nuevo, {{ $currentUser->present()->fullname() }}!</h3>
+                <p class="text-white-50 mt-1 text-size-100">Puedes ver el resumen de los formularios:
+                    <br>
+                    <strong class="text-white"> {{date('d M Y H:i:s')}}</strong>
+                </p>
             </div>
         </div>
     </div>
-    <div class="col-lg-8 col-md-12">
+    {{-- <div class="col-lg-8 col-md-12">
         <div class="card h-100">
             <div class="card-body">
                 <div class="d-flex">
@@ -45,7 +41,7 @@
                     </div>
                     <div class="ms-3">
                         <p class="text-muted mb-0">Formularios con hallazgos</p>
-                        <h4 class="">{{negativeResponseCount(['companies'=>company()->id])}} {{--<sup class="text-success fw-medium font-size-14"><i class="mdi mdi-arrow-down"></i> 10%</sup>--}}</h4>
+                        <h4 class="">{{negativeResponseCount(['companies'=>company()->id])}} </h4>
                     </div>
                 </div>
                 <div>
@@ -61,19 +57,18 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 </div>
 
     
-    <div class="row mt-2">
-        {{-- Card de bienvenida --}}
+    <div class="row mt-1">
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card">
                 <div class="card-body">
                     <div class="avatar">
-                                <span class="avatar-title bg-soft-primary rounded">
-                                    <i class="mdi mdi-bus-articulated-front text-primary font-size-24"></i>
+                                <span class="avatar-title bg-soft-success rounded">
+                                    <i class="mdi mdi-format-list-numbered-rtl text-primary font-size-24"></i>
                                 </span>
                     </div>
                     <p class="text-muted mt-4 mb-0">Formularios Activos</p>
@@ -81,13 +76,13 @@
                 </div>
             </div>
         </div>
-
+    
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card">
                 <div class="card-body">
                     <div class="avatar">
                                 <span class="avatar-title bg-soft-primary rounded">
-                                    <i class="mdi mdi-bus-articulated-front text-primary font-size-24"></i>
+                                    <i class="mdi mdi-clipboard-list-outline text-primary font-size-24"></i>
                                 </span>
                     </div>
                     <p class="text-muted mt-4 mb-0">Formularios contestados hoy</p>
@@ -95,12 +90,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-12">
+        
+        <div class="col-lg-4 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-body"  style="max-height: 250px;">
                     <div class="avatar">
-                                <span class="avatar-title bg-soft-primary rounded">
-                                    <i class="mdi mdi-bus-articulated-front text-primary font-size-24"></i>
+                                <span class="avatar-title bg-soft-info rounded">
+                                    <i class="mdi mdi-list-status text-primary font-size-24"></i>
                                 </span>
                     </div>
                     <p class="text-muted mt-4 mb-0">Formularios contestados con hallazgos hoy</p>
@@ -140,25 +136,21 @@
 
 
     <div class="row">
-        <div class="p-4 border-top">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="d-flex flex-wrap align-items-center">
-                                <h5 class="card-title mb-0">Respuestas x colaborador con cantidad de hallazgos</h5>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex flex-wrap align-items-center">
+                        <h5 class="card-title mb-0">Respuestas x colaborador con cantidad de hallazgos</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="position-relative">
+                        <div class="modal-button mt-2">
+                            <div class="row align-items-start">
                             </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="position-relative">
-                                <div class="modal-button mt-2">
-                                    <div class="row align-items-start">
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="table-response"></div>
                         </div>
                     </div>
+                    <div id="table-response"></div>
                 </div>
             </div>
         </div>
@@ -215,7 +207,7 @@
                     },
                     {
                         id: 'negative_num',
-                        name: 'Respuestas negativas',
+                        name: 'Hallazgos',
                         width: '150px',
                     },
                     {

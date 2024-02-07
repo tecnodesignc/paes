@@ -17,7 +17,6 @@
                                disabled {{$fiel->value ===2?'checked':""}}>
                         <label class="btn btn-outline-dark" for="btnradio6">N/A</label>
                     </div>
-
                 </td>
                 <td>
                     @if(isset($fiel->image))
@@ -35,7 +34,6 @@
             @break
         @case(1)
             <tr>
-                {{-- hola {{$fiel->type}} --}}
                 <th scope="row">{{$fiel->label}}</th>
                 <td>
                     <div>
@@ -65,6 +63,66 @@
             </tr>
             @break
         @case(4)
+            <tr>
+                <th scope="row">{{$fiel->label}}</th>
+                <td>
+                    <div>
+                        <p class="text-muted mb-0">{{$fiel->value}}</p>
+                    </div>
+                </td>
+            </tr>
+            @break
+        @case(6)
+            <tr>
+                <th scope="row">{{$fiel->label}}</th>
+                <td>
+                    <div>
+                        <p class="text-muted mb-0">{{$fiel->value}}</p>
+                    </div>
+                </td>
+            </tr>
+            @break
+        @case(7)
+            <tr>
+                <th scope="row">{{$fiel->label}}</th>
+                <td>
+                    <div>
+                        <p class="text-muted mb-0">{{$fiel->value}}</p>
+                    </div>
+                </td>
+            </tr>
+            @break
+        @case(8)
+            <tr>
+                <th scope="row">{{$fiel->label}}</th>
+                <td>
+                    <div>
+                        <p class="text-muted mb-0">{{$fiel->value}}</p>
+                    </div>
+                </td>
+            </tr>
+            @break
+        @case(9)
+            <tr>
+                <th scope="row">{{$fiel->label}}</th>
+                <td>
+                    <div>
+                        <p class="text-muted mb-0">{{$fiel->value}}</p>
+                    </div>
+                </td>
+            </tr>
+            @break
+        @case(10)
+            <tr>
+                <th scope="row">{{$fiel->label}}</th>
+                <td>
+                    <div>
+                        <p class="text-muted mb-0">{{$fiel->value}}</p>
+                    </div>
+                </td>
+            </tr>
+            @break
+        @case(11)
             <tr>
                 <th scope="row">{{$fiel->label}}</th>
                 <td>

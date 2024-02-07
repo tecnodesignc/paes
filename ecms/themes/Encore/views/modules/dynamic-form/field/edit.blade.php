@@ -65,7 +65,7 @@
                                                        placeholder="Agrega la etiqueta al campo"
                                                        type="text"
                                                        value="{{old('label',$field->label)}}"
-                                                       class="form-control">
+                                                       class="form-control" required>
                                                 {!! $errors->first('label', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("order") ? ' was-validated' : '' }}">
@@ -81,7 +81,7 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label">Tipo de Campo</label>
-                                                <select class="form-select shadow-none" name="type" id="type" required>
+                                                <select class="form-select shadow-none" name="type" id="type" required placeholder="--Seleccione--">
                                                     <option value="0" {{ $field->type == 0 ? 'selected' : '' }}>Texto</option>
                                                     <option value="1" {{ $field->type == 1 ? 'selected' : '' }}>Área de Texto</option>
                                                     <option value="2" {{ $field->type == 2 ? 'selected' : '' }}>Número</option>
@@ -92,8 +92,8 @@
                                                     <option value="7" {{ $field->type == 7 ? 'selected' : '' }}>Selector Múltiple</option>
                                                     <option value="8" {{ $field->type == 8 ? 'selected' : '' }}>Imagen</option>
                                                     <option value="9" {{ $field->type == 9 ? 'selected' : '' }}>Firma</option>
-                                                    <option value="10" {{ $field->type == 10 ? 'selected' : '' }}>Caja de Selección</option>
-                                                    <option value="11" {{ $field->type == 11 ? 'selected' : '' }}>Opciones</option>
+                                                    <option value="10" {{ $field->type == 10 ? 'selected' : '' }}>Opciones</option>
+                                                    <option value="11" {{ $field->type == 11 ? 'selected' : '' }}>Estados</option>
                                                 </select>
                                             </div>
 
@@ -140,7 +140,14 @@
     <script src="{{ Theme::url('libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{Theme::url('libs/choices.js/choices.js.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <script type="application/javascript">
+             document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                // Cancela el envío del formulario
+                event.preventDefault();
+            }
+        });
         document.addEventListener("DOMContentLoaded", function (event) {
             // Aquí comienza el nuevo código
             let token = "{{$currentUser->getFirstApiKey() }}";
@@ -149,13 +156,29 @@
                 duplicateItemsAllowed: false,
                 editItems: true,
             });
-            
-            $('#type').change(function () {
-                if (this.value === '6' || this.value === '7' || this.value === '10' || this.value === '11') {
+
+            // Función para actualizar la visibilidad y opciones del campo de opciones del campo
+            function updateOptionsFieldVisibilityAndOptions() {
+                var typeValue = $('#type').val();
+                if (typeValue === '6' || typeValue === '7' || typeValue === '10' || typeValue === '11') {
                     $('#limits').css('display', 'block');
                 } else {
                     $('#limits').css('display', 'none');
                 }
+
+                // Mostrar las opciones específicas cuando se selecciona 'Estados'
+                if (typeValue === '11') {
+                    textUniqueVals.removeActiveItems();
+                    textUniqueVals.setValue(['BUENO','REGULAR','MALO','NO APLICA', 'NO TIENE'])
+                }
+            }
+
+            // Llamada a la función para actualizar la visibilidad y opciones del campo cuando se carga la página
+            updateOptionsFieldVisibilityAndOptions();
+
+            // Escuchar cambios en el campo de selección de tipo
+            $('#type').change(function () {
+                updateOptionsFieldVisibilityAndOptions();
             });
         });
     </script>
