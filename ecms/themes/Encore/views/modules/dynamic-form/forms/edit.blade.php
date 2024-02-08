@@ -149,6 +149,16 @@
         </div>
     </div>
     {{-- FIN DEL COMPONENTE DEL FORMULARIO --}}
+    
+    {{-- BOTONES DE ACCIONES --}}
+    <div class="row mb-4">
+        <div class="col text-end">
+            <a href="{{route('dynamicform.form.index')}}" class="btn btn-danger"> <i class="bx bx-x me-1"></i> Cancelar </a>
+            <button type="submit" class="btn btn-success"><i class=" bx bx-file me-1"></i> Guardar</button>
+        </div> 
+    </div>
+    {{-- FIN DE BOTONES DE ACCIONES --}}
+    {!! Form::close() !!}
 
     {{-- COMPONENTE DE PREGUNTAS --}}
     <div class="row">
@@ -215,15 +225,6 @@
     </div>
     {{-- FIN DEL COMPONENTE DE PREGUNTAS --}}
 
-    {{-- BOTONES DE ACCIONES --}}
-    <div class="row mb-4">
-        <div class="col text-end">
-            <a href="{{route('dynamicform.form.index')}}" class="btn btn-danger"> <i class="bx bx-x me-1"></i> Cancelar </a>
-            <button type="submit" class="btn btn-success"><i class=" bx bx-file me-1"></i> Guardar</button>
-        </div> 
-    </div>
-    {{-- FIN DE BOTONES DE ACCIONES --}}
-    {!! Form::close() !!}
 
     <!-- MODAL PARA MOSTRAR LA TABLA DE FILES-->
 <div class="modal fade" id="table-modal" tabindex="-1" role="dialog" aria-labelledby="table-modal-label" aria-hidden="true">
@@ -375,12 +376,13 @@
                     {
                         id: "id",
                         name: "Action",
-                        width: '150px',
+                        width: '110px',
                         sort: {
                             enabled: false
                         },
                         formatter: (function (cell) {
-                            return gridjs.html('<div class="d-flex gap-3"><a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'
+                            return gridjs.html('<div class="d-flex gap-3">'
+                                + '<a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success"><i class="mdi mdi-clipboard-edit-outline mdi-24px" ></i></a>'
                                 + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" class="text-danger"  onclick="deleteField(event, '+ cell +')" ><i class="mdi mdi-delete mdi-24px"></i></a>'
                                 + '<a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/orden/1" data-bs-toggle="tooltip" data-bs-placement="top" title="Subir" class="text-secondary"><i class="mdi mdi-arrow-up-bold-circle-outline mdi-24px"></i></a>'
                                 + '<a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/orden/-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Bajar" class="text-secondary"><i class="mdi mdi-arrow-down-bold-circle-outline mdi-24px"></i></a>'
@@ -390,7 +392,7 @@
 
                 ],
             pagination: {
-                limit: 12,
+                limit: 10,
                 server: {
                     url: (prev, page, limit) => `${prev}&limit=${limit}&page=${page + 1}`
                 }
@@ -436,11 +438,9 @@
                 .then(response => {
                     // Verificar si la solicitud fue exitosa
                     if (response.status === 200) {
-                        // Manejar la respuesta si la eliminación fue exitosa
-                        console.log(response.data);
                         alert('Campo eliminado exitosamente');
-                        // Aquí puedes actualizar la tabla después de la eliminación
-                        // mygrid.forceRender();
+                        // Actualizamos la tabla después de la eliminación
+                        mygrid.forceRender();
                     } else {
                         // Manejar el caso en que la solicitud no fue exitosa
                         throw new Error('Error al eliminar el campo');
@@ -453,7 +453,6 @@
                 });
             }
         }
-
 
     </script>
     {{-- FIN DE JS DEL RENDERIZADO DE LA TABLA DE CAMPOS --}}

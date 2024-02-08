@@ -9,16 +9,20 @@ use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\Dynamicform\Entities\Form;
 use Modules\Dynamicform\Http\Requests\CreateFormRequest;
 use Modules\Dynamicform\Http\Requests\UpdateFormRequest;
+use Modules\Dynamicform\Repositories\FieldRepository;
 use Modules\Dynamicform\Repositories\FormRepository;
 use Illuminate\Http\Request;
 class FormController extends AdminBaseController
 {
     private FormRepository $form;
+    private FieldRepository $field;
+
   
-    public function __construct(FormRepository $form)
+    public function __construct(FormRepository $form, FieldRepository $field)
     {
         parent::__construct();
         $this->form=$form;
+        $this->field=$field;
 
     }
 
@@ -31,6 +35,28 @@ class FormController extends AdminBaseController
     {
 
         return view('modules.dynamic-form.forms.index');
+    }
+
+       /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  Form $form
+     * @return Response
+     */
+    public function show(Form $form) :Factory|View
+    {   
+
+        $params = json_decode(json_encode([
+            'filter' => [
+                'form_id' => $form->id,
+                'order'=>['field'=>'order','way'=>'asc']
+                ], 
+            'include' => ['*'], 'page' => 1, 'take' => 10000
+        ]));
+
+        $datos = $this->field->getItemsBy($params);
+        $datos = $datos->items();
+        return view('modules.dynamic-form.forms.show', compact('datos'));
     }
 
     /**
@@ -67,7 +93,7 @@ class FormController extends AdminBaseController
      * @param  Form $form
      * @return Response
      */
-    public function edit(Form $form)
+    public function edit(Form $form) :Factory|View
     {
         return view('modules.dynamic-form.forms.edit', compact('form'));
     }

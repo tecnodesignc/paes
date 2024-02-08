@@ -152,11 +152,10 @@
                         },
                         width: '150px',
                         formatter: (function (cell) {
-                            return gridjs.html('<div class="d-flex justify-content-center align-items-center gap-4">' +
-                                '<a href="/preoperativo/form/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success btn-lg">' +
-                                '<i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'+ 
-                                '<a href="/preoperativo/form/' + cell + '/borrar" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger btn-lg">' +
-                                '<i class="mdi mdi-delete mdi-24px"></i></a></div>');
+                            return gridjs.html('<div class="d-flex justify-content-center align-items-center gap-4">' 
+                                + '<a href="/preoperativo/form/'+ cell + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Vista previa" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a>'
+                                + '<a href="/preoperativo/form/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success btn-lg"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>' 
+                                + '<a href="/preoperativo/form/' + cell + '/borrar" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger btn-lg"><i class="mdi mdi-delete mdi-24px"></i></a></div>');
                         })
                     },
            

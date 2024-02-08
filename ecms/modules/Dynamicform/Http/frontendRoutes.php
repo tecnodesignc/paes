@@ -14,6 +14,11 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             'uses' => 'FormController@index',
             'middleware' => 'can:dynamicform.forms.index'
         ]);
+        $router->get('/{form}/show', [
+            'as' => 'dynamicform.form.show',
+            'uses' => 'FormController@show',
+            // 'middleware' => 'can:dynamicform.forms.show'
+        ]);
         $router->get('/create', [
             'as' => 'dynamicform.form.create',
             'uses' => 'FormController@create',
@@ -37,7 +42,7 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
         $router->put('/{form}/borrar', [
             'as' => 'dynamicform.form.destroy',
             'uses' => 'FormController@destroy',
-            // 'middleware' => 'can:dynamicform.forms.destroy'
+            'middleware' => 'can:dynamicform.forms.destroy'
         ]);
     
 

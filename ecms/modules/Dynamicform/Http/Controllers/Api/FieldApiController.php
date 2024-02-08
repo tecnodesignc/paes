@@ -37,7 +37,13 @@ class FieldApiController extends Controller
         try {
             $includes = explode(',', $request->input('include'));
 
-            $params = json_decode(json_encode(['filter' => ['search' => $request->input('search'), 'companies' => $request->input('companies'), 'form_id' => $form->id, 'order'=>$request->input('order')], 'include' => $includes, 'page' => $request->input('page'), 'take' => $request->input('limit')]));
+            $params = json_decode(json_encode(['filter' => [
+                'search' => $request->input('search'), 
+                'companies' => $request->input('companies'), 
+                'form_id' => $form->id,
+                'order'=>$request->input('order')
+            ], 
+            'include' => $includes, 'page' => $request->input('page'), 'take' => $request->input('limit')]));
 
             $fields = $this->field->getItemsBy($params);
 

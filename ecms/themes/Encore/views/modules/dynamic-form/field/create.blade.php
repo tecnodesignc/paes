@@ -61,7 +61,7 @@
                                         <div class="card-body">
                                             <div class="mb-3 {{ $errors->has('label') ? 'was-validated' : '' }}">
                                                 <label class="form-label" for="label"><strong>*</strong>Etiqueta</label>
-                                                <input id="label" name="label" placeholder="Agrega la etiqueta al campo" type="text" value="{{ old('label') }}" class="form-control">
+                                                <input id="label" name="label" placeholder="Agrega la etiqueta al campo" type="text" value="{{ old('label') }}" class="form-control" required>
                                                 {!! $errors->first('label', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has('order') ? 'was-validated' : '' }}">
@@ -83,7 +83,7 @@
                                                     <option value="8">Imagen</option>
                                                     <option value="9">Firma</option>
                                                     <option value="10">Opciones</option>
-                                                    <option value="11" title="B/M/Na">Estados</option>
+                                                    <option value="11">Estados</option>
                                                 </select>
                                             </div>
                                             <div class="checkbox {{ $errors->has('required') ? 'was-validated' : '' }}">
@@ -95,7 +95,7 @@
                                             </div>
                                             <div id="limits" class="mb-3" style="display: none;">
                                                 <label for="selectable" class="form-label font-size-13 text-muted"><strong>*</strong>Opciones del Campo</label>
-                                                <input class="form-control" id="selectable" name="selectable[]" type="text" value="{{ old('selectable') }}" placeholder="Agregar Opciones" required>
+                                                <input class="form-control" id="selectable" name="selectable[]" type="text" value="{{ old('selectable') }}" placeholder="Agregar Opciones">
                                                 {!! $errors->first('selectable', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                         </div>
@@ -146,16 +146,17 @@
             function updateOptionsFieldVisibilityAndOptions() {
                 var typeValue = $('#type').val();
                 if (typeValue === '6' || typeValue === '7' || typeValue === '10' || typeValue === '11') {
+                    // Mostrar las opciones específicas cuando se selecciona 'Estados'
+                    if (typeValue === '11') {
+                        textUniqueVals.removeActiveItems();
+                        textUniqueVals.setValue(['BUENO','REGULAR','MALO','NO APLICA', 'NO TIENE'])
+                    }
                     $('#limits').css('display', 'block');
                 } else {
                     $('#limits').css('display', 'none');
                 }
 
-                // Mostrar las opciones específicas cuando se selecciona 'Estados'
-                if (typeValue === '11') {
-                    textUniqueVals.removeActiveItems();
-                    textUniqueVals.setValue(['BUENO','REGULAR','MALO','NO APLICA', 'NO TIENE'])
-                }
+              
             }
 
             // Llamada a la función para actualizar la visibilidad y opciones del campo cuando se carga la página
