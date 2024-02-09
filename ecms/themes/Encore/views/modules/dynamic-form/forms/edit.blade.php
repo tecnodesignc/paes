@@ -178,7 +178,7 @@
                             </div>
                             <div class="flex-grow-1 overflow-hidden">
                                 <h5 class="font-size-16 mb-1">Agregar campos</h5>
-                                <p class="text-muted text-truncate mb-0">Configuracion de filas del formulario</p>
+                                <p class="text-muted text-truncate mb-0">Configuracion de campos del formulario</p>
                             </div>
                             <div class="flex-shrink-0">
                                 <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
@@ -199,9 +199,17 @@
                                                 <div class="row align-items-start">
                                                     <div class="col-sm">
                                                         <div>
+                                                            
+                                                            <a href="{{route('dynamicform.form.show',[$form->id])}}"
+                                                                title="Vista previa" 
+                                                                class="btn btn-info waves-effect waves-light mb-2 me-2">
+                                                                <i class="mdi mdi-eye-outline me-1"></i>Vista previa
+                                                            </a>
+
                                                             <a href="{{route('dynamicform.field.create',[$form->id])}}"
-                                                               class="btn btn-primary waves-effect waves-light mb-2 me-2"
-                                                               id="add-file">
+                                                                title="Agregar campos"
+                                                                class="btn btn-primary waves-effect waves-light mb-2 me-2"
+                                                                id="add-file">
                                                             <i class="mdi mdi-plus me-1"></i> Agregar </a>
                                                                 
                                                             {{-- <button type="button" class="btn btn-primary waves-effect waves-light mb-2 me-2" id="open-modal-button" data-bs-toggle="modal" data-bs-target="#table-modal">

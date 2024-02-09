@@ -55,7 +55,22 @@ class FormController extends AdminBaseController
         ]));
 
         $datos = $this->field->getItemsBy($params);
+   
         $datos = $datos->items();
+        // dd($datos[0]->selectable[0]);
+                // Valor original
+        // $value = 'BUENO,REGULAR, MALO,NO APLICA,NO TIENE';
+
+        // Convertir la cadena en un array usando la coma como delimitador
+        // $options = explode(',', $value);
+        // $options = json_decode(json_encode($datos->items(), true));
+        // foreach ($options as $key => $value) {
+         
+        //     foreach ($value->selectable as $value) {
+        //         dd(  $split = explode(',', $value));
+        //     }
+        // }
+        // dd($options);
         return view('modules.dynamic-form.forms.show', compact('datos'));
     }
 
