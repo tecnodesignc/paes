@@ -120,7 +120,6 @@
                                                            value="{{old('icon', $form->icon)}}"
                                                            class="form-control"
                                                            data-placement="bottomRight"
-
                                                     >
                                                     <span class="input-group-addon input-group-text"></span>
                                                 </div>
@@ -137,7 +136,7 @@
                                                     Activo
                                                     {!! $errors->first('active', '<div class="invalid-feedback">:message</div>') !!}
                                                 </label>
-                                            </div>                                            
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -149,13 +148,13 @@
         </div>
     </div>
     {{-- FIN DEL COMPONENTE DEL FORMULARIO --}}
-    
+
     {{-- BOTONES DE ACCIONES --}}
     <div class="row mb-4">
         <div class="col text-end">
             <a href="{{route('dynamicform.form.index')}}" class="btn btn-danger"> <i class="bx bx-x me-1"></i> Cancelar </a>
             <button type="submit" class="btn btn-success"><i class=" bx bx-file me-1"></i> Guardar</button>
-        </div> 
+        </div>
     </div>
     {{-- FIN DE BOTONES DE ACCIONES --}}
     {!! Form::close() !!}
@@ -199,9 +198,9 @@
                                                 <div class="row align-items-start">
                                                     <div class="col-sm">
                                                         <div>
-                                                            
+
                                                             <a href="{{route('dynamicform.form.show',[$form->id])}}"
-                                                                title="Vista previa" 
+                                                                title="Vista previa"
                                                                 class="btn btn-info waves-effect waves-light mb-2 me-2">
                                                                 <i class="mdi mdi-eye-outline me-1"></i>Vista previa
                                                             </a>
@@ -211,11 +210,11 @@
                                                                 class="btn btn-primary waves-effect waves-light mb-2 me-2"
                                                                 id="add-file">
                                                             <i class="mdi mdi-plus me-1"></i> Agregar </a>
-                                                                
+
                                                             {{-- <button type="button" class="btn btn-primary waves-effect waves-light mb-2 me-2" id="open-modal-button" data-bs-toggle="modal" data-bs-target="#table-modal">
                                                                 <i class="mdi mdi-calendar me-1"></i> Importar campos
                                                             </button> --}}
-                                                            
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -233,38 +232,36 @@
     </div>
     {{-- FIN DEL COMPONENTE DE PREGUNTAS --}}
 
-
     <!-- MODAL PARA MOSTRAR LA TABLA DE FILES-->
-<div class="modal fade" id="table-modal" tabindex="-1" role="dialog" aria-labelledby="table-modal-label" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="table-modal-label">Tabla de Campos</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
+    <div class="modal fade" id="table-modal" tabindex="-1" role="dialog" aria-labelledby="table-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="table-modal-label">Tabla de Campos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
 
-                <div class="position-relative">
-                    <div class="modal-button mt-2">
-                        <div class="row align-items-start">
-                            <div class="col-sm">
-                                <div>
-                                    <a href="{{route('dynamicform.field.create',[$form->id])}}"
-                                       class="btn btn-primary waves-effect waves-light mb-2 me-2"
-                                       id="add-file">
-                                    <i class="mdi mdi-plus me-1"></i> Agregar </a>
+                    <div class="position-relative">
+                        <div class="modal-button mt-2">
+                            <div class="row align-items-start">
+                                <div class="col-sm">
+                                    <div>
+                                        <a href="{{route('dynamicform.field.create',[$form->id])}}"
+                                        class="btn btn-primary waves-effect waves-light mb-2 me-2"
+                                        id="add-file">
+                                        <i class="mdi mdi-plus me-1"></i> Agregar </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div id="table-fields2"></div>
                 </div>
-                <div id="table-fields2"></div>
             </div>
         </div>
     </div>
-</div>
-<!-- FIN MODAL -->
-
+    <!-- FIN MODAL -->
 
 @endsection
 @section('script')
@@ -366,7 +363,7 @@
                         id: 'label',
                         name: 'Etiqueta',
                         width: '400px',
-                    },          
+                    },
                     {
                         id: 'required',
                         name: 'Requerido',
@@ -392,8 +389,8 @@
                             return gridjs.html('<div class="d-flex gap-3">'
                                 + '<a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success"><i class="mdi mdi-clipboard-edit-outline mdi-24px" ></i></a>'
                                 + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" class="text-danger"  onclick="deleteField(event, '+ cell +')" ><i class="mdi mdi-delete mdi-24px"></i></a>'
-                                + '<a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/orden/1" data-bs-toggle="tooltip" data-bs-placement="top" title="Subir" class="text-secondary"><i class="mdi mdi-arrow-up-bold-circle-outline mdi-24px"></i></a>'
-                                + '<a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/orden/-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Bajar" class="text-secondary"><i class="mdi mdi-arrow-down-bold-circle-outline mdi-24px"></i></a>'
+                                + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Subir" class="text-secondary" onclick="orderField(event, '+ cell +',1)"><i class="mdi mdi-arrow-up-bold-circle-outline mdi-24px"></i></a>'
+                                + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Bajar" class="text-secondary" onclick="orderField(event, '+ cell +',-1)"><i class="mdi mdi-arrow-down-bold-circle-outline mdi-24px"></i></a>'
                                 + '</div>');
                         })
                     }
@@ -423,7 +420,7 @@
                 },
                 then: data => data.data,
                 total: data => data.meta.page.total
-            },   
+            },
             style: {
                 table: {
                     'overflow-x': 'auto',  // scrolling horizontal
@@ -462,6 +459,34 @@
             }
         }
 
+        function orderField(event,field, order) {
+            event.preventDefault();
+            // Realizar la solicitud con Axios
+            axios.get(`/preoperativo/form/{{$form->id}}/field/${field}/orden/${order}`,{
+                headers: {
+                    'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                // Verificar si la solicitud fue exitosa
+                if (response.status === 200) {
+                    console.log('Campo ordenado exitosamente');
+                    // Actualizamos la tabla después de ordenar
+                    mygrid.forceRender();
+                } else {
+                    // Manejar el caso en que la solicitud no fue exitosa
+                    // console.log(response.status);
+                    throw new Error('Error al ordenar el campo');
+                }
+            })
+            .catch(error => {
+                // Manejar errores
+                // console.error(error);
+                alert('Error al ordenar el campo');
+            });
+        }
+
     </script>
     {{-- FIN DE JS DEL RENDERIZADO DE LA TABLA DE CAMPOS --}}
 
@@ -482,7 +507,7 @@
     //     });
     // });
 
- 
+
 
 // function renderizarTabla() {
     // const loading = new Loader();
@@ -519,7 +544,7 @@
     //                     id: 'label',
     //                     name: 'Etiqueta',
 
-    //                 },          
+    //                 },
     //                 {
     //                     id: 'required',
     //                     name: 'Requerido',
@@ -549,18 +574,9 @@
     //                 url: (prev, keyword) => `${prev}&search=${keyword}`
     //             }
     //         },
-    //         server: {
-    //             @php
-    //                 $params=['include'=>'form','form'=>$form->id, 'order'=>['field'=>'order','way'=>'asc']];
-    //             @endphp
-    //             url: '{!!route('api.dynamicform.field.index',$params)!!}',
-    //             headers: {
-    //                 Authorization: `Bearer {{$currentUser->getFirstApiKey()}}`,
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             then: data => data.data,
-    //             total: data => data.meta.page.total
-    //         },
+
+
+
     //         style: {
     //             table: {
     //                 'overflow-x': 'auto',  // scrolling horizontal
@@ -569,7 +585,7 @@
     //         },
     //     }).render(document.getElementById("table-fields2"));
     // }
-</script>
+    </script>
 
 
     <style>

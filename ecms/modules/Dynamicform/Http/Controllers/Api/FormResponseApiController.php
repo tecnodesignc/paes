@@ -48,10 +48,10 @@ class FormResponseApiController extends Controller
 
             $params = json_decode(json_encode(['filter' =>
              [
-                'search' => $request->input('search'), 
+                'search' => $request->input('search'),
                 'companies' => $request->input('companies'),
-                'form_id' => $request->input('form_id')            
-            ], 
+                'form_id' => $request->input('form_id')
+            ],
              'include' => $includes, 'page' => $request->input('page'), 'take' => $request->input('limit')]));
 
             $formresponses = $this->formresponse->getItemsBy($params);

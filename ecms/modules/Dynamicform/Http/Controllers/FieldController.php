@@ -5,6 +5,7 @@ namespace Modules\Dynamicform\Http\Controllers;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\Dynamicform\Entities\Field;
 use Modules\Dynamicform\Http\Requests\CreateFieldRequest;
@@ -67,8 +68,6 @@ class FieldController extends AdminBaseController
      */
     public function update($formId, Field $field, UpdateFieldRequest $request)
     {
-
-        // dd($request);
         $this->field->update($field, $request->all());
 
         return redirect()->route('dynamicform.form.edit', $field->form_id)->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicfield::fields.title.fields')]));
@@ -85,34 +84,58 @@ class FieldController extends AdminBaseController
     {
         $this->field->destroy($field);
 
-        // return redirect()->route('dynamicform.form.edit',[$form->id])->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('dynamicfield::fields.title.fields')]));
         return response()->json(['message' => trans('core::core.messages.resource deleted', ['name' => trans('dynamicfield::fields.title.fields')])]);
     }
     
     /**
      * Update the specified resource in storage.
      *
+     * @param $formId
      * @param  Field $field
-     * @param  UpdateFieldRequest $request
-     * @return Response
+     * @param  Request $request
+     * @return JSON
      */
-    public function orden($formId, Field $field, UpdateFieldRequest $request, $ordenValue)
+
+    public function orden($formId, Field $field, Request $request, $ordenValue)
     {
-        if (isset($ordenValue) && $ordenValue == 1) {
-            // $campo_anterior = Field::find($field->id-1);
-            if($field->order > 1 ){
-                $this->field->update($field, ['order'=> $field->order - 1]);
+        // Verificar si el valor de orden es válido (1 para aumentar, -1 para disminuir)
+        if (isset($ordenValue) && in_array($ordenValue, [1, -1])) {
+            // Obtener todos los campos ordenados por su orden actual
+            $params = json_decode(json_encode([
+                'filter' => [
+                    'form_id' => $formId->id,
+                    'order'=>['field'=>'order','way'=>'desc']
+                    ], 
+                'include' => ['*'], 'page' => 1, 'take' => 10000
+            ]));
+    
+            $fiels = $this->field->getItemsBy($params);
+
+            // Encontrar el índice del campo actual en la colección de todos los campos
+            $index = $fiels->search(function ($item) use ($field) {
+                return $item->id == $field->id;
+            });
+    
+            // Verificar si el campo actual está en la colección de campos
+            if ($index !== false) {
+                // Calcular el nuevo índice del campo después de moverlo hacia arriba o hacia abajo
+                $newIndex = $index + $ordenValue;
+    
+                // Asegurarse de que el nuevo índice esté dentro de los límites de la colección
+                if ($newIndex >= 0 && $newIndex < $fiels->count()) {
+                    // Intercambiar los valores de orden del campo actual y el campo en el nuevo índice
+                    $currentOrder = $field->order;
+                    $field->order = $fiels[$newIndex]->order;
+                    $field->save();
+    
+                    $fiels[$newIndex]->order = $currentOrder;
+                    $fiels[$newIndex]->save();
+                }
             }
-            // $this->field->update($campo_anterior, ['order'=> $campo_anterior->order+1]);
-        }
-        if (isset($ordenValue) && $ordenValue == -1) {
-            // $campo_siguiente = Field::find($field->id+1);
-            $this->field->update($field, ['order'=> $field->order + 1]);
-            // $this->field->update($campo_siguiente, ['order'=> $campo_siguiente->order-1]);
         }
     
-        return redirect()->route('dynamicform.form.edit', $field->form_id)->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicfield::fields.title.fields')]));
-
+        return response()->json(['message' => trans('core::core.messages.resource updated', ['name' => trans('dynamicfield::fields.title.fields')])]);
     }
+    
 
 }

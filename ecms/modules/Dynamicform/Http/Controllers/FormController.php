@@ -17,7 +17,7 @@ class FormController extends AdminBaseController
     private FormRepository $form;
     private FieldRepository $field;
 
-  
+
     public function __construct(FormRepository $form, FieldRepository $field)
     {
         parent::__construct();
@@ -37,6 +37,28 @@ class FormController extends AdminBaseController
         return view('modules.dynamic-form.forms.index');
     }
 
+        /**
+     * Display a listing of the resource.
+     *
+     * @return Application|Factory|View
+     */
+    public function indexcolaboradoresform():Application|Factory|View
+    {
+        //consulta para los formularios
+        $params_form = json_decode(json_encode([
+            'filter' => [
+                'companies' => company()->id?company()->id:array_values(companies()->map(function ($company){
+                    return $company->id;
+                })->toArray()),
+                'status' => 1
+            ],  'include' => ['*'], 'page' => 1, 'take' => 10000
+        ]));
+
+        $forms=$this->form->getItemsBy($params_form);
+
+        return view('modules.dynamic-form.forms.indexcolaboradoresform', compact('forms'));
+    }
+
        /**
      * Show the form for editing the specified resource.
      *
@@ -44,34 +66,19 @@ class FormController extends AdminBaseController
      * @return Response
      */
     public function show(Form $form) :Factory|View
-    {   
+    {
 
         $params = json_decode(json_encode([
             'filter' => [
                 'form_id' => $form->id,
                 'order'=>['field'=>'order','way'=>'asc']
-                ], 
+                ],
             'include' => ['*'], 'page' => 1, 'take' => 10000
         ]));
 
         $datos = $this->field->getItemsBy($params);
-   
         $datos = $datos->items();
-        // dd($datos[0]->selectable[0]);
-                // Valor original
-        // $value = 'BUENO,REGULAR, MALO,NO APLICA,NO TIENE';
-
-        // Convertir la cadena en un array usando la coma como delimitador
-        // $options = explode(',', $value);
-        // $options = json_decode(json_encode($datos->items(), true));
-        // foreach ($options as $key => $value) {
-         
-        //     foreach ($value->selectable as $value) {
-        //         dd(  $split = explode(',', $value));
-        //     }
-        // }
-        // dd($options);
-        return view('modules.dynamic-form.forms.show', compact('datos'));
+        return view('modules.dynamic-form.forms.show', compact('form','datos'));
     }
 
     /**

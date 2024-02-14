@@ -14,7 +14,7 @@
             Formularios
         @endslot
         @slot('title')
-           Vista previa
+           Contestar Formulario
         @endslot
     @endcomponent
     {{-- Cabecera donde irá el título y la empresa del formulario --}}
@@ -25,6 +25,43 @@
             </div>
         </div>
     </div>
+
+    {!! Form::open(['route' => ['dynamicform.formresponses.store', $form], 'method' => 'post', 'class'=>'needs-validation']) !!}
+    @csrf
+    <div class="row">
+        <div class="card border border-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <h5 class="text-truncate font-size-18 mb-1">Nombre completo:</h5>
+                        <input type="text" name="fullName" id="" value="{{ucfirst($currentUser->present()->fullName())}}" class="form-control" readonly>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <h5 class="text-truncate font-size-18 mb-1">Identificación:</h5>
+                        <input type="text" name="identification" id="" value="" class="form-control" readonly>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-lg-6 col-sm-6">
+                        <h5 class="text-truncate font-size-18 mb-1">Vehículo:</h5>
+                        <select class="form-control" name="label">
+                            <option value="">--Seleccione--</option>
+                            {{-- @foreach($options as $option)
+                                <option value="{{ $option }}">{{ $option }}</option>
+                            @endforeach --}}
+                        </select>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <h5 class="text-truncate font-size-18 mb-1">Kilometraje:</h5>
+                        <input type="text" name="millage" id="" class="form-control">
+                    </div>
+                </div>
+        </div>
+    </div>
+
+
+    </div>
+
     {{-- Card de campos del formulario --}}
     <div class="row">
         <div class="card border border-primary">
@@ -36,6 +73,20 @@
             </div>
         </div>
     </div>
+    {{-- Card con los botones que guardan las respuestas --}}
+    <div class="row">
+        <div class="card border border-primary">
+            <div class="card-body">
+                <div class="d-flex gap-4 justify-content-center">
+                    <button class="btn btn-success" type="submit">Enviar respuestas</button>
+                    <button class="btn btn-danger" type="reset">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {!! Form::close() !!}
+
 @endsection
 @section('script')
     <script src="{{ Theme::url('libs/glightbox/glightbox.min.js') }}"></script>
@@ -47,6 +98,7 @@
 
         $(document).ready(function() {
             $('.form-select').select2({
+                // theme: 'bootstrap4',
                 placeholder: {id:'-1', text:"--Seleccione--"},
                 allowClear: true,
                 width: 'resolve' // need to override the changed default
@@ -191,6 +243,7 @@
             });
         });
 
+        //Apagamos la camara
         function cancelCamera(fieldId) {
             const video = document.getElementById('video-' + fieldId);
             const mediaStream = video.srcObject;
@@ -199,6 +252,70 @@
                 video.srcObject = null;
             }
         }
+
+    </script>
+    <script type="application/javascript">
+
+        // Recolectar los datos del formulario
+        function collectFormData() {
+        // Objeto para almacenar los datos del formulario
+        var formData = {
+            "info": {
+            "fullName": document.getElementById("fullName").value,
+            "identification": document.getElementById("identification").value,
+            "vehicle": {
+                "value": document.getElementById("vehicleValue").value,
+                "label": document.getElementById("vehicleLabel").value,
+                "millage": document.getElementById("vehicleMillage").value
+            }
+            },
+            "answers": []
+        };
+
+        // Recolectar respuestas de campos dinámicos
+        var fields = document.querySelectorAll(".dynamic-field");
+        fields.forEach(function(field) {
+            var fieldId = field.getAttribute("data-field-id");
+            var fieldType = field.getAttribute("data-field-type");
+            var fieldValue = "";
+
+            // Recolectar valor dependiendo del tipo de campo
+            switch (fieldType) {
+            case "text":
+            case "textarea":
+            case "number":
+            case "tel":
+            case "email":
+                fieldValue = field.value;
+                break;
+            case "radio":
+                var selectedRadio = field.querySelector("input[type=radio]:checked");
+                if (selectedRadio) {
+                fieldValue = selectedRadio.value;
+                }
+                break;
+            // Añadir más casos según sea necesario para otros tipos de campos
+            }
+
+            // Añadir respuesta al array de respuestas
+            formData.answers.push({
+            "field_id": fieldId,
+            "value": fieldValue
+            });
+        });
+
+        return formData;
+        }
+
+        // Evento para manejar el envío del formulario
+        document.getElementById("submitForm").addEventListener("click", function(event) {
+        event.preventDefault();
+        var formData = collectFormData();
+        console.log(formData); // Aquí puedes hacer lo que quieras con el objeto de datos
+        });
+
+
+
 
     </script>
 

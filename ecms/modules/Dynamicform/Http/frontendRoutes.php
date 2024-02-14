@@ -14,6 +14,11 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             'uses' => 'FormController@index',
             'middleware' => 'can:dynamicform.forms.index'
         ]);
+        $router->get('/colaboradores', [
+            'as' => 'dynamicform.form.indexcolaboradoresform',
+            'uses' => 'FormController@indexcolaboradoresform',
+            // 'middleware' => 'can:dynamicform.forms.indexcolaboradoresform'
+        ]);
         $router->get('/{form}/show', [
             'as' => 'dynamicform.form.show',
             'uses' => 'FormController@show',
@@ -44,7 +49,7 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             'uses' => 'FormController@destroy',
             'middleware' => 'can:dynamicform.forms.destroy'
         ]);
-    
+
 
         $router->group(['prefix' =>'/{form}/field'], function (Router $router) {
             $router->get('/create', [
@@ -96,6 +101,18 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
                 'as' => 'dynamicform.formresponses.show',
                 'uses' => 'ResponseController@show',
                 'middleware' => 'can:dynamicform.formresponses.edit'
+            ]);
+
+            $router->get('/create', [
+                'as' => 'dynamicform.formresponses.create',
+                'uses' => 'ResponseController@create',
+                // 'middleware' => 'can:dynamicform.formresponses.create'
+            ]);
+
+            $router->post('/', [
+                'as' => 'dynamicform.formresponses.store',
+                'uses' => 'ResponseController@store',
+                // 'middleware' => 'can:dynamicform.formresponses.create'
             ]);
 
             $router->get('/{form_response}/pdf', [

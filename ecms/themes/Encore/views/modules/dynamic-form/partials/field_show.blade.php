@@ -1,222 +1,366 @@
 @if(isset($field->type))
     @switch($field->type)
-    {{-- Input tipo si/no/no aplica --}}
+        {{-- Input tipo si/no/no aplica --}}
         @case(5)
-        <div class="row mt-3">
-            <div class="col-lg-6 col-md-12">
-                <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
-                <div class="btn-group border border-primary" role="group" aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-1" autocomplete="off"
-                            {{$field->value === 1 ? 'checked' : ''}}>
-                    <label class="btn btn-outline-dark  mb-0" for="btnradio-{{$field->id}}-1">Si</label>
+            <div class="row mt-3">
+                <div class="col-lg-6 col-md-12">
+                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <div class="btn-group border border-primary" role="group" aria-label="Basic radio toggle button group">
+                        <input type="radio" class="btn-check" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-1" autocomplete="off"
+                                {{$field->value === 1 ? 'checked' : ''}}>
+                        <label class="btn btn-outline-dark mb-0" for="btnradio-{{$field->id}}-1">Si</label>
 
-                    <input type="radio" class="btn-check" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-2" autocomplete="off"
-                            {{$field->value === 0 ? 'checked' : ''}}>
-                    <label class="btn btn-outline-dark  mb-0" for="btnradio-{{$field->id}}-2">No</label>
+                        <input type="radio" class="btn-check" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-2" autocomplete="off"
+                                {{$field->value === 0 ? 'checked' : ''}}>
+                        <label class="btn btn-outline-dark mb-0" for="btnradio-{{$field->id}}-2">No</label>
 
-                    <input type="radio" class="btn-check" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-3" autocomplete="off"
-                            {{$field->value === 2 ? 'checked' : ''}}>
-                    <label class="btn btn-outline-dark  mb-0" for="btnradio-{{$field->id}}-3">N/A</label>
+                        <input type="radio" class="btn-check" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-3" autocomplete="off"
+                                {{$field->value === 2 ? 'checked' : ''}}>
+                        <label class="btn btn-outline-dark mb-0" for="btnradio-{{$field->id}}-3">N/A</label>
+                    </div>
                 </div>
-            </div>
-            @if(isset($field->image))
-            <div class="col-lg-3 col-md-12">
-                    <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
-                        <div class="img-fluid">
-                            <img src="{{url($field->image)}}" alt="" class="img-fluid d-block">
+                <div class="col-lg-3 col-md-12 text-center">
+                    @if(isset($field->image))
+                        <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
+                            <div class="img-fluid">
+                                <img src="{{url($field->image)}}" alt="" class="img-fluid d-block">
+                            </div>
+                        </a>
+                    @else
+                    <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal-{{$field->id}}"><i class="fas fa-camera"></i></button>
+
+                    <!-- Modal para tomar la foto -->
+                    <div id="myModal-{{$field->id}}" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <h3 class="m-3">Subir imagen</h3>
+                                <div class="card m-3">
+                                    <div class="card-header bg-primary text-white d-flex justify-content-between">
+                                        <div>
+                                            <p>Subir imagen</p>
+                                        </div>
+                                        <button id="captureButton-{{$field->id}}" class="btn btn-primary" onclick="captureImage('{{$field->id}}')"><i class="fas fa-camera"></i></button>
+                                        <button id="uploadButton-{{$field->id}}" class="btn btn-info" onclick="uploadImage('{{$field->id}}')"><i class="fas fa-plus"></i></button>
+                                        <button id="switchCameraButton-{{$field->id}}" class="btn btn-secondary" onclick="switchCamera('{{$field->id}}')"> <i class="mdi mdi-sync-circle"></i></button>
+
+                                    </div>
+                                    <div class="card-body">
+                                        <video id="video-{{$field->id}}" width="240" height="240" autoplay></video>
+                                        <canvas id="canvas-{{$field->id}}" width="240" height="240" style="display: none;"></canvas>
+                                        <div id="gallery-{{$field->id}}"></div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <p class="waves-effect text-primary m-3 mt-1" data-bs-dismiss="modal" data-bs-target="#myModal-{{$field->id}}" onclick="cancelCamera('{{$field->id}}')">Cerrar camara</p>
+                                </div>
+                            </div>
                         </div>
-                    </a>
+                    </div>
+                    @endif
                 </div>
-                @endif
-            <div class="col-lg-3 col-md-12">
-                    <textarea class="form-control" id="btncomment-{{$field->id}}" name="btncomment-{{$field->id}}" rows="2" cols="50">{{$field->comment??''}}</textarea>
+                <div class="col-lg-3 col-md-12">
+                    <textarea class="form-control" id="btncomment-{{$field->id}}" name="btncomment-{{$field->id}}" rows="2" cols="50", placeholder="Agregar un comentario">{{$field->comment??''}}</textarea>
+                </div>
             </div>
-        </div>
-        
             @break
 
         {{-- Input tipo text --}}
         @case(0)
-            <tr>
-                <th scope="row">{{$field->label}}</th>
-                <td>
-                   <input type="text" name="btntext-{{$field->id}}" id="" class="form-control">
-                </td>
-            </tr>
+            <div class="row mt-3">
+                <div class="col-lg-12 col-md-12">
+                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <input type="text" name="btntext-{{$field->id}}" id="" class="form-control">
+                </div>
+            </div>
             @break
 
-        {{-- Input tipo Area de texto --}}        
+        {{-- Input tipo Area de texto --}}
         @case(1)
-            <tr>
-                <td>
-                    <p>{{$field->label}}</p>
+            <div class="row mt-3">
+                <div class="col-lg-12 col-md-12">
+                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
                     <textarea class="form-control" id="btntextarea-{{$field->id}}" name="btntextarea-{{$field->id}}" rows="5" cols="50">{{$field->value ?? ''}}</textarea>
-                </td>
-            </tr>
+                </div>
+            </div>
+
             @break
 
 
         {{-- Input tipo Numero--}}
         @case(2)
-            <tr>
-                <th scope="row">{{$field->label}}</th>
-                <td>
-                    <div>
-                        <input type="number" name="btnnumber-{{$field->id}}" id="" class="form-control">
-                    </div>
-                </td>
-            </tr>
+            <div class="row mt-3">
+                <div class="col-lg-12 col-md-12">
+                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <input type="number" name="btnnumber-{{$field->id}}" id="" class="form-control">
+                </div>
+            </div>
             @break
 
         {{-- Input tipo Teléfono --}}
         @case(3)
-            <tr>
-                <th scope="row">{{$field->label}}</th>
-                <td>
-                    <div>
-                        <input type="tel" name="btntel-{{$field->id}}" id="" class="form-control" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size='10'>
-                    </div>
-                </td>
-            </tr>
+            <div class="row mt-3">
+                <div class="col-lg-12 col-md-12">
+                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <input type="tel" name="btntel-{{$field->id}}" id="" class="form-control" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size='10'>
+                </div>
+            </div>
             @break
 
         {{-- Input tipo Email --}}
         @case(4)
-            <tr>
-                <th scope="row">{{$field->label}}</th>
-                <td>
-                    <div>
-                        <input type="email" name="btnemail-{{$field->id}}" id="" class="form-control" pattern=".+@example\.com" size="30">
-                    </div>
-                </td>
-            </tr>
+            <div class="row mt-3">
+                <div class="col-lg-12 col-md-12">
+                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <input type="email" name="btnemail-{{$field->id}}" id="" class="form-control" pattern=".+@example\.com" size="30">
+                </div>
+            </div>
             @break
-        
+
         {{-- Input tipo Selector --}}
         @case(6)
-            <tr>
-                <th scope="row">{{$field->label}}</th>
-                <td>
+            <div class="row mt-3">
+                <div class="col-lg-6 col-md-12">
+                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
                     @php
                         $options = $field->selectable[0];
                         $options = explode(',', $options);
                     @endphp
-                    <select class="form-select" name="btnselect-{{$field->id}}" style="width: 100%; height: 150px;" >
+                    <select class="form-select" name="btnselect-{{$field->id}}" style="width: 100%;" >
                         <option value="">--Seleccione--</option>
                         @foreach($options as $option)
                             <option value="{{ $option }}">{{ $option }}</option>
                         @endforeach
                     </select>
-                </td>
-            </tr>
+                </div>
+                <div class="col-lg-3 col-md-12">
+                    @if(isset($field->image))
+                        <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
+                            <div class="img-fluid">
+                                <img src="{{url($field->image)}}" alt="" class="img-fluid d-block">
+                            </div>
+                        </a>
+                    @endif
+                </div>
+                <div class="col-lg-3 col-md-12">
+
+                    <textarea class="form-control" id="btncomment-{{$field->id}}" name="btncomment-{{$field->id}}" rows="2" cols="50", placeholder="Agregar un comentario">{{$field->comment??''}}</textarea>
+
+                </div>
+            </div>
             @break
-
-
 
         {{-- Input tipo Selector Multiple --}}
         @case(7)
-            <tr>
-                <th scope="row">{{$field->label}}</th>
-                   <td>
-                   <select class="form-select-multiple" name="btnselect-multiple{{$field->id}}[]" style="width: 100%; height: 150px;" multiple>
-                            @php
-                                $options = $field->selectable[0];
-                                $options = explode(',', $options);
-                            @endphp
-                                @foreach($options as $option)
-                                    <option value="{{ $option }}">{{ $option }}</option>
-                                @endforeach
+            <div class="row mt-3">
+                <div class="col-lg-6 col-md-12">
+                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <select class="form-select-multiple" name="btnselect-multiple{{$field->id}}[]" style="width: 100%; height: 150px;" multiple="multiple">
+                        @php
+                            $options = $field->selectable[0];
+                            $options = explode(',', $options);
+                        @endphp
+                            @foreach($options as $option)
+                                <option value="{{ $option }}">{{ $option }}</option>
+                            @endforeach
                     </select>
-                </td>
-            </tr>
+                </div>
+                <div class="col-lg-3 col-md-12">
+                    @if(isset($field->image))
+                        <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
+                            <div class="img-fluid">
+                                <img src="{{url($field->image)}}" alt="" class="img-fluid d-block">
+                            </div>
+                        </a>
+                    @endif
+                </div>
+                <div class="col-lg-3 col-md-12">
+                    <textarea class="form-control" id="btncomment-{{$field->id}}" name="btncomment-{{$field->id}}" rows="2" cols="50", placeholder="Agregar un comentario">{{$field->comment??''}}</textarea>
+                </div>
+            </div>
             @break
 
         {{-- Input tipo Imagen--}}
         @case(8)
-                <div class="row">
-                    <div class="col-lg-6 col-md-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <p>{{$field->label}}</p>
-                            </div>
-                            <div class="card-body">
-                                <video id="video" width="240" height="240" autoplay></video>
-                            </div>
-                            <div class="card-footer">
-                                <button id="captureButton" class="btn btn-primary"><i class="fas fa-camera"></i> Capturar imagen</button>
-                                <button id="uploadButton" class="btn btn-info"><i class="far fa-images"></i> Cargar imagen</button>
-                                <button id="switchCameraButton" class="btn btn-secondary"> <i class="mdi mdi-sync-circle"></i> Cambiar Cámara</button>
-                            </div>
+            <div class="row mt-3">
+                <div class="col-lg-6 col-md-12">
+                    <div class="card">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                            <a class="waves-effect text-danger m-3 mt-1" onclick="cancelCamera('{{$field->id}}')">Cerrar camara</a>
                         </div>
-                    </div>
-                    <div class="col-lg-6 col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div id="gallery"></div>
-                                <canvas id="canvas" width="240" height="240" style="display: none;"></canvas>
-                            </div>
+
+                        <video id="video-{{$field->id}}" width="240" height="240" autoplay></video>
+                        <div class="card-footer">
+                            <button id="captureButton-{{$field->id}}" class="btn btn-primary" onclick="captureImage('{{$field->id}}')"><i class="fas fa-camera"></i> Capturar imagen</button>
+                            <button id="uploadButton-{{$field->id}}" class="btn btn-info" onclick="uploadImage('{{$field->id}}')"><i class="far fa-images"></i> Cargar imagen</button>
+                            <button id="switchCameraButton-{{$field->id}}" class="btn btn-secondary" onclick="switchCamera('{{$field->id}}')"> <i class="mdi mdi-sync-circle"></i> Cambiar Cámara</button>
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-6 col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <canvas id="canvas-{{$field->id}}" width="240" height="240" style="display: none;"></canvas>
+                            <div id="gallery-{{$field->id}}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @break
 
         {{-- Input tipo Firma --}}
         @case(9)
-            <tr>
-                {{-- <th scope="row">{{$field->label}}</th> --}}
-                <td>
+            <div class="row mt-3">
+                <div class="col-lg-12 col-md-12">
                     <div>
-                        <p>{{$field->label}}</p>
-                        <canvas id="signatureCanvas" class="border border-secondary" width="425px" height="150px" ></canvas>
+                        <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                        <canvas id="signatureCanvas" class="border border-secondary " width="300px" height="200px"></canvas>
                     </div>
                     <div class="d-flex gap-4">
                         <button class="btn btn-secondary" >Guardar</button>
                         <button class="btn btn-danger" onclick="document.getElementById('signatureCanvas').getContext('2d').clearRect(0, 0, document.getElementById('signatureCanvas').width, document.getElementById('signatureCanvas').height)">Cancelar</button>
                     </div>
-                </td>
-            </tr>
+                </div>
+            </div>
             @break
 
         {{-- Input tipo Opciones --}}
         @case(10)
-            <tr>
-                <th scope="row">{{$field->label}}</th>
-                <td>
-                    <div class="btn-group" role="group" aria-label="Opciones">
+            <div class="row mt-3">
+                <div class="col-lg-6 col-md-12">
+                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <div class="btn-group border border-primary d-flex flex-wrap" role="group" aria-label="Opciones">
                         @foreach($field->selectable as $options)
                             @php
                                 $options = explode(',', $options);
                             @endphp
                             @foreach($options as $option)
-                                <input type="radio" id="option_{{ $field->id }}_{{ $option }}" name="option_{{ $field->id }}" value="{{ $option }}">
-                                <label for="option_{{ $field->id }}_{{ $option }}" class="btn btn-secondary-outline">{{ $option }}</label>
+                                <input type="radio" class="btn-check" id="option_{{ $field->id }}_{{ $option }}" name="option_{{ $field->id }}" value="{{ $option }}">
+                                <label for="option_{{ $field->id }}_{{ $option }}" class="btn btn-outline-dark mb-0">{{ $option }}</label>
                             @endforeach
                         @endforeach
                     </div>
-                </td>
-            </tr>
+                </div>
+                <div class="col-lg-3 col-md-12 text-center">
+                    @if(isset($field->image))
+                        <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
+                            <div class="img-fluid">
+                                <img src="{{url($field->image)}}" alt="" class="img-fluid d-block">
+                            </div>
+                        </a>
+                    @else
+                    <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal-{{$field->id}}"><i class="fas fa-camera"></i></button>
+
+                    <!-- Modal para tomar la foto -->
+                    <div id="myModal-{{$field->id}}" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <h3 class="m-3">Subir imagen</h3>
+                                <div class="card m-3">
+                                    <div class="card-header bg-primary text-white d-flex justify-content-between">
+                                        <div>
+                                            <p>Subir imagen</p>
+                                        </div>
+                                        <button id="captureButton-{{$field->id}}" class="btn btn-primary" onclick="captureImage('{{$field->id}}')"><i class="fas fa-camera"></i></button>
+                                        <button id="uploadButton-{{$field->id}}" class="btn btn-info" onclick="uploadImage('{{$field->id}}')"><i class="fas fa-plus"></i></button>
+                                        <button id="switchCameraButton-{{$field->id}}" class="btn btn-secondary" onclick="switchCamera('{{$field->id}}')"> <i class="mdi mdi-sync-circle"></i></button>
+
+                                    </div>
+                                    <div class="card-body">
+                                        <video id="video-{{$field->id}}" width="240" height="240" autoplay></video>
+                                        <canvas id="canvas-{{$field->id}}" width="240" height="240" style="display: none;"></canvas>
+                                        <div id="gallery-{{$field->id}}"></div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <p class="waves-effect text-primary m-3 mt-1" data-bs-dismiss="modal" data-bs-target="#myModal-{{$field->id}}" onclick="cancelCamera('{{$field->id}}')">Cerrar camara</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+                <div class="col-lg-3 col-md-12">
+
+                    <textarea class="form-control" id="btncomment-{{$field->id}}" name="btncomment-{{$field->id}}" rows="2" cols="50", placeholder="Agregar un comentario">{{$field->comment??''}}</textarea>
+
+                </div>
+            </div>
             @break
 
         {{-- Input tipo Estados --}}
         @case(11)
-            <tr>
-                <th scope="row">{{$field->label}}</th>
-                <td>
-                    <div class="btn-group border border-primary" role="group" aria-label="Opciones">
+            <div class="row mt-3">
+                <div class="col-lg-6 col-md-12">
+                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <div class="btn-group border border-primary d-flex flex-wrap" role="group" aria-label="Opciones">
                         @foreach($field->selectable as $options)
                             @php
                                 $options = explode(',', $options);
                             @endphp
                             @foreach($options as $option)
                                 <input type="radio" id="option_{{ $field->id }}_{{ $option }}" name="option_{{ $field->id }}" value="{{ $option }}" class="btn-check">
-                                <label class="btn btn-outline-dark mb-0" for="option_{{ $field->id }}_{{ $option }}" >{{ $option }}</label>
-                                
+                                <label class="btn btn-outline-dark mb-0 " for="option_{{ $field->id }}_{{ $option }}" >{{ $option }}</label>
                             @endforeach
                         @endforeach
                     </div>
-                </td>
-            </tr>
+                </div>
+                <div class="col-lg-3 col-md-12 text-center">
+                    @if(isset($field->image))
+                        <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
+                            <div class="img-fluid">
+                                <img src="{{url($field->image)}}" alt="" class="img-fluid d-block">
+                            </div>
+                        </a>
+                    @else
+                    <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal-{{$field->id}}"><i class="fas fa-camera"></i></button>
+
+                    <!-- Modal para tomar la foto -->
+                    <div id="myModal-{{$field->id}}" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <h3 class="m-3">Subir imagen</h3>
+                                <div class="card m-3">
+                                    <div class="card-header bg-primary text-white d-flex justify-content-between">
+                                        <div>
+                                            <p>Subir imagen</p>
+                                        </div>
+                                        <button id="captureButton-{{$field->id}}" class="btn btn-primary" onclick="captureImage('{{$field->id}}')"><i class="fas fa-camera"></i></button>
+                                        <button id="uploadButton-{{$field->id}}" class="btn btn-info" onclick="uploadImage('{{$field->id}}')"><i class="fas fa-plus"></i></button>
+                                        <button id="switchCameraButton-{{$field->id}}" class="btn btn-secondary" onclick="switchCamera('{{$field->id}}')"> <i class="mdi mdi-sync-circle"></i></button>
+
+                                    </div>
+                                    <div class="card-body">
+                                        <video id="video-{{$field->id}}" width="240" height="240" autoplay></video>
+                                        <canvas id="canvas-{{$field->id}}" width="240" height="240" style="display: none;"></canvas>
+                                        <div id="gallery-{{$field->id}}"></div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <p class="waves-effect text-primary m-3 mt-1" data-bs-dismiss="modal" data-bs-target="#myModal-{{$field->id}}" onclick="cancelCamera('{{$field->id}}')">Cerrar camara</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+                <div class="col-lg-3 col-md-12">
+                    <textarea class="form-control" id="btncomment-{{$field->id}}" name="btncomment-{{$field->id}}" rows="2" cols="50", placeholder="Agregar un comentario">{{$field->comment??''}}</textarea>
+                </div>
+            </div>
             @break
-  
+
+
+        {{-- Input tipo text --}}
+        @case(12)
+            <div class="row mt-3">
+                <div class="col-lg-12 col-md-12 text-center">
+                    <hr>
+                    <h2 class="mb-2">{{$field->label}}</h2>
+                </div>
+            </div>
+            @break
+
+
     @endswitch
 @endif
