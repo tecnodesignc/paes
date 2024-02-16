@@ -214,7 +214,7 @@
                 <div class="col-lg-12 col-md-12">
                     <div>
                         <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
-                        <canvas id="signatureCanvas" class="border border-secondary" width="300px" height="200px" data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}"></canvas>
+                        <canvas id="signatureCanvas" class="border border-secondary" width="300px" height="200px"></canvas>
                     </div>
                     <div class="d-flex gap-4">
                         <button type="button" class="btn btn-secondary" onclick="uploadFile({{ intval($field->id) }}, '{{$field->label}}', {{$field->type}})">Guardar</button>

@@ -172,19 +172,27 @@
         // Aqui definimos la cantidad de imagenes que se pueden tomar o cargar
         const maxImages = 1;
 
+        // Función para cargar la imagen desde el archivo
         function uploadImage(fieldId) {
-            const input = document.createElement('input');
+            var input = document.createElement('input');
             input.type = 'file';
             input.accept = 'image/*';
-            input.onchange = (event) => {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => {
-                        displayImage(reader.result, fieldId);
-                    }
-                }
+            input.onchange = function(event) {
+                var file = event.target.files[0];
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    var img = new Image();
+                    img.onload = function() {
+                        var canvas = document.getElementById('canvas-' + fieldId);
+                        var context = canvas.getContext('2d');
+                        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                        // Llamar a la función para subir el archivo al almacenamiento
+                        uploadFile(fieldId, file.name, 'image', 'canvas-' + fieldId);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
             };
             input.click();
         }
@@ -221,6 +229,10 @@
             if (imageIndex < maxImages) {
                 const context = canvas.getContext('2d');
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const fileName = 'captured_image_';
+                // Llamar a la función para subir el archivo al almacenamiento
+                uploadFile(fieldId, fileName, 'image', 'canvas-' + fieldId);
                 const imageData = canvas.toDataURL('image/jpeg');
                 displayImage(imageData, fieldId);
             } else {
@@ -403,8 +415,18 @@
             event.preventDefault();
             var canvas = document.getElementById(canvasId);
             var cxt = canvas.getContext("2d");
-            var imageData = canvas.toDataURL('image/png').replace("image/jpeg", "image/octet-stream");
-            var signatureFile = dataURLtoFile(imageData, 'signature.png' + label); // Convertir imageData a un archivo
+            var imageData = canvas.toDataURL('image/png');
+
+            // Generar un nombre único basado en un timestamp
+            const currentDate = new Date();
+            const day = String(currentDate.getDate()).padStart(2, '0');
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Los meses son indexados desde 0
+            const year = String(currentDate.getFullYear()).slice(-2); // Solo toma los últimos dos dígitos del año
+
+            const formattedDate = `${day}-${month}-${year}`;
+
+            var signatureFile = dataURLtoFile(imageData, 'image_'+formattedDate+'_'+label+'.png'); // Convertir imageData a un archivo
+
             var formData = new FormData();
             formData.append('file', signatureFile);
             // console.log(formData);
