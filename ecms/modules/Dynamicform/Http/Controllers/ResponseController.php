@@ -17,6 +17,7 @@ use Modules\Dynamicform\Repositories\FormResponseRepository;
 use Modules\Dynamicform\Transformers\FieldTransformer;
 use Modules\Dynamicform\Transformers\FormResponseTransformer;
 use Mockery\CountValidator\Exception;
+use Modules\User\Entities\Sentinel\User;
 
 
 class ResponseController extends AdminBaseController
@@ -65,7 +66,6 @@ class ResponseController extends AdminBaseController
         $datos = $this->field->getItemsBy($params);
 
         $datos = $datos->items();
-        dd(session()->all());
 
         return view('modules.dynamic-form.response.create', compact('form','datos'));
     }
@@ -79,7 +79,7 @@ class ResponseController extends AdminBaseController
     public function store(CreateFormResponseRequest $request, $datos): JsonResponse
     {
 
-        dd($datos);
+        dd($request);
         // \DB::beginTransaction();
 
         // try {
