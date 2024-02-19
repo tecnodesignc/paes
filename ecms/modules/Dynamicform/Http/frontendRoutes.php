@@ -77,6 +77,7 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
                 'uses' => 'FieldController@destroy',
                 'middleware' => 'can:dynamicform.fields.destroy'
             ]);
+            // METODO PUT SI ES OK RENDERIZAR LA TABLA
             $router->get('/{field}/orden/{orden}', [
                 'as' => 'dynamicform.field.orden',
                 'uses' => 'FieldController@orden',

@@ -157,10 +157,8 @@ class FormResponseApiController extends Controller
         \DB::beginTransaction();
 
         try {
-
             $data = $request->all();
             $formresponse = $this->formresponse->create($data);
-
             $response = ["data" => new FormResponseTransformer($formresponse)];
 
             \DB::commit();

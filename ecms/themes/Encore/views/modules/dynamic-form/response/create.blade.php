@@ -38,7 +38,7 @@
                     </div>
                     <div class="col-lg-6 col-sm-6">
                         <h5 class="text-truncate font-size-18 mb-1">Identificación:</h5>
-                        <input type="text" name="identification" id="identification" value="" class="form-control" readonly>
+                        <input type="text" name="identification" id="identification" value="{{$currentUser->driver->driver_license}}" class="form-control" readonly>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -173,35 +173,37 @@
         const maxImages = 1;
 
         // Función para cargar la imagen desde el archivo
-        function uploadImage(fieldId) {
+        function uploadImage(fieldId, label, type) {
             const gallery = document.getElementById('gallery-' + fieldId);
             const imageIndex = gallery.querySelectorAll('.image-container').length;
-            if (imageIndex > maxImages) {
-                alert('¡Ya has alcanzado el límite de imágenes!');
-                return;
-            }
+            if (imageIndex < maxImages) {
+                var input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = function(event) {
+                    var file = event.target.files[0];
+                    var reader = new FileReader();
+                    reader.onload = function(event) {
+                        var img = new Image();
+                        img.onload = function() {
+                            const canvasId = 'canvas-' + fieldId;
+                            var canvas = document.getElementById(canvasId);
+                            var context = canvas.getContext('2d');
+                            context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            // Mostrar la previsualización de la imagen en la galería
+                            displayImage(event.target.result, fieldId);
 
-            var input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = function(event) {
-                var file = event.target.files[0];
-                var reader = new FileReader();
-                reader.onload = function(event) {
-                    var img = new Image();
-                    img.onload = function() {
-                        const canvasId = 'canvas-' + fieldId;
-                        var canvas = document.getElementById(canvasId);
-                        var context = canvas.getContext('2d');
-                        context.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        // Llamar a la función para subir el archivo al almacenamiento
-                        uploadImageToServer(fieldId, file.name, 'image', canvasId);
+                            // Llamar a la función para subir el archivo al almacenamiento
+                            uploadImageToServer(fieldId, label, type, canvasId);
+                        };
+                        img.src = event.target.result;
                     };
-                    img.src = event.target.result;
+                    reader.readAsDataURL(file);
                 };
-                reader.readAsDataURL(file);
-            };
-            input.click();
+                input.click();
+            }else{
+                alert('¡Ya has alcanzado el límite de imágenes!');
+            }
         }
 
         function displayImage(imageData, fieldId) {
@@ -227,9 +229,9 @@
             container.remove();
         }
 
-        function captureImage(fieldId) {
+        function captureImage(fieldId, label, type) {
             const video = document.getElementById('video-' + fieldId);
-            const canvasId = 'canvas-' + fieldId;
+            var canvasId = 'canvas-' + fieldId;
             const canvas = document.getElementById(canvasId);
             const gallery = document.getElementById('gallery-' + fieldId);
 
@@ -237,10 +239,8 @@
             if (imageIndex < maxImages) {
                 const context = canvas.getContext('2d');
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                const fileName = 'captured_image_';
                 // Llamar a la función para subir el archivo al almacenamiento
-                uploadImageToServer(fieldId, fileName, 5, canvasId);
+                uploadImageToServer(fieldId, label, type, canvasId);
                 const imageData = canvas.toDataURL('image/jpeg');
                 displayImage(imageData, fieldId);
             } else {
@@ -277,6 +277,7 @@
     </script>
 
     <script type="application/javascript">
+
         // Recolectar los datos del formulario
         function collectFormData() {
             // Objeto para almacenar los datos del formulario
@@ -304,7 +305,7 @@
                 var fieldComment;
                 var foto;
                 var fieldValue;
-                // console.log(fieldId + "\n" + fieldType);
+
                 // Recolectar valor dependiendo del tipo de campo
                 switch (fieldType) {
                     // Texto
@@ -382,44 +383,31 @@
 
             });
 
-            formData = eliminarDuplicados(formData.answers);
+            // Eliminar duplicados de respuestas
+            formData.answers = eliminarDuplicados(formData.answers);
 
             return formData;
         }
 
-        //Elimina los datos duplicados
+        // Elimina los datos duplicados
         function eliminarDuplicados(respuestas) {
             var uniqueAnswers = [];
             var seenFieldIds = {};
-
             respuestas.forEach(function(answer) {
                 if (!seenFieldIds.hasOwnProperty(answer.field_id)) {
                     uniqueAnswers.push(answer);
                     seenFieldIds[answer.field_id] = true;
                 }
             });
-
+            // Devolver respuestas únicas
             return uniqueAnswers;
         }
 
-        //Convertimos la imagen que está en base 64 a archivo
-        function dataURLtoFile(dataurl, filename) {
-            var arr = dataurl.split(','),
-                mime = arr[0].match(/:(.*?);/)[1],
-                bstr = atob(arr[1]),
-                n = bstr.length,
-                u8arr = new Uint8Array(n);
-            while (n--) {
-                u8arr[n] = bstr.charCodeAt(n);
-            }
-            return new File([u8arr], filename, { type: mime });
-        }
-
-        // Sube el archivo al almacenamiento
-        function uploadImageToServer(id, label, type, canvasId = 'signatureCanvas') {
-            var formDataAnswers = {
+        var formImagesAnswers = {
                 "answers": []
             };
+        // Sube el archivo al almacenamiento
+        function uploadImageToServer(id, label, type, canvasId = 'signatureCanvas') {
             event.preventDefault();
             var canvas = document.getElementById(canvasId);
             var cxt = canvas.getContext("2d");
@@ -433,11 +421,11 @@
 
             const formattedDate = `${day}-${month}-${year}`;
 
-            var signatureFile = dataURLtoFile(imageData, 'image_'+formattedDate+'_'+label+'.png'); // Convertir imageData a un archivo
+            var signatureFile = dataURLtoFile(imageData, 'img_'+formattedDate+'_'+id+'.png'); // Convertir imageData a un archivo
 
             var formData = new FormData();
+
             formData.append('file', signatureFile);
-            // console.log(formData);
             // Realizar la solicitud con Axios
             var uploadImageUrl = "{{ route('api.dynamicform.field.upload-image') }}";
             axios.post(uploadImageUrl, formData, {
@@ -449,16 +437,33 @@
             .then(response => {
                 // Verificar si la solicitud fue exitosa
                 if (response.status === 200) {
-                    // Añadir respuesta al array de respuestas
-                    console.log(response.data.data.url);
-                    // Añadir la URL de la imagen al objeto de respuestas
-                    formDataAnswers.answers.push({
-                        "field_id": id,
-                        "label": label,
-                        "type": type,
-                        "value": response.data.data.url
-                    });
-                    console.log(JSON.stringify(formDataAnswers.answers));
+                    // Buscar si ya existe un registro con el mismo field_id
+                    const existingIndex = formImagesAnswers.answers.findIndex(item => item.field_id === id);
+                    if(type == 'image'){
+                        if (existingIndex !== -1) {
+                            // Si ya existe, actualizar el image
+                            formImagesAnswers.answers[existingIndex].image = response.data.data.url;
+                        } else {
+                            // Si no existe, agregar un nuevo registro
+                            formImagesAnswers.answers.push({
+                                "field_id": id,
+                                "image": response.data.data.url
+                            });
+                        }
+                    } else {
+                        if (existingIndex !== -1) {
+                            // Si ya existe, actualizar el image
+                            formImagesAnswers.answers[existingIndex].value = response.data.data.url;
+                        } else {
+                            // Añadir la firma
+                            formImagesAnswers.answers.push({
+                                "field_id": id,
+                                "label": label,
+                                "type": type,
+                                "value": response.data.data.url
+                            });
+                        }
+                    }
                 } else {
                     // Manejar el caso en que la solicitud no fue exitosa
                     // console.log(response.status);
@@ -480,15 +485,73 @@
             context.clearRect(0, 0, canvas.width, canvas.height);
         }
 
+        //Convertimos la imagen que está en base 64 a archivo
+        function dataURLtoFile(dataurl, filename) {
+            var arr = dataurl.split(','),
+                mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]),
+                n = bstr.length,
+                u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new File([u8arr], filename, { type: mime });
+        }
+
+        //Evento submit
         document.addEventListener("DOMContentLoaded", function() {
-            // Aquí va tu código JavaScript
             document.querySelector("button[type='submit']").addEventListener("click", function(event) {
+
                 event.preventDefault();
                 var formData = collectFormData();
-                console.log(JSON.stringify(formData)); // Aquí puedes hacer lo que quieras con el objeto de datos
+                formImagesAnswers.answers.forEach(function(imageAnswer) {
+                    // console.log(imageAnswer);
+                    const existingIndex = formData.answers.findIndex(item => item.field_id === imageAnswer.field_id);
+                    if (existingIndex !== -1) {
+                        formData.answers[existingIndex].image = imageAnswer.image;
+                    }
+                    else {
+                        formData.answers.push({
+                            field_id: imageAnswer.field_id,
+                            label: imageAnswer.label,
+                            type: imageAnswer.type,
+                            value: imageAnswer.value,
+                            image: imageAnswer.image
+                        });
+                    }
+                });
 
-            });
-        });
+                var datos = {
+                    form_id: {{$form->id}},
+                    user_id: {{$currentUser->getUserId()}},
+                    data: formData,
+                    company: {{$currentUser->companies->company_id}}
+                };
+
+                console.log(datos);
+                // var createUrl = "{{ route('api.dynamicform.formresponse.store') }}";
+                // axios.post(createUrl, datos, {
+                //     headers: {
+                //         'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                //         'Content-Type': 'multipart/form-data'
+                //     }
+                // }).then(response => {
+                //     // Verificar si la solicitud fue exitosa
+                //     if (response.status === 200) {
+                //         console.log(response);
+                //     } else {
+                //         // Manejar el caso en que la solicitud no fue exitosa
+                //         // console.log(response.status);
+                //         throw new Error('Error al cargar la imagen');
+                //     }
+                // }).catch(error => {
+                //     // Manejar errores
+                //     console.error(error);
+                //     // alert('Error al cargar la imagen');
+                // });
+
+            });// Fin del axios
+        }); //fin del documentLoaded
 
     </script>
 

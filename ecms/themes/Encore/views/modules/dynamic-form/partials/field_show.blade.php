@@ -191,9 +191,9 @@
 
                         <video id="video-{{$field->id}}" width="240" height="240" autoplay></video>
                         <div class="card-footer">
-                            <button type="button" id="captureButton-{{$field->id}}" class="btn btn-primary" onclick="captureImage('{{$field->id}}')"><i class="fas fa-camera"></i> Capturar imagen</button>
-                            <button type="button" id="uploadButton-{{$field->id}}" class="btn btn-info" onclick="uploadImage('{{$field->id}}')"><i class="far fa-images"></i> Cargar imagen</button>
-                            <button type="button" id="switchCameraButton-{{$field->id}}" class="btn btn-secondary" onclick="switchCamera('{{$field->id}}')"> <i class="mdi mdi-sync-circle"></i> Cambiar Cámara</button>
+                            <button type="button" id="captureButton-{{$field->id}}" class="btn btn-primary" onclick="captureImage({{$field->id}}, '{{$field->label}}', {{$field->type}})"><i class="fas fa-camera"></i> Capturar imagen</button>
+                            <button type="button" id="uploadButton-{{$field->id}}" class="btn btn-info" onclick="uploadImage({{$field->id}}, '{{$field->label}}', {{$field->type}})"><i class="far fa-images"></i> Cargar imagen</button>
+                            <button type="button" id="switchCameraButton-{{$field->id}}" class="btn btn-secondary" onclick="switchCamera({{$field->id}})"> <i class="mdi mdi-sync-circle"></i> Cambiar Cámara</button>
                         </div>
                     </div>
                 </div>

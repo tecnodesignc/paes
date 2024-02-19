@@ -2,6 +2,7 @@
 
 namespace modules\Dynamicform\Http\Controllers;
 
+use Auth;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -17,8 +18,6 @@ use Modules\Dynamicform\Repositories\FormResponseRepository;
 use Modules\Dynamicform\Transformers\FieldTransformer;
 use Modules\Dynamicform\Transformers\FormResponseTransformer;
 use Mockery\CountValidator\Exception;
-use Modules\User\Entities\Sentinel\User;
-
 
 class ResponseController extends AdminBaseController
 {
@@ -30,6 +29,7 @@ class ResponseController extends AdminBaseController
         parent::__construct();
         $this->form_response = $form_response;
         $this->field=$field;
+
     }
 
     public function index(Form $form)
@@ -78,29 +78,27 @@ class ResponseController extends AdminBaseController
      */
     public function store(CreateFormResponseRequest $request, $datos): JsonResponse
     {
+        \DB::beginTransaction();
 
-        dd($request);
-        // \DB::beginTransaction();
+        try {
 
-        // try {
+            $data = $request->all();
+            $formresponse = $this->form_response->create($data);
 
-        //     $data = $request->all();
-        //     $formresponse = $this->form_response->create($data);
+            $response = ["data" => new FormResponseTransformer($formresponse)];
 
-        //     $response = ["data" => new FormResponseTransformer($formresponse)];
+            \DB::commit();
 
-        //     \DB::commit();
+        } catch (Exception $e) {
 
-        // } catch (Exception $e) {
+            \Log::Error($e);
+            \DB::rollback();
+            $status = $this->getStatusError($e->getCode());
+            $response = ["errors" => $e->getMessage()];
 
-        //     \Log::Error($e);
-        //     \DB::rollback();
-        //     $status = $this->getStatusError($e->getCode());
-        //     $response = ["errors" => $e->getMessage()];
+        }
 
-        // }
-
-        // return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
+        return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
 
     }
 
