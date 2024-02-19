@@ -217,7 +217,7 @@
                         <canvas id="signatureCanvas" class="border border-secondary" width="300px" height="200px"></canvas>
                     </div>
                     <div class="d-flex gap-4">
-                        <button type="button" class="btn btn-secondary" onclick="uploadFile({{ intval($field->id) }}, '{{$field->label}}', {{$field->type}})">Guardar</button>
+                        <button type="button" class="btn btn-secondary" onclick="uploadImageToServer({{ intval($field->id) }}, '{{$field->label}}', {{$field->type}})">Guardar</button>
                         <button type="button" class="btn btn-danger" onclick="clearCanvas({{ intval($field->id) }})">Cancelar</button>
                     </div>
                 </div>

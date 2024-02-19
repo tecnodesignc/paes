@@ -174,6 +174,13 @@
 
         // Función para cargar la imagen desde el archivo
         function uploadImage(fieldId) {
+            const gallery = document.getElementById('gallery-' + fieldId);
+            const imageIndex = gallery.querySelectorAll('.image-container').length;
+            if (imageIndex > maxImages) {
+                alert('¡Ya has alcanzado el límite de imágenes!');
+                return;
+            }
+
             var input = document.createElement('input');
             input.type = 'file';
             input.accept = 'image/*';
@@ -183,12 +190,12 @@
                 reader.onload = function(event) {
                     var img = new Image();
                     img.onload = function() {
-                        var canvas = document.getElementById('canvas-' + fieldId);
+                        const canvasId = 'canvas-' + fieldId;
+                        var canvas = document.getElementById(canvasId);
                         var context = canvas.getContext('2d');
                         context.drawImage(img, 0, 0, canvas.width, canvas.height);
-
                         // Llamar a la función para subir el archivo al almacenamiento
-                        uploadFile(fieldId, file.name, 'image', 'canvas-' + fieldId);
+                        uploadImageToServer(fieldId, file.name, 'image', canvasId);
                     };
                     img.src = event.target.result;
                 };
@@ -222,7 +229,8 @@
 
         function captureImage(fieldId) {
             const video = document.getElementById('video-' + fieldId);
-            const canvas = document.getElementById('canvas-' + fieldId);
+            const canvasId = 'canvas-' + fieldId;
+            const canvas = document.getElementById(canvasId);
             const gallery = document.getElementById('gallery-' + fieldId);
 
             const imageIndex = gallery.querySelectorAll('.image-container').length;
@@ -232,7 +240,7 @@
 
                 const fileName = 'captured_image_';
                 // Llamar a la función para subir el archivo al almacenamiento
-                uploadFile(fieldId, fileName, 'image', 'canvas-' + fieldId);
+                uploadImageToServer(fieldId, fileName, 5, canvasId);
                 const imageData = canvas.toDataURL('image/jpeg');
                 displayImage(imageData, fieldId);
             } else {
@@ -408,7 +416,7 @@
         }
 
         // Sube el archivo al almacenamiento
-        function uploadFile(id, label, type, canvasId = 'signatureCanvas') {
+        function uploadImageToServer(id, label, type, canvasId = 'signatureCanvas') {
             var formDataAnswers = {
                 "answers": []
             };
