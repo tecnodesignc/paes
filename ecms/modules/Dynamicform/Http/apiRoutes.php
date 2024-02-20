@@ -4,7 +4,8 @@ use Illuminate\Routing\Router;
 
 /** @var Router $router */
 
-$router->group(['prefix' => '/dynamicform/v1' ], function (Router $router) {
+$router->group(['prefix' => '/dynamicform/v1', 'middleware' => ['api.token', 'auth.admin']
+], function (Router $router) {
     $router->group(['prefix' => '/forms'], function (Router $router) {
         $router->bind('form', function ($id) {
             return app('Modules\Dynamicform\Repositories\FormRepository')->find($id);
@@ -36,7 +37,6 @@ $router->group(['prefix' => '/dynamicform/v1' ], function (Router $router) {
             'uses' => 'FormApiController@destroy',
             'middleware' => ['token-can:dynamicform.forms.destroy']
         ]);
-
 
         $router->group(['prefix' => '/{form}/fields'], function (Router $router) {
             $router->bind('field', function ($id) {
@@ -79,13 +79,12 @@ $router->group(['prefix' => '/dynamicform/v1' ], function (Router $router) {
         $router->get('/', [
             'as' => 'api.dynamicform.formresponse.index',
             'uses' => 'FormResponseApiController@index',
-            // 'middleware' => ['token-can:dynamicform.formresponses.index']
+            'middleware' => ['token-can:dynamicform.formresponses.index']
         ]);
-
         $router->post('/', [
             'as' => 'api.dynamicform.formresponse.store',
             'uses' => 'FormResponseApiController@store',
-            // 'middleware' => ['token-can:dynamicform.formresponses.index']
+            'middleware' => ['token-can:dynamicform.formresponses.index']
         ]);
         $router->post('/upload-image', [
             'as' => 'api.dynamicform.field.upload-image',
@@ -109,6 +108,16 @@ $router->group(['prefix' => '/dynamicform/v1' ], function (Router $router) {
         ]);
 
     });
+
+    $router->group(['prefix' => '/vehicles'], function (Router $router) {
+        $router->get('/{companyId}', [
+            'as' => 'api.dynamicform.formresponse.vehicles',
+            'uses' => 'FormResponseApiController@vehicles',
+            'middleware' => ['token-can:dynamicform.formresponses.create']
+        ]);
+    });
+
+
 
 // append
 

@@ -44,12 +44,7 @@
                 <div class="row mt-3">
                     <div class="col-lg-6 col-sm-6">
                         <h5 class="text-truncate font-size-18 mb-1">Vehículo:</h5>
-                        <select class="form-control" name="label" id="vehicleLabel">
-                            <option value="">--Seleccione--</option>
-                            {{-- @foreach($options as $option)
-                                <option value="{{ $option }}">{{ $option }}</option>
-                            @endforeach --}}
-                        </select>
+                        <select class="vehicleLabel" id="vehicleLabel"></select>
                     </div>
                     <div class="col-lg-6 col-sm-6">
                         <h5 class="text-truncate font-size-18 mb-1">Kilometraje:</h5>
@@ -104,6 +99,46 @@
                 placeholder: "--Seleccione--",
                 width: 'resolve' // need to override the changed default
             });
+
+
+
+
+            // Verificar si company()->id está definido
+            var companyId = {{ company()->id ? company()->id : 'null' }};
+            if (companyId !== null) {
+                // Llama a la API para obtener los datos
+                var url = "{{ route('api.dynamicform.formresponse.vehicles', ['companyId' => ':companyId']) }}";
+                url = url.replace(':companyId', companyId); // Reemplazar el marcador de posición con el companyId
+
+                axios.get(url, {
+                    headers: {
+                        'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function(response) {
+                    // Procesa los datos de respuesta aquí si es necesario
+                    var data = response.data;
+                    // Verifica si hay errores en la respuesta
+                    if (data.errors) {
+                        console.error('Error al obtener los datos:', data.errors);
+                        return;
+                    }
+
+                    // Llena el select2 con los datos obtenidos
+                    $('.vehicleLabel').select2({
+                        width: '100%', // need to override the changed default
+                        data: Object.keys(data).map(function(key) {
+                            return { id: key, text: data[key] };
+                        })
+                    });
+
+                })
+                .catch(function(error) {
+                    // Maneja los errores aquí
+                    console.error('Error al obtener los datos:', error);
+                });
+            }
 
         });
     </script>
@@ -464,6 +499,7 @@
                             });
                         }
                     }
+                    alert("Guardado correctamente!")
                 } else {
                     // Manejar el caso en que la solicitud no fue exitosa
                     // console.log(response.status);
@@ -521,34 +557,39 @@
                     }
                 });
 
+                // Verificar si company()->id está definido
+                var companyId = {{ company()->id ? company()->id : 'null' }};
+                if (companyId === null) {
+                    // Mostrar una alerta al usuario
+                    alert("Debe seleccionar una empresa.");
+                    return;
+                }
+
                 var datos = {
                     form_id: {{$form->id}},
                     user_id: {{$currentUser->getUserId()}},
                     data: formData,
-                    company: {{$currentUser->companies->company_id}}
+                    company_id: companyId
                 };
 
-                console.log(datos);
-                // var createUrl = "{{ route('api.dynamicform.formresponse.store') }}";
-                // axios.post(createUrl, datos, {
-                //     headers: {
-                //         'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
-                //         'Content-Type': 'multipart/form-data'
-                //     }
-                // }).then(response => {
-                //     // Verificar si la solicitud fue exitosa
-                //     if (response.status === 200) {
-                //         console.log(response);
-                //     } else {
-                //         // Manejar el caso en que la solicitud no fue exitosa
-                //         // console.log(response.status);
-                //         throw new Error('Error al cargar la imagen');
-                //     }
-                // }).catch(error => {
-                //     // Manejar errores
-                //     console.error(error);
-                //     // alert('Error al cargar la imagen');
-                // });
+                var createUrl = "{{ route('api.dynamicform.formresponse.store') }}";
+                axios.post(createUrl, datos, {
+                    headers: {
+                        'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(response => {
+                    // Verificar si la solicitud fue exitosa
+                    if (response.status !== 200) {
+
+                        // Manejar el caso en que la solicitud no fue exitosa
+                        console.log(response.status);
+                        throw new Error('Error al cargar la imagen');
+                    }
+                }).catch(error => {
+                    // Manejar errores
+                    console.log('Error al cargar la data ' + error);
+                });
 
             });// Fin del axios
         }); //fin del documentLoaded

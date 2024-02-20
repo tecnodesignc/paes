@@ -16,7 +16,10 @@ use Modules\Dynamicform\Repositories\FormResponseRepository;
 use Modules\Dynamicform\Transformers\FormResponseTransformer;
 use Modules\Core\Http\Controllers\Api\BaseApiController;
 use Modules\Media\Helpers\FileHelper;
+use Modules\Transport\Transformers\VehiclesTransformer;
 use Modules\User\Contracts\Authentication;
+
+use Modules\Transport\Repositories\VehiclesRepository;
 
 class FormResponseApiController extends Controller
 {
@@ -26,14 +29,22 @@ class FormResponseApiController extends Controller
     private FormResponseRepository $formresponse;
 
     /**
+     * @var VehiclesRepository
+     */
+    private VehiclesRepository $vehicle;
+
+
+    /**
      * @var Factory
      */
     private Factory $filesystem;
-    public function __construct(FormResponseRepository $formresponse, Factory $filesystem)
+    public function __construct(FormResponseRepository $formresponse, Factory $filesystem, VehiclesRepository $vehicle)
     {
         $this->formresponse = $formresponse;
         $this->auth = app(Authentication::class);
         $this->filesystem = $filesystem;
+        $this->vehicle=$vehicle;
+
     }
 
     /**
@@ -157,8 +168,10 @@ class FormResponseApiController extends Controller
         \DB::beginTransaction();
 
         try {
+
             $data = $request->all();
             $formresponse = $this->formresponse->create($data);
+
             $response = ["data" => new FormResponseTransformer($formresponse)];
 
             \DB::commit();
@@ -254,6 +267,28 @@ class FormResponseApiController extends Controller
 
         return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
 
+    }
+
+        /**
+     * Get listing of the resource
+     *
+     * @return JsonResponse
+     */
+    public function vehicles($companyId): JsonResponse
+    {
+        try {
+
+            $response=$this->vehicle->all()->where('company_id',$companyId)->pluck('plate','id');
+
+        } catch (Exception $e) {
+
+            \Log::Error($e);
+            $status = $this->getStatusError($e->getCode());
+            $response = ["errors" => $e->getMessage()];
+
+        }
+
+        return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
     }
 
 

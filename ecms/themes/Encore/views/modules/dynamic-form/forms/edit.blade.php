@@ -462,7 +462,7 @@
         function orderField(event,field, order) {
             event.preventDefault();
             // Realizar la solicitud con Axios
-            axios.get(`/preoperativo/form/{{$form->id}}/field/${field}/orden/${order}`,{
+            axios.put(`/preoperativo/form/{{$form->id}}/field/${field}/orden/${order}`,{
                 headers: {
                     'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
                     'Content-Type': 'application/json'
@@ -471,18 +471,14 @@
             .then(response => {
                 // Verificar si la solicitud fue exitosa
                 if (response.status === 200) {
-                    console.log('Campo ordenado exitosamente');
                     // Actualizamos la tabla después de ordenar
                     mygrid.forceRender();
                 } else {
-                    // Manejar el caso en que la solicitud no fue exitosa
-                    // console.log(response.status);
                     throw new Error('Error al ordenar el campo');
                 }
             })
             .catch(error => {
                 // Manejar errores
-                // console.error(error);
                 alert('Error al ordenar el campo');
             });
         }

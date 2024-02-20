@@ -5,6 +5,9 @@
 
 @section('css')
     {!! Theme::style('libs/glightbox/glightbox.min.css?v='.config('app.version')) !!}
+    <link href="{{Theme::url('libs/alertifyjs/alertifyjs.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 @endsection
 
 @section('content')
@@ -44,10 +47,10 @@
                                  <p>001-234-5678</p>--}}
                                  <h5 class="font-size-15 mb-1">Placa de Vehículo:</h5>
                                  <p>{{$form_response->data->info->vehicle->label ?? null}}</p>
-                    
+
                                  <h5 class="font-size-15 mb-1">Kilometraje del Vehiculo:</h5>
                                  <p>{{$form_response->data->info->vehicle->millage ?? null}}</p>
-                         
+
                                  <h5 class="font-size-15 mb-1">Fecha De registro:</h5>
                                  <p>{{$form_response->created_at->format('Y-m-d') ?? null}}</p>
                             </div>
@@ -60,7 +63,7 @@
                         <h5 class="font-size-15">Resumen del Formulario</h5>
 
 
-                        <div class="table-responsive mb-5">
+                        {{-- <div class="table-responsive mb-5">
                             <table class="table align-middle table-nowrap table-centered mb-0">
                                 <thead>
                                     <tr>
@@ -69,15 +72,25 @@
                                         <th class="fw-bold">Imagen</th>
                                         <th class="fw-bold">Comentario</th>
                                     </tr>
-                                </thead><!-- end thead -->
+                                </thead>
                                 <tbody>
                                     @foreach($form_response->data->answers as $answer)
                                         @include('modules.dynamic-form.partials.field',['field'=>$answer])
-                                        <!-- end tr -->
                                     @endforeach
-                                </tbody><!-- end tbody -->
-                            </table><!-- end table -->
-                        </div><!-- end table responsive -->
+                                </tbody>
+                            </table>
+                        </div> --}}
+                        {{-- Card de campos del formulario --}}
+                        <div class="row">
+                            <div class="card border border-primary">
+                                <div class="card-body">
+                                    @foreach($form_response->data->answers as $answer)
+                                        @include('modules.dynamic-form.partials.field_response',['field'=>$answer])
+
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
                         @foreach($form_response->data->answers as $answer)
                             @if($answer->type === 8)
                                 <div class="popup-gallery">
@@ -151,8 +164,26 @@
 @section('script')
     <script src="{{ Theme::url('libs/glightbox/glightbox.min.js') }}"></script>
     <script src="{{Theme::url('js/app.js')}}"></script>
-
+    <script src="{{ Theme::url('libs/alertifyjs/alertifyjs.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script type="application/javascript" async>
+            $('.form-select').select2({
+                // theme: 'bootstrap4',
+                placeholder: {id:'-1', text:"--Seleccione--"},
+                allowClear: true,
+                width: 'resolve' // need to override the changed default
+            });
+            $('.form-select-multiple').select2({
+                placeholder: "--Seleccione--",
+                width: 'resolve' // need to override the changed default
+            });
+
+
+
+
+
+
+
         (function () {
             'use strict';
             let token = "{{$currentUser->getFirstApiKey() }}";
