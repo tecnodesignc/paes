@@ -44,30 +44,39 @@
                 </li>
 
                 {{-- Inicio componentes de formularios --}}
+                @if($currentUser->hasAccess('dynamicform.forms.index') || $currentUser->hasAccess('dynamicform.formresponses.index') )
+
                 <li class="menu-title" data-key="t-menu">Formularios</li>
+                @endif
                 {{-- dashboard forms--}}
+                @if($currentUser->hasAccess('dynamicform.forms.index'))
                 <li>
                     <a href="{{ route('dynamicform.dashboard') }}">
                         <i class="mdi mdi-chart-bar icon nav-icon"></i>
                         <span class="menu-item" data-key="t-dashboards">Dashboard</span>
                     </a>
                 </li>
+                @endif
                 {{-- Fin dashboard forms--}}
                 {{-- Formularios de colaboradores --}}
+                @if($currentUser->hasAccess('dynamicform.formresponses.index'))
                 <li>
                     <a href="{{ route('dynamicform.form.indexcolaboradoresform') }}">
                         <i class="mdi mdi-notebook icon nav-icon"></i>
                         <span class="menu-item text-truncate" data-key="t-business">Formularios</span>
                     </a>
                 </li>
+                @endif
                 {{-- Fin de componentes de Formularios de colaboradores --}}
                 {{-- Admin de formularios --}}
+                @if($currentUser->hasAccess('dynamicform.forms.index'))
                 <li>
                     <a href="{{ route('dynamicform.form.index') }}">
                         <i class="mdi mdi-notebook-edit icon nav-icon"></i>
                         <span class="menu-item text-truncate" data-key="t-business">Admin Formularios</span>
                     </a>
                 </li>
+                @endif
                 {{-- Fin de componentes de Admin de formularios --}}
 
                 @if($currentUser->hasAccess('sass.companies.index'))

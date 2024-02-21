@@ -1,6 +1,6 @@
 <?php
 
-namespace modules\Dynamicform\Events;
+namespace Modules\Dynamicform\Events;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\Dynamicform\Entities\FormResponse;

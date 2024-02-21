@@ -278,7 +278,7 @@ class FormResponseApiController extends Controller
     {
         try {
 
-            $response=$this->vehicle->all()->where('company_id',$companyId)->pluck('plate','id');
+            $response=$this->vehicle->all()->where('company_id',$companyId)->pluck('plate','plate');
 
         } catch (Exception $e) {
 

@@ -23,28 +23,29 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
+
                     <div class="invoice-title">
-                        <h4 class="float-end font-size-48">Formulario {{$form->name}}</h4>
+                        <h4 class="float-end font-size-48">{{$form->name}}</h4>
                         <div class="mb-4">
                             <img src="{{ Theme::url('images/logo2.jpeg') }}" alt="logo" height="48"/>
                         </div>
                         <div class="text-muted">
-                            <p class="mb-1">{{$form_response->company->name}}</p>
-                            <p class="mb-1"><i class="mdi mdi-email-outline me-1 text-danger mdi-24px"></i> {{$form_response->company->email ?? null}}</p>
+                            <p class="mb-1 font-size-20">{{$form_response->company->name}}</p>
+                            <p class="mb-0"><i class="mdi mdi-email-outline me-1 text-danger mdi-24px"></i> {{$form_response->company->email ?? null}}</p>
                             <p><i class="mdi mdi-phone-outline me-1 text-primary mdi-24px"></i>{{$form_response->company->phone ?? null}}</p>
                         </div>
                     </div>
 
-                    <hr class="my-4">
+                    <hr class="my-3">
 
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="text-muted">
                                 <h5 class="font-size-28 mb-3"><strong> Colaborador: </strong></h5>
-                                <h5 class="font-size-15 mb-2">{{$form_response->data->info->fullName ?? null}}</h5>
-                                <p class="mb-1">{{$form_response->data->info->identification ?? null}}</p>
-                                {{-- <p class="mb-1">PrestonMiller@armyspy.com</p>
-                                 <p>001-234-5678</p>--}}
+
+                                <h5 class="font-size-15 mb-1">{{$form_response->data->info->fullName ?? null}}</h5>
+                                <p>{{$form_response->data->info->identification ?? null}}</p>
+
                                  <h5 class="font-size-15 mb-1">Placa de Vehículo:</h5>
                                  <p>{{$form_response->data->info->vehicle->label ?? null}}</p>
 
@@ -59,103 +60,25 @@
                     </div>
                     <!-- end row -->
 
-                    <div class="py-2">
-                        <h5 class="font-size-15">Resumen del Formulario</h5>
+                    <hr class="my-3">
 
-
-                        {{-- <div class="table-responsive mb-5">
-                            <table class="table align-middle table-nowrap table-centered mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="fw-bold">Pregunta</th>
-                                        <th class="fw-bold">Respuesta</th>
-                                        <th class="fw-bold">Imagen</th>
-                                        <th class="fw-bold">Comentario</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($form_response->data->answers as $answer)
-                                        @include('modules.dynamic-form.partials.field',['field'=>$answer])
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div> --}}
                         {{-- Card de campos del formulario --}}
                         <div class="row">
-                            <div class="card border border-primary">
-                                <div class="card-body">
-                                    @foreach($form_response->data->answers as $answer)
-                                        @include('modules.dynamic-form.partials.field_response',['field'=>$answer])
-
-                                    @endforeach
-                                </div>
-                            </div>
+                            <h5 class="font-size-28">Resumen del formulario</h5>
+                            {{-- Renderizamos los campos del formulario --}}
+                            @foreach($form_response->data->answers as $dato)
+                                {{-- Incluimos la vista del campo con el valor establecido --}}
+                                @include('modules.dynamic-form.partials.field_response', ['field' => $dato])
+                            @endforeach
                         </div>
-                        @foreach($form_response->data->answers as $answer)
-                            @if($answer->type === 8)
-                                <div class="popup-gallery">
-                                    <h5 class="font-size-15">{{$answer->label ?? null}}</h5>
-                                    <div class="row">
-                                        @php
-                                            $images=explode(',',$answer->value)
-                                        @endphp
-                                        @if(count($images)>1)
-                                            @foreach($images as $img)
-                                                <div class="col-xl-2 col-md-4 col-6">
-                                                    <div class="mt-4">
-                                                        <a href="{{url($img)}}"
-                                                           class="thumb preview-thumb image-popup">
-                                                            <div class="img-fluid">
-                                                                <img src="{{url($img)}}" alt=""
-                                                                     class="img-fluid d-block" width="150px">
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        @else
-                                            <div class="col-xl-2 col-md-4 col-6">
-                                                <div class="mt-4">
-                                                    <a href="{{url($answer->value)}}"
-                                                       class="thumb preview-thumb image-popup">
-                                                        <div class="img-fluid">
-                                                            <img src="{{url($answer->value)}}" alt=""
-                                                                 class="img-fluid d-block">
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-                            @if($answer->type === 9)
-                                <div class="popup-gallery mt-4">
-                                    <h5 class="font-size-15">{{$answer->label}}</h5>
-                                    <div class="row">
-                                        <div class="col-xl-2 col-md-4 col-6">
-                                            <div class="mt-4">
-                                                <a href="{{url($answer->value)}}"
-                                                   class="thumb preview-thumb image-popup">
-                                                    <div class="img-fluid">
-                                                        <img src="{{url($answer->value)}}" alt=""
-                                                             class="img-fluid d-block">
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                        @endforeach
-                        <div class="d-print-none mt-4">
+
+                        <div class="d-print-none mt-3">
                             <div class="float-end">
                                 <a href="javascript:window.print()" class="btn btn-success me-1"><i
                                             class="fa fa-print"></i></a>
-                                <a href="{{route('dynamicform.formresponses.downloadpdf', [$form_response,$form_response->id])}}" class="btn btn-primary w-md">Descargar</a>
+                                {{-- <a href="{{route('dynamicform.formresponses.downloadpdf', [$form_response,$form_response->id])}}" class="btn btn-primary w-md">Descargar</a> --}}
                             </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -167,23 +90,6 @@
     <script src="{{ Theme::url('libs/alertifyjs/alertifyjs.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script type="application/javascript" async>
-            $('.form-select').select2({
-                // theme: 'bootstrap4',
-                placeholder: {id:'-1', text:"--Seleccione--"},
-                allowClear: true,
-                width: 'resolve' // need to override the changed default
-            });
-            $('.form-select-multiple').select2({
-                placeholder: "--Seleccione--",
-                width: 'resolve' // need to override the changed default
-            });
-
-
-
-
-
-
-
         (function () {
             'use strict';
             let token = "{{$currentUser->getFirstApiKey() }}";

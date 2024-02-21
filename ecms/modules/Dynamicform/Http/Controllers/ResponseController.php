@@ -45,17 +45,6 @@ class ResponseController extends AdminBaseController
      */
     public function show(Form $form, FormResponse $form_response): Application|Factory|View
     {
-        // $params = json_decode(json_encode([
-        //     'filter' => [
-        //         'form_id' => $form->id,
-        //         'order'=>['field'=>'order','way'=>'asc']
-        //         ],
-        //     'include' => ['*'], 'page' => 1, 'take' => 10000
-        // ]));
-
-        // $datos = $this->field->getItemsBy($params);
-        // $datos = $datos->items();
-        // dd(compact('form_response'));
         return view('modules.dynamic-form.response.show', compact('form_response', 'form'));
     }
 

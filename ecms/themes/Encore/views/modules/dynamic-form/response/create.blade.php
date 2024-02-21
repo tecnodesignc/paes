@@ -386,7 +386,13 @@
                         break;
                     // select multiple
                     case "7":
-                        fieldValue = document.getElementById("btnselect-multiple-" + fieldId).value;
+                        var selectedOptions = document.querySelectorAll("#btnselect-multiple-" + fieldId + " option:checked");
+                        var selectedValues = [];
+                        // Recorrer los elementos seleccionados y obtener sus valores
+                        selectedOptions.forEach(function(option) {
+                            selectedValues.push(option.value);
+                        });
+                        fieldValue = selectedValues;
                         fieldComment = document.getElementById("btncomment-" + fieldId).value;
                         break;
 
@@ -534,17 +540,18 @@
             return new File([u8arr], filename, { type: mime });
         }
 
-        //Evento submit
+        //Evento submit que recopila la data obtenida del formulario, las imagenes capturadas y firma
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelector("button[type='submit']").addEventListener("click", function(event) {
-
                 event.preventDefault();
                 var formData = collectFormData();
+                //recorremos el formulario de respuestas
                 formImagesAnswers.answers.forEach(function(imageAnswer) {
-                    // console.log(imageAnswer);
+                    //validamos el id de la respuesta de la imagen existe contra los datos del form
                     const existingIndex = formData.answers.findIndex(item => item.field_id === imageAnswer.field_id);
+                    //validamos si existe entonces actualice el formData con la imagen y sino cree el registro
                     if (existingIndex !== -1) {
-                        formData.answers[existingIndex].image = imageAnswer.image;
+                        formData.answers[existingIndex].image = imageAnswer.value;
                     }
                     else {
                         formData.answers.push({
@@ -565,6 +572,7 @@
                     return;
                 }
 
+                // Estructura de datos para enviar a la api
                 var datos = {
                     form_id: {{$form->id}},
                     user_id: {{$currentUser->getUserId()}},
@@ -580,10 +588,12 @@
                     }
                 }).then(response => {
                     // Verificar si la solicitud fue exitosa
-                    if (response.status !== 200) {
-
+                    if (response.status === 200) {
+                        // Redirigir al usuario a otra página
+                        window.location.href = "{{ route('dynamicform.form.indexcolaboradoresform') }}";
+                    } else {
                         // Manejar el caso en que la solicitud no fue exitosa
-                        console.log(response.status);
+                        // console.log(response.status);
                         throw new Error('Error al cargar la imagen');
                     }
                 }).catch(error => {

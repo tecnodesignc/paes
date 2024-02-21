@@ -58,7 +58,7 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
                 $companies = is_array($filter->companies) ? $filter->companies : [$filter->companies];
                 $query->whereIn('company_id',$companies);
             }
-            
+
             // Filter by form id
             if(isset($filter->form_id)){
                 $query->where('form_id', $filter->form_id);
@@ -96,10 +96,9 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
      */
     public function create($data): Model|Collection|Builder|array|null
     {
+        \Log::info('error en eloquent repository');
         $formresponse = $this->model->create($data);
-        event(
-            new FormResponsesWasCreated($formresponse, $data)
-        );
+        event(new FormResponsesWasCreated($formresponse, $data));
         return $formresponse;
     }
 
