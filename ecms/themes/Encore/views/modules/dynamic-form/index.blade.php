@@ -213,14 +213,14 @@
                     }
 
                 ],
-            pagination: 12,
+            pagination: true,
             search: true,
             sort: true,
             data: {!! json_encode($forms_response_negatives) !!}
         }).render(document.getElementById("table-response"));
     </script>
 
-    <script type="application/javascript" async>
+    {{-- <script type="application/javascript" async>
         const loading = new Loader();
         flatpickr('#guia', {
             defaultDate: new Date(),
@@ -265,7 +265,7 @@
         };
         var chart = new ApexCharts(document.querySelector("#mini-1"), options);
         chart.render();
-    </script>
+    </script> --}}
 
     <style>
         #qrcode img {
