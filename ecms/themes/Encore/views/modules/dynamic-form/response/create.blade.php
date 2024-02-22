@@ -146,58 +146,60 @@
     <script type="application/javascript">
         document.addEventListener('DOMContentLoaded', (event) => {
             const canvas = document.getElementById('signatureCanvas');
-            const ctx = canvas.getContext('2d');
-            let isDrawing = false;
-            let lastX = 0;
-            let lastY = 0;
+            if (canvas){
+                const ctx = canvas.getContext('2d');
+                let isDrawing = false;
+                let lastX = 0;
+                let lastY = 0;
 
-            function draw(e) {
-                if (!isDrawing) return;
-                let mouseX, mouseY;
-                // Determinar las coordenadas del evento
-                if (e.type === 'mousemove' || e.type === 'mousedown' || e.type === 'mouseup' || e.type === 'mouseout') {
-                    mouseX = e.offsetX;
-                    mouseY = e.offsetY;
-                } else if (e.type === 'touchmove' || e.type === 'touchstart' || e.type === 'touchend') {
-                    const rect = canvas.getBoundingClientRect();
-                    mouseX = e.touches[0].clientX - rect.left;
-                    mouseY = e.touches[0].clientY - rect.top;
+                function draw(e) {
+                    if (!isDrawing) return;
+                    let mouseX, mouseY;
+                    // Determinar las coordenadas del evento
+                    if (e.type === 'mousemove' || e.type === 'mousedown' || e.type === 'mouseup' || e.type === 'mouseout') {
+                        mouseX = e.offsetX;
+                        mouseY = e.offsetY;
+                    } else if (e.type === 'touchmove' || e.type === 'touchstart' || e.type === 'touchend') {
+                        const rect = canvas.getBoundingClientRect();
+                        mouseX = e.touches[0].clientX - rect.left;
+                        mouseY = e.touches[0].clientY - rect.top;
+                    }
+                    ctx.beginPath();
+                    ctx.moveTo(lastX, lastY);
+                    ctx.lineTo(mouseX, mouseY);
+                    ctx.stroke();
+                    lastX = mouseX;
+                    lastY = mouseY;
                 }
-                ctx.beginPath();
-                ctx.moveTo(lastX, lastY);
-                ctx.lineTo(mouseX, mouseY);
-                ctx.stroke();
-                lastX = mouseX;
-                lastY = mouseY;
+
+                // Event listeners para el canvas
+                canvas.addEventListener('mousedown', (e) => {
+                    isDrawing = true;
+                    [lastX, lastY] = [e.offsetX, e.offsetY];
+                });
+
+                canvas.addEventListener('mousemove', draw);
+
+                canvas.addEventListener('mouseup', () => {
+                    isDrawing = false;
+                });
+
+                canvas.addEventListener('mouseout', () => {
+                    isDrawing = false;
+                });
+
+                // Event listeners para eventos táctiles
+                canvas.addEventListener('touchstart', (e) => {
+                    isDrawing = true;
+                    [lastX, lastY] = [e.touches[0].clientX, e.touches[0].clientY];
+                });
+
+                canvas.addEventListener('touchmove', draw);
+
+                canvas.addEventListener('touchend', () => {
+                    isDrawing = false;
+                });
             }
-
-            // Event listeners para el canvas
-            canvas.addEventListener('mousedown', (e) => {
-                isDrawing = true;
-                [lastX, lastY] = [e.offsetX, e.offsetY];
-            });
-
-            canvas.addEventListener('mousemove', draw);
-
-            canvas.addEventListener('mouseup', () => {
-                isDrawing = false;
-            });
-
-            canvas.addEventListener('mouseout', () => {
-                isDrawing = false;
-            });
-
-            // Event listeners para eventos táctiles
-            canvas.addEventListener('touchstart', (e) => {
-                isDrawing = true;
-                [lastX, lastY] = [e.touches[0].clientX, e.touches[0].clientY];
-            });
-
-            canvas.addEventListener('touchmove', draw);
-
-            canvas.addEventListener('touchend', () => {
-                isDrawing = false;
-            });
         });
     </script>
 

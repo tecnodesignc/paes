@@ -35,7 +35,7 @@ class SendNotification
                 // Enviar la notificacion
                 $this->notification->to($user->id)->push('Formulario con hallazgo',
                 "Se ha registrado una respuesta al formulario ".$formresponse->form->name." con ". $formresponse_negative. "hallazgos negativos.",
-                '<i class="mdi mdi-file-alert-outline text-warning"></i>',
+                '<i class="mdi mdi-file-alert-outline"></i>',
                 route('dynamicform.formresponses.show', [$formresponse->form_id, $formresponse->id]));
             }
         }
