@@ -46,13 +46,13 @@
                                 <h5 class="font-size-15 mb-1">{{$form_response->data->info->fullName ?? null}}</h5>
                                 <p>{{$form_response->data->info->identification ?? null}}</p>
 
-                                 <h5 class="font-size-15 mb-1">Placa de Vehículo:</h5>
+                                 <h5 class="font-size-15 mb-1">Placa del vehículo:</h5>
                                  <p>{{$form_response->data->info->vehicle->label ?? null}}</p>
 
-                                 <h5 class="font-size-15 mb-1">Kilometraje del Vehiculo:</h5>
+                                 <h5 class="font-size-15 mb-1">Kilometraje del vehículo:</h5>
                                  <p>{{$form_response->data->info->vehicle->millage ?? null}}</p>
 
-                                 <h5 class="font-size-15 mb-1">Fecha De registro:</h5>
+                                 <h5 class="font-size-15 mb-1">Fecha de registro:</h5>
                                  <p>{{$form_response->created_at->format('Y-m-d') ?? null}}</p>
                             </div>
                         </div>
