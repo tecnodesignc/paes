@@ -144,13 +144,15 @@
     </script>
 
     <script type="application/javascript">
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const canvas = document.getElementById('signatureCanvas');
-            if (canvas){
+
+        document.addEventListener('DOMContentLoaded', (e) => {
+            const canvases = document.querySelectorAll('.signatureCanvas');
+
+            canvases.forEach(canvas => {
                 const ctx = canvas.getContext('2d');
                 let isDrawing = false;
-                let lastX = 0;
-                let lastY = 0;
+                let lastX = null;
+                let lastY = null;
 
                 function draw(e) {
                     if (!isDrawing) return;
@@ -191,7 +193,8 @@
                 // Event listeners para eventos táctiles
                 canvas.addEventListener('touchstart', (e) => {
                     isDrawing = true;
-                    [lastX, lastY] = [e.touches[0].clientX, e.touches[0].clientY];
+                    const rect = canvas.getBoundingClientRect();
+                    [lastX, lastY] = [e.touches[0].clientX - rect.left, e.touches[0].clientY - rect.top];
                 });
 
                 canvas.addEventListener('touchmove', draw);
@@ -199,8 +202,25 @@
                 canvas.addEventListener('touchend', () => {
                     isDrawing = false;
                 });
-            }
+
+                // Prevenir el scroll en toda la página mientras se pinta en el canvas
+                    document.addEventListener('touchmove', (e) => {
+                if (e.target.classList.contains('signatureCanvas')) {
+                    e.preventDefault();
+                }
+            }, { passive: false }); // especificar explícitamente que el evento no es pasivo
+            });
         });
+
+
+        // Función para limpiar el canvas
+        function clearCanvas(fieldId) {
+            const canvas = document.getElementById('signatureCanvas-'+fieldId);
+            const context = canvas.getContext('2d');
+            // Limpiar el canvas
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
     </script>
 
     <script type="application/javascript">
@@ -519,14 +539,6 @@
                 console.error(error);
                 // alert('Error al cargar la imagen');
             });
-        }
-
-        // Función para limpiar el canvas
-        function clearCanvas() {
-            const canvas = document.getElementById('signatureCanvas');
-            const context = canvas.getContext('2d');
-            // Limpiar el canvas
-            context.clearRect(0, 0, canvas.width, canvas.height);
         }
 
         //Convertimos la imagen que está en base 64 a archivo

@@ -4,7 +4,7 @@
         @case(5)
             <div class="row mt-3">
                 <div class="col-lg-6 col-md-12">
-                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <div class="btn-group border border-primary" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check dynamic-field" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-1" autocomplete="off" value="1" data-field-type="5" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}"
                                 {{$field->value === 1 ? 'checked' : ''}}>
@@ -68,7 +68,7 @@
         @case(0)
             <div class="row mt-3">
                 <div class="col-lg-12 col-md-12">
-                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <input type="text" name="btntext-{{$field->id}}" id="btntext-{{$field->id}}" class="form-control dynamic-field"  data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}">
                 </div>
             </div>
@@ -78,7 +78,7 @@
         @case(1)
             <div class="row mt-3">
                 <div class="col-lg-12 col-md-12">
-                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <textarea class="form-control dynamic-field" id="btntextarea-{{$field->id}}" name="btntextarea-{{$field->id}}" rows="5" cols="50"
                         data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" {{$field->required == 1 ? 'required' : ''}}
                     >{{$field->value ?? ''}}</textarea>
@@ -90,7 +90,7 @@
         @case(2)
             <div class="row mt-3">
                 <div class="col-lg-12 col-md-12">
-                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <input type="number" name="btnnumber-{{$field->id}}" id="btnnumber-{{$field->id}}" class="form-control dynamic-field" data-field-type="2" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" {{$field->required == 1 ? 'required' : ''}}>
                 </div>
             </div>
@@ -100,7 +100,7 @@
         @case(3)
             <div class="row mt-3">
                 <div class="col-lg-12 col-md-12">
-                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <input type="tel" name="btntel-{{$field->id}}" id="btntel-{{$field->id}}" class="form-control dynamic-field" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size='10' data-field-type="3" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" {{$field->required == 1 ? 'required' : ''}}>
                 </div>
             </div>
@@ -110,7 +110,7 @@
         @case(4)
             <div class="row mt-3">
                 <div class="col-lg-12 col-md-12">
-                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <input type="email" name="btnemail-{{$field->id}}" id="btnemail-{{$field->id}}" class="form-control dynamic-field" pattern=".+@example\.com" size="30" data-field-type="4" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" {{$field->required == 1 ? 'required' : ''}}>
                 </div>
             </div>
@@ -120,7 +120,7 @@
         @case(6)
             <div class="row mt-3">
                 <div class="col-lg-6 col-md-12">
-                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     @php
                         $options = $field->selectable[0];
                         $options = explode(',', $options);
@@ -151,7 +151,7 @@
         @case(7)
             <div class="row mt-3">
                 <div class="col-lg-6 col-md-12">
-                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <select class="form-select-multiple dynamic-field" name="btnselect-multiple-{{$field->id}}[]" id="btnselect-multiple-{{$field->id}}" style="width: 100%; height: 150px;" multiple="multiple" data-field-type="7" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}">
                         @php
                             $options = $field->selectable[0];
@@ -183,7 +183,7 @@
                 <div class="col-lg-6 col-md-12">
                     <div class="card">
                         <div class="d-flex justify-content-between">
-                            <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                            <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                             <a class="waves-effect text-danger m-3 mt-1" onclick="cancelCamera('{{$field->id}}')">Cerrar camara</a>
                         </div>
 
@@ -211,11 +211,12 @@
             <div class="row mt-3">
                 <div class="col-lg-12 col-md-12">
                     <div>
-                        <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
-                        <canvas id="signatureCanvas" class="border border-secondary" width="300px" height="200px"></canvas>
+                        <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
+                        <canvas  id="signatureCanvas-{{$field->id}}" style="background-color: azure" width="300px" height="200px" class="border border-secondary signatureCanvas"></canvas>
+
                     </div>
                     <div class="d-flex gap-4">
-                        <button type="button" class="btn btn-secondary" onclick="uploadImageToServer({{ intval($field->id) }}, '{{$field->label}}', {{$field->type}})">Guardar</button>
+                        <button type="button" class="btn btn-secondary" onclick="uploadImageToServer({{ intval($field->id) }}, '{{$field->label}}', {{$field->type}}, 'signatureCanvas-{{$field->id}}')">Guardar</button>
                         <button type="button" class="btn btn-danger" onclick="clearCanvas({{ intval($field->id) }})">Cancelar</button>
                     </div>
                 </div>
@@ -227,7 +228,7 @@
         @case(11)
             <div class="row mt-3">
                 <div class="col-lg-6 col-md-12">
-                    <h5 class="text-truncate font-size-18 mb-1">{{$field->label}}</h5>
+                    <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <div class="btn-group border border-primary d-flex flex-wrap" role="group" aria-label="Opciones">
                         @foreach($field->selectable as $options)
                             @php
