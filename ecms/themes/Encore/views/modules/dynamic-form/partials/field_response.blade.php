@@ -104,11 +104,16 @@
                 <div class="col-lg-9 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
 
-                    <div class="gap-1" role="group" aria-label="{{$field->label}}" disabled>
-                        @foreach($field->value as $option)
-                        <button type="button" class="btn btn-secondary disabled mt-1">{{$option}}</button>
-                        @endforeach
-                    </div>
+                    @if(isset($field->value))
+                        <div class="gap-1" role="group" aria-label="{{$field->label}}" disabled>
+                            @foreach($field->value as $option)
+                                <button type="button" class="btn btn-secondary disabled mt-1">{{$option}}</button>
+                            @endforeach
+                        </div>
+                    @else
+                        <input type="text" value="" class="form-control" disabled>
+
+                    @endif
                 </div>
                 <div class="col-lg-3 col-md-12">
                     <textarea class="form-control" rows="2" cols="50" placeholder="Agregar un comentario" disabled>{{$field->comment??''}}</textarea>
@@ -154,7 +159,7 @@
             <div class="row mt-3">
                 <div class="col-lg-6 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
-                    <input type="text" value="{{$field->value}}" class="form-control" disabled>
+                    <input type="text" value="{{$field->value ?? null}}" class="form-control" disabled>
                 </div>
                 <div class="col-lg-3 col-md-12 text-center">
                     @if(isset($field->image))

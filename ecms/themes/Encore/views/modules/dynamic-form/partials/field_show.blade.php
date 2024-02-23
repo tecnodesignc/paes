@@ -123,15 +123,19 @@
             <div class="row mt-3">
                 <div class="col-lg-7 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
-                    @php
-                        $options = $field->selectable[0];
-                        $options = explode(',', $options);
-                    @endphp
+
                     <select class="form-select dynamic-field" name="btnselect-{{$field->id}}" id="btnselect-{{$field->id}}" style="width: 100%;" data-field-type="6" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}">
-                        <option value="">--Seleccione--</option>
-                        @foreach($options as $option)
-                            <option value="{{ $option }}">{{ $option }}</option>
-                        @endforeach
+                        @if(empty($field->selectable[0]))
+                            <option disabled>No hay opciones disponibles</option>
+                        @else
+                            @php
+                                $options = explode(',', $field->selectable[0]);
+                            @endphp
+                            <option value="">--Seleccione--</option>
+                            @foreach($options as $option)
+                                <option value="{{ $option }}">{{ $option }}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
                 <div class="col-lg-2 col-md-12">
@@ -155,13 +159,16 @@
                 <div class="col-lg-7 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <select class="form-select-multiple dynamic-field" name="btnselect-multiple-{{$field->id}}[]" id="btnselect-multiple-{{$field->id}}" style="width: 100%; height: 150px;" multiple="multiple" data-field-type="7" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}">
-                        @php
-                            $options = $field->selectable[0];
-                            $options = explode(',', $options);
-                        @endphp
-                            @foreach($options as $option)
-                                <option value="{{ $option }}">{{ $option }}</option>
-                            @endforeach
+                        @if(empty($field->selectable[0]))
+                            <option disabled>No hay opciones disponibles</option>
+                        @else
+                            @php
+                                $options = explode(',', $field->selectable[0]);
+                            @endphp
+                                @foreach($options as $option)
+                                    <option value="{{ $option }}">{{ $option }}</option>
+                                @endforeach
+                        @endif
                     </select>
                 </div>
                 <div class="col-lg-2 col-md-12">

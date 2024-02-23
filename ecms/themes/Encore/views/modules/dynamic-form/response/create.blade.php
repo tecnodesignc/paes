@@ -436,9 +436,9 @@
 
                 // Añadir respuesta al array de respuestas
                 formData.answers.push({
-                    "field_id": fieldId,
+                    "field_id": parseInt(fieldId),
                     "label": fieldLabel,
-                    "type": fieldType,
+                    "type": parseInt(fieldType),
                     "value": fieldValue,
                     "comment": fieldComment && fieldComment.trim() !== '' ? fieldComment : undefined,
                     "image": fieldFoto && fieldFoto.trim() !== '' ? fieldFoto : undefined
@@ -569,9 +569,9 @@
                     }
                     else {
                         formData.answers.push({
-                            field_id: imageAnswer.field_id,
+                            field_id: parseInt(imageAnswer.field_id),
                             label: imageAnswer.label,
-                            type: imageAnswer.type,
+                            type: parseInt(imageAnswer.type),
                             value: imageAnswer.value,
                             image: imageAnswer.image
                         });
@@ -593,7 +593,7 @@
                     data: formData,
                     company_id: companyId
                 };
-
+                console.log(datos);
                 var createUrl = "{{ route('api.dynamicform.formresponse.store') }}";
                 axios.post(createUrl, datos, {
                     headers: {
