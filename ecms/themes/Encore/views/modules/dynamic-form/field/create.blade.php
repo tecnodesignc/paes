@@ -49,7 +49,7 @@
                                     <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
                                 </div>
                             </div>
-                            
+
                         </div>
                     </a>
                     <div id="addproduct-productinfo-collapse" class="collapse show"
@@ -73,11 +73,12 @@
                                                 <label class="form-label"><strong>*</strong>Tipo de Campo</label>
                                                 <select class="form-select shadow-none" name="type" id="type" required>
                                                     <option value="12">Título</option>
-                                                    <option value="0">Texto</option>
+                                                    <option value="13">Párrafo</option>
+                                                    <option value="0">Input de Texto</option>
                                                     <option value="1">Area de Texto</option>
-                                                    <option value="2">Numero</option>
-                                                    <option value="3">Teléfono</option>
-                                                    <option value="4">Email</option>
+                                                    <option value="2">Input de Numero</option>
+                                                    <option value="3">Input de Teléfono</option>
+                                                    <option value="4">Input de Email</option>
                                                     <option value="5">Si/No/No Aplica</option>
                                                     <option value="6">Selector</option>
                                                     <option value="7">Selector Multiple</option>
@@ -157,7 +158,7 @@
                     $('#limits').css('display', 'none');
                 }
 
-              
+
             }
 
             // Llamada a la función para actualizar la visibilidad y opciones del campo cuando se carga la página

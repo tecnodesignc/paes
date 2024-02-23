@@ -3,7 +3,7 @@
         {{-- Input tipo si/no/no aplica --}}
         @case(5)
             <div class="row mt-3">
-                <div class="col-lg-6 col-md-12">
+                <div class="col-lg-7 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <div class="btn-group border border-primary" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check dynamic-field" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-1" autocomplete="off" value="1" data-field-type="5" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}"
@@ -19,7 +19,8 @@
                         <label class="btn btn-outline-dark mb-0" for="btnradio-{{$field->id}}-3">N/A</label>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-12 text-center">
+
+                <div class="col-lg-2 col-md-12 text-lg-center">
                     @if(isset($field->image))
                         <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
                             <div class="img-fluid">
@@ -27,7 +28,7 @@
                             </div>
                         </a>
                     @else
-                    <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal-{{$field->id}}"><i class="fas fa-camera"></i></button>
+                    <button type="button" class="btn btn-primary mt-lg-4" data-bs-toggle="modal" data-bs-target="#myModal-{{$field->id}}"><i class="fas fa-camera"></i></button>
 
                     <!-- Modal para tomar la foto -->
                     <div id="myModal-{{$field->id}}" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
@@ -59,8 +60,9 @@
                     @endif
                 </div>
                 <div class="col-lg-3 col-md-12">
-                    <textarea class="form-control" id="btncomment-{{$field->id}}" name="btncomment-{{$field->id}}" rows="2" cols="50", placeholder="Agregar un comentario">{{$field->comment??''}}</textarea>
+                    <textarea class="form-control mt-1" id="btncomment-{{$field->id}}" name="btncomment-{{$field->id}}" rows="2" cols="50", placeholder="Agregar un comentario">{{$field->comment??''}}</textarea>
                 </div>
+
             </div>
             @break
 
@@ -119,7 +121,7 @@
         {{-- Input tipo Selector --}}
         @case(6)
             <div class="row mt-3">
-                <div class="col-lg-6 col-md-12">
+                <div class="col-lg-7 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     @php
                         $options = $field->selectable[0];
@@ -132,7 +134,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-lg-3 col-md-12">
+                <div class="col-lg-2 col-md-12">
                     @if(isset($field->image))
                         <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
                             <div class="img-fluid">
@@ -150,7 +152,7 @@
         {{-- Input tipo Selector Multiple --}}
         @case(7)
             <div class="row mt-3">
-                <div class="col-lg-6 col-md-12">
+                <div class="col-lg-7 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <select class="form-select-multiple dynamic-field" name="btnselect-multiple-{{$field->id}}[]" id="btnselect-multiple-{{$field->id}}" style="width: 100%; height: 150px;" multiple="multiple" data-field-type="7" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}">
                         @php
@@ -162,7 +164,7 @@
                             @endforeach
                     </select>
                 </div>
-                <div class="col-lg-3 col-md-12">
+                <div class="col-lg-2 col-md-12">
                     @if(isset($field->image))
                         <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
                             <div class="img-fluid">
@@ -227,7 +229,7 @@
         @case(10)
         @case(11)
             <div class="row mt-3">
-                <div class="col-lg-6 col-md-12">
+                <div class="col-lg-7 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <div class="btn-group border border-primary d-flex flex-wrap" role="group" aria-label="Opciones">
                         @foreach($field->selectable as $options)
@@ -241,7 +243,7 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-12 text-center">
+                <div class="col-lg-2 col-md-12 text-lg-center">
                     @if(isset($field->image))
                         <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
                             <div class="img-fluid">
@@ -249,7 +251,7 @@
                             </div>
                         </a>
                     @else
-                    <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#myModal-{{$field->id}}"><i class="fas fa-camera"></i></button>
+                    <button type="button" class="btn btn-primary mt-lg-4" data-bs-toggle="modal" data-bs-target="#myModal-{{$field->id}}"><i class="fas fa-camera"></i></button>
 
                     <!-- Modal para tomar la foto -->
                     <div id="myModal-{{$field->id}}" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
@@ -281,7 +283,7 @@
                     @endif
                 </div>
                 <div class="col-lg-3 col-md-12">
-                    <textarea class="form-control" id="btncomment-{{$field->id}}" name="btncomment-{{$field->id}}" rows="2" cols="50", placeholder="Agregar un comentario">{{$field->comment??''}}</textarea>
+                    <textarea class="form-control mt-1" id="btncomment-{{$field->id}}" name="btncomment-{{$field->id}}" rows="2" cols="50", placeholder="Agregar un comentario">{{$field->comment??''}}</textarea>
                 </div>
             </div>
             @break
@@ -296,6 +298,14 @@
             </div>
             @break
 
+        {{-- Input tipo párrafo --}}
+        @case(13)
+        <div class="row mt-3">
+            <div class="col-lg-12 col-md-12 text">
+                <p class="mb-2 ">{{$field->label}}</p>
+            </div>
+        </div>
+        @break
 
     @endswitch
 @endif

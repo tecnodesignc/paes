@@ -124,9 +124,7 @@
                         <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
 
                         <a href="{{url($field->value)}}" class="thumb preview-thumb image-popup">
-                            <div class="img-fluid">
-                                <img src="{{url($field->value)}}" alt="" class="img-fluid d-block" >
-                            </div>
+                            <img src="{{url($field->value)}}" alt="" class="img" width="240px" height="240px">
                         </a>
                     @endif
                 </div>
@@ -173,7 +171,7 @@
             </div>
             @break
 
-        {{-- Input tipo text --}}
+        {{-- Input tipo título --}}
         @case(12)
             <div class="row mt-3">
                 <div class="col-lg-12 col-md-12 text-center">
@@ -183,6 +181,14 @@
             </div>
             @break
 
+        {{-- Input tipo párrafo --}}
+        @case(13)
+        <div class="row mt-3">
+            <div class="col-lg-12 col-md-12 text-center">
+                <p class="mb-2 ">{{$field->label}}</p>
+            </div>
+        </div>
+        @break
 
     @endswitch
 @endif

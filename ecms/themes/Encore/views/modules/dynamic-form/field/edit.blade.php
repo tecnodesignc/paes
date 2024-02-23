@@ -83,11 +83,12 @@
                                                 <label class="form-label">Tipo de Campo</label>
                                                 <select class="form-select shadow-none" name="type" id="type" required placeholder="--Seleccione--">
                                                     <option value="12" {{ $field->type == 12 ? 'selected' : '' }}>Título</option>
-                                                    <option value="0" {{ $field->type == 0 ? 'selected' : '' }}>Texto</option>
+                                                    <option value="13" {{ $field->type == 13 ? 'selected' : '' }}>Párrafo</option>
+                                                    <option value="0" {{ $field->type == 0 ? 'selected' : '' }}>Input de Texto</option>
                                                     <option value="1" {{ $field->type == 1 ? 'selected' : '' }}>Área de Texto</option>
-                                                    <option value="2" {{ $field->type == 2 ? 'selected' : '' }}>Número</option>
-                                                    <option value="3" {{ $field->type == 3 ? 'selected' : '' }}>Teléfono</option>
-                                                    <option value="4" {{ $field->type == 4 ? 'selected' : '' }}>Email</option>
+                                                    <option value="2" {{ $field->type == 2 ? 'selected' : '' }}>Input de Número</option>
+                                                    <option value="3" {{ $field->type == 3 ? 'selected' : '' }}>Input de Teléfono</option>
+                                                    <option value="4" {{ $field->type == 4 ? 'selected' : '' }}>Input de Email</option>
                                                     <option value="5" {{ $field->type == 5 ? 'selected' : '' }}>Si/No/No Aplica</option>
                                                     <option value="6" {{ $field->type == 6 ? 'selected' : '' }}>Selector</option>
                                                     <option value="7" {{ $field->type == 7 ? 'selected' : '' }}>Selector Múltiple</option>
@@ -105,14 +106,14 @@
                                                     {!! $errors->first('required', '<div class="invalid-feedback">:message</div>') !!}
                                                 </label>
                                             </div>
-                                            
+
                                             <div id="limits" class="mb-3 {{ $errors->has("selectable") ? ' was-validated' : '' }}">
                                                 <label for="companies" class="form-label font-size-13 text-muted">Opciones del Campo</label>
                                                 <input class="form-control" id="selectable" name="selectable[]" type="text"
                                                     value="{{ old('selectable', is_array($field->selectable) ? implode(',', $field->selectable) : $field->selectable) }}" placeholder="Agregar Opciones" />
                                                 {!! $errors->first('selectable', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
