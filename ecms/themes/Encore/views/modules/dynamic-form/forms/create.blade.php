@@ -91,7 +91,7 @@
                                                 </select>
                                                 {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -131,7 +131,7 @@
                                                     {!! $errors->first('activated', '<div class="invalid-feedback">:message</div>') !!}
                                                 </label>
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -144,7 +144,7 @@
     </div>
     <div class="row mb-4">
         <div class="col text-end">
-            <a href="{{route('transport.vehicles.index')}}" class="btn btn-danger"> <i class="bx bx-x me-1"></i>
+            <a href="{{route('dynamicform.form.index')}}" class="btn btn-danger"> <i class="bx bx-x me-1"></i>
                 Cancelar </a>
             <button type="submit" class="btn btn-success"><i class=" bx bx-file me-1"></i> Guardar</button>
         </div> <!-- end col -->
@@ -214,7 +214,7 @@
             })
         })();
     </script>
-    
+
     <style>
         .fade:not(.show) {
             opacity: 1;
