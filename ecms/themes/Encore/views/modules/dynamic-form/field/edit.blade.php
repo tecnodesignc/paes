@@ -82,7 +82,7 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label">Tipo de Campo</label>
-                                                <select class="form-select shadow-none btnseleccion" name="type" id="type" required placeholder="--Seleccione--">
+                                                <select class="form-select shadow-none btnseleccion" name="type" id="type" required placeholder="--Seleccione--" style="width: 100%;">
                                                     <option value="12" {{ $field->type == 12 ? 'selected' : '' }}>Título</option>
                                                     <option value="13" {{ $field->type == 13 ? 'selected' : '' }}>Párrafo</option>
                                                     <option value="0" {{ $field->type == 0 ? 'selected' : '' }}>Input de Texto</option>

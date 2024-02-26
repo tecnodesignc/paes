@@ -72,7 +72,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label"><strong>*</strong>Tipo de Campo</label>
-                                                <select class="form-select shadow-none btnseleccion" name="type" id="type" required>
+                                                <select class="form-select shadow-none btnseleccion" name="type" id="type" required style="width: 100%;">
                                                     <option value="12">Título</option>
                                                     <option value="13">Párrafo</option>
                                                     <option value="0">Input de Texto</option>
