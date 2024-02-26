@@ -11,6 +11,7 @@
     {!! Theme::style('libs/choices.js/choices.js.min.css?v='.config('app.version')) !!}
     <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
     {!! Theme::style('libs/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css?v='.config('app.version')) !!}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -81,7 +82,7 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label">Tipo de Campo</label>
-                                                <select class="form-select shadow-none" name="type" id="type" required placeholder="--Seleccione--">
+                                                <select class="form-select shadow-none btnseleccion" name="type" id="type" required placeholder="--Seleccione--">
                                                     <option value="12" {{ $field->type == 12 ? 'selected' : '' }}>Título</option>
                                                     <option value="13" {{ $field->type == 13 ? 'selected' : '' }}>Párrafo</option>
                                                     <option value="0" {{ $field->type == 0 ? 'selected' : '' }}>Input de Texto</option>
@@ -142,9 +143,13 @@
     <script src="{{ Theme::url('libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{Theme::url('libs/choices.js/choices.js.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script type="application/javascript">
-             document.addEventListener("keydown", function(event) {
+        $(document).ready(function() {
+            $('.btnseleccion').select2();
+        });
+        document.addEventListener("keydown", function(event) {
             if (event.key === "Enter") {
                 // Cancela el envío del formulario
                 event.preventDefault();

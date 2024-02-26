@@ -11,6 +11,7 @@
     {!! Theme::style('libs/choices.js/choices.js.min.css?v='.config('app.version')) !!}
     <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
     {!! Theme::style('libs/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css?v='.config('app.version')) !!}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -71,7 +72,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label"><strong>*</strong>Tipo de Campo</label>
-                                                <select class="form-select shadow-none" name="type" id="type" required>
+                                                <select class="form-select shadow-none btnseleccion" name="type" id="type" required>
                                                     <option value="12">Título</option>
                                                     <option value="13">Párrafo</option>
                                                     <option value="0">Input de Texto</option>
@@ -127,8 +128,12 @@
     <script src="{{ Theme::url('libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{Theme::url('libs/choices.js/choices.js.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script type="application/javascript">
+        $(document).ready(function() {
+            $('.btnseleccion').select2();
+        });
         document.addEventListener("keydown", function(event) {
             if (event.key === "Enter") {
                 // Cancela el envío del formulario
