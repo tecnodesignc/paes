@@ -40,7 +40,7 @@
                                         <div>
                                             <p>Subir imagen</p>
                                         </div>
-                                        <button type="button" id="captureButton-{{$field->id}}" class="btn btn-primary" onclick="captureImage('{{$field->id}}')"><i class="fas fa-camera"></i></button>
+                                        <button type="button" id="captureButton-{{$field->id}}" class="btn btn-primary" onclick="captureImage({{$field->id}}, '{{$field->label}}', {{$field->type}})"><i class="fas fa-camera"></i></button>
                                         <button type="button" id="uploadButton-{{$field->id}}" class="btn btn-info" onclick="uploadImage('{{$field->id}}')"><i class="fas fa-plus"></i></button>
                                         <button type="button" id="switchCameraButton-{{$field->id}}" class="btn btn-secondary" onclick="switchCamera('{{$field->id}}')"> <i class="mdi mdi-sync-circle"></i></button>
 

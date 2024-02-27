@@ -13,7 +13,7 @@
 
                         <input type="radio" class="btn-check" autocomplete="off"
                             disabled {{$field->value == 0 ? 'checked' : ''}}>
-                        <label class="btn btn-outline-dark mb-0">No</label>
+                        <label class="btn {{$field->value == 0 ? 'btn-danger' : 'btn-outline-dark'}}  mb-0">No</label>
 
                         <input type="radio" class="btn-check" autocomplete="off"
                             disabled {{$field->value == 2 ? 'checked' : ''}}>
@@ -30,7 +30,9 @@
                     @endif
                 </div>
                 <div class="col-lg-3 col-md-12">
-                    <textarea class="form-control" rows="2" cols="50", placeholder="Agregar un comentario" disabled>{{$field->comment??''}}</textarea>
+                    @if (isset($field->comment))
+                        <textarea class="form-control" rows="2" cols="50", placeholder="Agregar un comentario" disabled>{{$field->comment??''}}</textarea>
+                    @endif
                 </div>
             </div>
             @break
@@ -93,7 +95,9 @@
                     <input type="text" value="{{$field->value}}" class="form-control" disabled>
                 </div>
                 <div class="col-lg-3 col-md-12">
-                    <textarea class="form-control" rows="2" cols="50" placeholder="Agregar un comentario" disabled>{{$field->comment??''}}</textarea>
+                    @if (isset($field->comment))
+                        <textarea class="form-control" rows="2" cols="50", placeholder="Agregar un comentario" disabled>{{$field->comment??''}}</textarea>
+                    @endif
                 </div>
             </div>
             @break
@@ -116,7 +120,9 @@
                     @endif
                 </div>
                 <div class="col-lg-3 col-md-12">
-                    <textarea class="form-control" rows="2" cols="50" placeholder="Agregar un comentario" disabled>{{$field->comment??''}}</textarea>
+                    @if (isset($field->comment))
+                        <textarea class="form-control" rows="2" cols="50", placeholder="Agregar un comentario" disabled>{{$field->comment??''}}</textarea>
+                    @endif
                 </div>
             </div>
             @break
@@ -145,7 +151,7 @@
 
                         <a href="{{url($field->value)}}" class="thumb preview-thumb image-popup">
                             <div class="img-fluid">
-                                <img src="{{url($field->value)}}" alt="" class="img-fluid d-block">
+                                <img src="{{url($field->value)}}" alt="" class="img-fluid d-block" width="300px" height="200px">
                             </div>
                         </a>
                     @endif
@@ -171,7 +177,9 @@
                     @endif
                 </div>
                 <div class="col-lg-3 col-md-12">
-                    <textarea class="form-control" rows="2" cols="50", placeholder="Agregar un comentario" disabled>{{$field->comment??''}}</textarea>
+                    @if (isset($field->comment))
+                        <textarea class="form-control" rows="2" cols="50", placeholder="Agregar un comentario" disabled>{{$field->comment??''}}</textarea>
+                    @endif
                 </div>
             </div>
             @break
