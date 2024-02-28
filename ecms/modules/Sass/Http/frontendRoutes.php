@@ -63,8 +63,7 @@ $router->group(['prefix' => '/companies'], function (Router $router) {
     ]);
     $router->group(['prefix' => '/drivers'], function (Router $router) {
 
-        $router->get('register/{token}', [
-            'middleware' => 'auth.guest',
+        $router->get('register/{token_company}', [
             'as' => 'sass.drivers.register',
             'uses' => 'AuthController@getRegister'
         ]);

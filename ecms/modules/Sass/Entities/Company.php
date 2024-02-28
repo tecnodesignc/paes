@@ -21,7 +21,7 @@ class Company extends Model
     use PresentableTrait;
 
     protected $table = 'sass__companies';
-    protected $fillable = ['logo','name','address','email','identification','phone','website','type','settings'];
+    protected $fillable = ['logo','name','nit','address','email','identification','phone','website','type','token','settings'];
 
 
 
