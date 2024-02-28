@@ -76,6 +76,8 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 
 </form>
@@ -87,6 +89,8 @@
     <script src="{{ Theme::url('libs/alertifyjs/alertifyjs.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+
     <script type="application/javascript">
         $(document).ready(function() {
             $('.form-select').select2({
@@ -346,28 +350,49 @@
             });
         });
 
-        let currentCamera = 'back'; // Estado inicial
+        // let currentCamera = 'front'; // Estado inicial
+        // async function switchCamera(fieldId) {
+        //     const video = document.getElementById('video-' + fieldId);
+        //     const devices = await navigator.mediaDevices.enumerateDevices();
+        //     const videoDevices = devices.filter(device => device.kind === 'videoinput');
+
+        //     // Encontrar la cámara opuesta a la actual
+        //     const oppositeCamera = currentCamera === 'front' ? 'back' : 'front';
+        //     const oppositeCameraDevice = videoDevices.find(device => device.label.toLowerCase().includes(oppositeCamera));
+
+        //     if (oppositeCameraDevice) {
+        //         try {
+        //             const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: oppositeCameraDevice.deviceId } });
+        //             video.srcObject = mediaStream;
+        //             currentCamera = oppositeCamera; // Actualizar el estado de la cámara
+        //         } catch (error) {
+        //             console.log("Conexión de la camara denegada");
+        //         }
+        //     } else {
+        //         console.error(`No se encontró una cámara ${oppositeCamera}.`);
+        //     }
+        // }
+
+        let currentCamera = "environment"; // Estado inicial: cámara trasera
+
         async function switchCamera(fieldId) {
             const video = document.getElementById('video-' + fieldId);
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            const videoDevices = devices.filter(device => device.kind === 'videoinput');
 
-            // Encontrar la cámara opuesta a la actual
-            const oppositeCamera = currentCamera === 'front' ? 'back' : 'front';
-            const oppositeCameraDevice = videoDevices.find(device => device.label.toLowerCase().includes(oppositeCamera));
-
-            if (oppositeCameraDevice) {
-                try {
-                    const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: oppositeCameraDevice.deviceId } });
-                    video.srcObject = mediaStream;
-                    currentCamera = oppositeCamera; // Actualizar el estado de la cámara
-                } catch (error) {
-                    console.log("Conexión de la camara denegada");
-                }
-            } else {
-                console.error(`No se encontró una cámara ${oppositeCamera}.`);
+            // Determinar la cámara opuesta a la actual
+            const oppositeCamera = currentCamera === "environment" ? "user" : "environment";
+            console.log(oppositeCamera);
+            try {
+                const mediaStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: oppositeCamera }
+                });
+                video.srcObject = mediaStream;
+                currentCamera = oppositeCamera; // Actualizar el estado de la cámara
+            } catch (error) {
+                console.log("Error al acceder a la cámara:", error);
             }
         }
+
+
     </script>
 
     <script type="application/javascript">

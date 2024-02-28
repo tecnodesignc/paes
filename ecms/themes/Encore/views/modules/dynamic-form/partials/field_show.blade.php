@@ -284,6 +284,8 @@
                                 <div class="d-flex justify-content-end">
                                     <p class="waves-effect text-primary m-3 mt-1" data-bs-dismiss="modal" data-bs-target="#myModal-{{$field->id}}" onclick="cancelCamera('{{$field->id}}')">Cerrar camara</p>
                                 </div>
+
+
                             </div>
                         </div>
                     </div>
