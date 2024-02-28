@@ -12,7 +12,7 @@ use Modules\Dynamicform\Repositories\FormRepository;
 use Modules\Dynamicform\Repositories\FormResponseRepository;
 use Modules\Dynamicform\Transformers\FormResponseTransformer;
 
-class PublicController extends PublicBaseController
+class PublicController extends AdminBaseController
 {
 
     private FormRepository $form;
