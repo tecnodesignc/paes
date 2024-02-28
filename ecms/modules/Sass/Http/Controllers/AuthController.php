@@ -2,17 +2,16 @@
 
 namespace modules\Sass\Http\Controllers;
 
+use http\Env\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Modules\Core\Http\Controllers\BasePublicController;
-use Modules\User\Events\UserLoggedIn;
+use Modules\Sass\Repositories\CompanyRepository;
 use Modules\User\Exceptions\InvalidOrExpiredResetCode;
 use Modules\User\Exceptions\UserNotFoundException;
-use Modules\User\Http\Requests\LoginRequest;
 use Modules\User\Http\Requests\RegisterRequest;
 use Modules\User\Http\Requests\ResetCompleteRequest;
 use Modules\User\Http\Requests\ResetRequest;
 use Modules\User\Repositories\UserRepository;
-use Modules\User\Services\UserRegistration;
 use Modules\User\Services\UserResetter;
 
 class AuthController extends BasePublicController
@@ -24,21 +23,31 @@ class AuthController extends BasePublicController
      */
     private $user;
 
-    public function __construct(UserRepository $user,)
+    protected CompanyRepository $company;
+
+    public function __construct(UserRepository $user,CompanyRepository $company)
     {
         parent::__construct();
         $this->user = $user;
+        $this->company=$company;
 
     }
 
-    public function getRegister()
+    public function getRegister($token_company)
     {
-        return view('modules.sass.driver.register');
+        return view('modules.sass.drivers.register');
     }
 
     public function postRegister(RegisterRequest $request)
     {
-        app(UserRegistration::class)->register($request->all());
+        $data=$request->all();
+        $company= $this->company->findByAttributes(['token'=>$data['token']]);
+
+        $data['company_id']=$company->id;
+        $data['password']=$request->input('password');
+        $data['roles']=[4];
+        $data['is_activated']=0;
+        $this->driver->create($data);
 
         return redirect()->route('saas.register')
             ->withSuccess(trans('user::messages.account created check email for activation'));
