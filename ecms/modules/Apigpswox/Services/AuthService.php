@@ -20,7 +20,6 @@ class AuthService extends Connection
     {
         $this->user = $user;
         $this->token = $token;
-
     }
 
     public function auth($credentials)
@@ -37,6 +36,12 @@ class AuthService extends Connection
                 $this->token->create(['user_id'=>$user->id,'user_api_hash'=>$auth->user_api_hash]);
         }
         return $user;
+
+    }
+    public function setToken($credentials)
+    {
+        $auth = $this->postAuth($credentials, '/login');
+        return $auth;
 
     }
 

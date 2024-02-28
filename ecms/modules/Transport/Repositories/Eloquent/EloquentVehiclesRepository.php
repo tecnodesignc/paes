@@ -118,7 +118,8 @@ class EloquentVehiclesRepository extends EloquentBaseRepository implements Vehic
                     $query->whereDate($date->field, '<=', $date->to);
             }
             if (isset($filter->company_id)) {
-                $query->where('company_id', $filter->company_id);
+                $companies = is_array($filter->company_id) ? $filter->company_id : [$filter->company_id];
+                $query->whereIn('company_id', $companies);
             }
 
 

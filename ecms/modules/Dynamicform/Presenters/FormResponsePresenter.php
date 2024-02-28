@@ -17,8 +17,7 @@ class FormResponsePresenter extends Presenter
         $count=0;
         $answers=$this->entity->data->answers;
         foreach ($answers as $item){
-            $type = intval($item->type);
-            if (isset($item->type) && $type===5){
+            if (isset($item->type) && ($item->type==5)){
                 if ($item->value == 0){
                     $count++;
                 }

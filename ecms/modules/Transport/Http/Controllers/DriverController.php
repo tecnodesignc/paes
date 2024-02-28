@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Modules\Sass\Repositories\CompanyRepository;
 use Modules\Transport\Entities\Driver;
 use Modules\Transport\Http\Requests\CreateDriverRequest;
-use Modules\Transport\Http\Requests\UpdatePassengerRequest;
+use Modules\Transport\Http\Requests\UpdateDriverRequest;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\Transport\Imports\ImportDrivers;
 use Modules\Transport\Repositories\DriverRepository;
@@ -60,8 +60,9 @@ class DriverController extends AdminBaseController
     public function store(CreateDriverRequest $request): mixed
     {
         $data=$request->all();
-        $data['password']=$this->generatePassword();
-        $data['roles']=[3];
+        $data['password']=$request->input('password')??$this->generatePassword();
+        dd($data);
+        $data['roles']=[4];
         $data['is_activated']= $request->input('is_activated')??0;
         $this->driver->create($data);
 
@@ -111,13 +112,13 @@ class DriverController extends AdminBaseController
      * Update the specified resource in storage.
      *
      * @param  Driver $driver
-     * @param  UpdatePassengerRequest $request
+     * @param  UpdateDriverRequest $request
      * @return Response
      */
-    public function update(Driver $driver, UpdatePassengerRequest $request)
+    public function update(Driver $driver, UpdateDriverRequest $request)
     {
         $data=$request->all();
-        $data['roles']=[3];
+        $data['roles']=[4];
         if (empty($data['is_activated']))$data['is_activated']=false;
         $this->driver->update($driver, $data);
 

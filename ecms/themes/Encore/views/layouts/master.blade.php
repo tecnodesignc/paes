@@ -1,3 +1,9 @@
+@php
+       if(!$currentUser->hasAccess('core.sidebar.group') && $currentUser->hasAccess('dynamicform.formresponses.index')){
+           redirect()->route('dynamicform.form.indexcolaboradoresform');
+       }
+@endphp
+
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 

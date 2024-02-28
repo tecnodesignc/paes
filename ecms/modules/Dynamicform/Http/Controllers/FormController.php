@@ -12,10 +12,14 @@ use Modules\Dynamicform\Http\Requests\UpdateFormRequest;
 use Modules\Dynamicform\Repositories\FieldRepository;
 use Modules\Dynamicform\Repositories\FormRepository;
 use Illuminate\Http\Request;
+use Modules\User\Contracts\Authentication;
+
 class FormController extends AdminBaseController
 {
     private FormRepository $form;
     private FieldRepository $field;
+
+    private $auth;
 
 
     public function __construct(FormRepository $form, FieldRepository $field)
@@ -23,6 +27,7 @@ class FormController extends AdminBaseController
         parent::__construct();
         $this->form=$form;
         $this->field=$field;
+        $this->auth = app(Authentication::class);
 
     }
 
@@ -47,9 +52,7 @@ class FormController extends AdminBaseController
         //consulta para los formularios
         $params_form = json_decode(json_encode([
             'filter' => [
-                'companies' => company()->id?company()->id:array_values(companies()->map(function ($company){
-                    return $company->id;
-                })->toArray()),
+                'companies' => [$this->auth->user()->driver->company_id],
                 'status' => 1
             ],  'include' => ['*'], 'page' => 1, 'take' => 10000
         ]));

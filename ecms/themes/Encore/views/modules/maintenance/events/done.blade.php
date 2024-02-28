@@ -61,7 +61,7 @@
                                         <div class="card-body ">
                                             @if(isset($event->form_verify) && !empty($event->form_verify))
                                                 @foreach($event->form_verify as $i=>$item)
-                                                    <div class="row font-size-20 mb-3">
+                                                    <div class="row mb-3">
                                                         <div class="col-1">
                                                             <label class="form-check-label" for="formCheckRight1">
                                                                 {{$i+1}}

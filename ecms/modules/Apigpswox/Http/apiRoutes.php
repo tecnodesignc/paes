@@ -3,22 +3,22 @@
 use Illuminate\Routing\Router;
 /** @var Router $router */
 
-$router->group(['prefix' =>'/apigpswox/v1'], function (Router $router) {
+$router->group(['prefix' =>'/apigpswox/v1','middleware' => 'api.token'], function (Router $router) {
 $router->group(['prefix' =>'/tokens'], function (Router $router) {
 
-    $router->get('/', [
+  /*  $router->get('/', [
         'as' => 'api.apigpswox.token.index',
         'uses' => 'TokenApiController@index',
         'middleware' => ['auth:api']
-    ]);
+    ]);*/
 
     $router->post('/', [
         'as' => 'api.apigpswox.token.store',
         'uses' => 'TokenApiController@store',
-        'middleware' => ['auth:api']
+        //'middleware' => ['token-can:apigpswox.tokens.store']
     ]);
 
-    $router->get('/{criteria}', [
+  /*  $router->get('/{criteria}', [
         'as' => 'api.apigpswox.token.show',
         'uses' => 'TokenApiController@show',
         'middleware' => ['auth:api']
@@ -32,7 +32,7 @@ $router->group(['prefix' =>'/tokens'], function (Router $router) {
         'as' => 'api.apigpswox.token.destroy',
         'uses' => 'TokenApiController@destroy',
         'middleware' => ['auth:api']
-    ]);
+    ]);*/
 
 });
 

@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use Modules\Core\Traits\CanPublishConfiguration;
 use Modules\Core\Events\BuildingSidebar;
 use Modules\Core\Events\LoadingBackendTranslations;
+use Modules\Transport\Console\SynchronizeVehicle;
 use Modules\Transport\Events\Handlers\RegisterTransportSidebar;
 
 class TransportServiceProvider extends ServiceProvider
@@ -37,6 +38,7 @@ class TransportServiceProvider extends ServiceProvider
             // append translations
 
         });
+        $this->registerCommands();
     }
 
     public function boot()
@@ -96,5 +98,11 @@ class TransportServiceProvider extends ServiceProvider
         );
 // add bindings
 
+    }
+    private function registerCommands()
+    {
+        $this->commands([
+            SynchronizeVehicle::class,
+        ]);
     }
 }

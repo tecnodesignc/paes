@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Modules\Maintenance\Entities\Event;
 use Modules\Maintenance\Entities\Fueltank;
+use Modules\Maintenance\Entities\Tire;
 use Modules\Media\Support\Traits\MediaRelation;
 use Modules\Sass\Entities\Company;
 
@@ -19,7 +20,7 @@ class Vehicles extends Model
     use  MediaRelation;
 
     protected $table = 'transport__vehicles';
-    protected $fillable = ['brand', 'plate', 'model', 'class',  'capacity', 'millage', 'device_id', 'device', 'company_id', 'type', 'reference', 'property_card', 'displacement', 'color', 'box_type', 'transmission_type', 'shielding', 'doors', 'serial_number', 'chassis_number', 'engine_number', 'accessories', 'axles'
+    protected $fillable = ['brand', 'plate', 'model', 'class',  'capacity', 'millage', 'device_id', 'device', 'company_id', 'type', 'reference', 'property_card', 'displacement', 'color', 'box_type', 'transmission_type', 'shielding', 'doors', 'serial_number', 'chassis_number', 'engine_number', 'accessories', 'axles','fixed_asset_num','transfers','cda_route_municipality','fines'
     ];
 
     protected $casts = [
@@ -62,6 +63,10 @@ class Vehicles extends Model
         return $this->hasMany(Fueltank::class);
     }
 
+    public function tires(): HasMany
+    {
+        return $this->hasMany(Tire::class);
+    }
     protected function device(): Attribute
     {
         return Attribute::make(

@@ -102,6 +102,7 @@
                         </li>
                     @endif
                 @endif
+                @if($currentUser->hasAccess('transport.vehicles.index') || $currentUser->hasAccess('transport.drivers.index'))
                 <li class="menu-title" data-key="t-applications">Transporte</li>
                 @if($currentUser->hasAccess('transport.vehicles.index'))
                 <li>
@@ -132,6 +133,7 @@
                             <!--                        <li><a href="ecommerce-orders" data-key="t-orders">Api KEYS</a></li>-->
                         </ul>
                     </li>
+                @endif
                 @endif
 <!--                <li>
                     <a href="javascript: void(0);" class="has-arrow">

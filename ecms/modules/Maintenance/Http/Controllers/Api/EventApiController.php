@@ -39,7 +39,7 @@ class EventAPIController extends BaseApiController
 
             $includes=explode(',',$request->input('include'));
 
-            $params=json_decode(json_encode(['filter'=>['search'=>$request->input('search'),'companies'=>$request->input('companies'),'status'=>$request->input('status')],'include'=>['*'],'page'=>$request->input('page'),'take'=>$request->input('limit')]));
+            $params=json_decode(json_encode(['filter'=>['search'=>$request->input('search'),'companies'=>$request->input('companies'),'status'=>$request->input('status'),'vehicle_id'=>$request->input('vehicle')],'include'=>['*'],'page'=>$request->input('page'),'take'=>$request->input('limit')]));
 
             $events = $this->event->getItemsBy($params);
 

@@ -27,10 +27,10 @@
                     <div class="card-body">
                         <div class="position-relative">
                             <div class="modal-button mt-2">
-                                <button data-bs-toggle="modal" data-bs-target="#add-new-task-modal"
+<!--                                <button data-bs-toggle="modal" data-bs-target="#add-new-task-modal"
                                         class="btn btn-success waves-effect waves-light mb-2 me-2"><i
                                             class="mdi mdi-plus me-1"></i> Nuevo Evento
-                                </button>
+                                </button>-->
                             </div>
                         </div>
                         <div class="row mt-5 pt-5">
@@ -286,11 +286,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6"  id="limits" style="display: none">
                                 <div class="mb-3">
                                     <label for="task-priority" class="form-label">Limite</label>
                                     <input class="form-control" placeholder="Agregar Kilómetros"
-                                           type="number" name="limits" id="limits" required value=""/>
+                                           type="number" name="limits" required value=""/>
                                 </div>
                             </div>
                         </div>
@@ -431,20 +431,23 @@
             const itemHtml = `
     <div class="card mb-0" id="${itemData.id}" >
       <div class="card-body p-3">
-        <small class="float-end text-muted">${itemData.limit == null ? moment(itemData.alert).format("DD MMM YYYY") : itemData.limit + ' km'}</small>
+        <small class="float-end text-muted">${itemData.limits == null ? moment(itemData.alert).format("DD MMM YYYY") : itemData.limits + ' km'}</small>
         <span class="badge text-bg-${itemData.type_class}">${itemData.type_name}</span>
 
         <h5 class="mt-2 mb-2">
           <a href="#" data-bs-toggle="modal" data-bs-target="#task-detail-modal" data-task-id="${itemData.id}"
              class="text-body">${itemData.description}</a>
         </h5>
+        <p class="mt-2 mb-2">
+          ${itemData.vehicle.plate}
+        </p>
         <div class="dropdown float-end">
           <a href="#" class="dropdown-toggle text-muted arrow-none"
              data-bs-toggle="dropdown" aria-expanded="false">
             <i class="mdi mdi-dots-vertical font-18"></i>
           </a>
           <div class="dropdown-menu dropdown-menu-end">
-            <a href="javascript:void(0);" class="dropdown-item " data-bs-toggle="modal" data-bs-target="#task-edit-modal" data-task-id="${itemData.id}"><i
+            <a href="EditEvent(${itemData})" class="dropdown-item " data-bs-toggle="modal" data-bs-target="#task-edit-modal" data-task-id="${itemData.id}"><i
                       class="mdi mdi-pencil me-1"></i>Editar</a>
             <a href="{{route('maintenance.event.index')}}/done/${itemData.id}" class="dropdown-item text-success"><i
                       class="mdi mdi-check me-1"></i>${itemData.status!==2?'Completar':'Visualizar'}</a>
@@ -558,6 +561,7 @@
             }).then(function (response) {
                 formClear()
                 addItemToView(response.data.data, 'pending')
+                alertify.success('Evento Agregado');
                 loading.hidden();
             }).catch(function (error) {
                 console.log(error);
@@ -589,7 +593,7 @@
                 }
             }).then(response => {
                 // Procesar la respuesta del servidor
-                console.log('Item movido exitosamente');
+                alertify.success('Evento Actualizado');
                 window.location.reload()
             }).catch(error => {
                 console.error(error);
@@ -631,6 +635,19 @@
                 $(a).closest('#inputFormRow').remove();
             }
         }
+
+    </script>
+    <script type="application/javascript">
+        document.addEventListener("DOMContentLoaded", function (event) {
+            $('#event-end').change(function () {
+                if (this.value) {
+                    $('#limits').css('display', 'block')
+                } else {
+                    $('#limits').css('display', 'none')
+              }
+
+            });
+        })
     </script>
     <style>
 
@@ -643,7 +660,7 @@
 
         .tasks {
             display: inline-block;
-            width: 22rem;
+            width: 19%;
             padding: 0 1rem 1rem 1rem;
             border: 1px solid #dee2e6;
             vertical-align: top;

@@ -12,7 +12,7 @@ use Modules\Dynamicform\Repositories\FormRepository;
 use Modules\Dynamicform\Repositories\FormResponseRepository;
 use Modules\Dynamicform\Transformers\FormResponseTransformer;
 
-class PublicController extends AdminBaseController
+class PublicController extends PublicBaseController
 {
 
     private FormRepository $form;
@@ -35,7 +35,7 @@ class PublicController extends AdminBaseController
      */
     public function dashboard():Application|Factory|View
     {
-        //consulta para las respuestas       
+        //consulta para las respuestas
         $from = Carbon::now()->setTime(0, 0, 0)->format('Y-m-d H:i:s');
         $to = Carbon::now()->format('Y-m-d H:i:s');
         $params = json_decode(json_encode([
@@ -48,7 +48,7 @@ class PublicController extends AdminBaseController
                 'companies' => company()->id?company()->id:array_values(companies()->map(function ($company){
                     return $company->id;
                  })->toArray())
-            
+
             ], 'include' => ['form','user', 'company'], 'page' => 1, 'take' => 10000
         ]));
 
@@ -61,7 +61,6 @@ class PublicController extends AdminBaseController
 
         // filtramos los formularios que contengan 1 o mas respuestas negativas
         $forms_response_negative = $forms_response->where('negative_num', '>=', 1);
-        
         // ----- Cantidad formularios contestados hoy con hallazgos
         $conteoPorEmpresa = $forms_response_negative->groupBy('company_id')
         ->map(function ($items) {
@@ -90,10 +89,10 @@ class PublicController extends AdminBaseController
         ]));
 
         $forms=$this->form->getItemsBy($params_form);
-        
+
         // -----todos los formularios activos total
         $forms_active_count=$forms->count();
-        
+
         return view('modules.dynamic-form.index', compact('forms_response_negatives', 'forms_active_count', 'forms_response_negative_count_day', 'conteoPorEmpresa', 'forms_response_count'));
     }
 

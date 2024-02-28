@@ -51,7 +51,7 @@
                          data-bs-parent="#addproduct-accordion">
                         <div class="p-4 border-top">
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-8">
                                     <div class="card">
                                         <div class="card-body">
                                             <div
@@ -99,12 +99,12 @@
                                             <div class="mb-3">
                                                 <label for="companies" class="form-label font-size-13 text-muted">Empresas
                                                     Asignadas</label>
-                                                <select class="form-control" name="companies[]"
-                                                        id="companies"
-                                                        placeholder="Selecciones Compañias " multiple>
+                                                <select class="form-control" name="company_id"
+                                                        id="company_id"
+                                                        placeholder="Selecciones Compañía " >
                                                     @foreach($companies as $company)
                                                         <option
-                                                            value="{{$company->id}}" {{in_array($company->id ,old('companies',[])) ? 'selected' : ''}} >{{$company->name}}</option>
+                                                            value="{{$company->id}}" {{$company->id === old('company_id') ? 'selected' : ''}}>{{$company->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -124,6 +124,25 @@
                                                         </label>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="row mb-3">
+                                        <div class="col-sm-6">
+                                            <div class="form-group{{ $errors->has('password') ? ' is-invalid' : '' }}">
+                                                {!! Form::label('password', trans('user::users.form.password')) !!}
+                                                {!! Form::password('password', ['class' => 'form-control']) !!}
+                                                {!! $errors->first('password', '<span class="invalid-feedback">:message</span>') !!}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div
+                                                class="form-group{{ $errors->has('password_confirmation') ? ' is-invalid' : '' }}">
+                                                {!! Form::label('password_confirmation', trans('user::users.form.password-confirmation')) !!}
+                                                {!! Form::password('password_confirmation', ['class' => 'form-control']) !!}
+                                                {!! $errors->first('password_confirmation', '<span class="invalid-feedback">:message</span>') !!}
                                             </div>
                                         </div>
                                     </div>

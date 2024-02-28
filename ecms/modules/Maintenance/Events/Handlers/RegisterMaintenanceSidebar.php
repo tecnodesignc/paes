@@ -61,7 +61,17 @@ class RegisterMaintenanceSidebar implements \Maatwebsite\Sidebar\SidebarExtender
                         $this->auth->hasAccess('maintenance.fueltanks.index')
                     );
                 });
+                $item->item(trans('maintenance::tires.title.tires'), function (Item $item) {
+                    $item->icon('fa fa-copy');
+                    $item->weight(0);
+                    $item->append('admin.maintenance.tire.create');
+                    $item->route('admin.maintenance.tire.index');
+                    $item->authorize(
+                        $this->auth->hasAccess('maintenance.tires.index')
+                    );
+                });
 // append
+
 
 
             });

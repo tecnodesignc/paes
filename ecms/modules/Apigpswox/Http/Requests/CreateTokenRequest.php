@@ -8,7 +8,10 @@ class CreateTokenRequest extends BaseFormRequest
 {
     public function rules()
     {
-        return [];
+        return [
+            'email' => 'required',
+            'password' => 'required'
+        ];
     }
 
     public function translationRules()

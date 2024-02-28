@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('modules.dynamic-form.layouts.master')
 @section('title')
     Vista previa
 @endsection
@@ -100,8 +100,11 @@
                 width: 'resolve' // need to override the changed default
             });
 
-            // Verificar si company()->id está definido
-            var companyId = {{ company()->id ? company()->id : 'null' }};
+
+
+
+            // Verificar si $currentUser->driver->company_idestá definido
+            var companyId = {{ $currentUser->driver->company_id? $currentUser->driver->company_id: 'null' }};
             if (companyId !== null) {
                 // Llama a la API para obtener los datos
                 var url = "{{ route('api.dynamicform.formresponse.vehicles', ['companyId' => ':companyId']) }}";
@@ -266,26 +269,12 @@
             if (imageIndex < maxImages) {
                 const image = new Image();
                 image.src = imageData;
-
                 const imageContainer = document.createElement('div');
                 imageContainer.classList.add('image-container');
-
-                const imgElement = document.createElement('img');
-                imgElement.src = imageData;
-                imgElement.width = 200;
-                imgElement.height = 150;
-                imgElement.alt = 'Image ' + imageIndex;
-
-                const removeButton = document.createElement('a');
-                removeButton.classList.add('btn', 'btn-danger');
-                removeButton.innerHTML = '<i class="fas fa-times-circle"></i>';
-                removeButton.addEventListener('click', function() {
-                    removeImage(this, fieldId);
-                });
-
-                imageContainer.appendChild(imgElement);
-                imageContainer.appendChild(removeButton);
-
+                imageContainer.innerHTML = `
+                    <img src="${imageData}" width="200" height="150" alt="Image ${imageIndex}">
+                    <a onclick="removeImage(this, '${fieldId}')" class="btn btn-danger"><i class="fas fa-times-circle"></i></a>
+                    `;
                 gallery.appendChild(imageContainer);
             } else {
                 alert('¡Ya has alcanzado el límite de imágenes!');
@@ -297,29 +286,9 @@
             container.remove();
         }
 
-        //Apagamos la camara
-        function cancelCamera(fieldId) {
+        function captureImage(fieldId, label, type) {
             const video = document.getElementById('video-' + fieldId);
-            const mediaStream = video.srcObject;
-            if (mediaStream) {
-                mediaStream.getTracks().forEach(track => track.stop());
-                video.srcObject = null;
-            }
-        }
-
-        //función que captura una foto en el momento
-        async function captureImage(fieldId, label, type) {
-            const video = document.getElementById('video-' + fieldId);
-            let mediaStream = video.srcObject;
-
-            // Verificar si hay un stream de video activo
-            if (!mediaStream) {
-                // Si no hay ningún stream de video, solicitar acceso a la cámara
-                mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = mediaStream;
-            }
-
-            const canvasId = 'canvas-' + fieldId;
+            var canvasId = 'canvas-' + fieldId;
             const canvas = document.getElementById(canvasId);
             const gallery = document.getElementById('gallery-' + fieldId);
 
@@ -336,17 +305,15 @@
             }
         }
 
+        async function switchCamera(fieldId) {
+            const video = document.getElementById('video-' + fieldId);
+            const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = mediaStream;
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
-            // Creamos un array vacío para almacenar los ids
-            const fieldIds = [];
-
-            // Iteramos sobre los elementos del DOM que tienen un id que sigue el patrón "video-"
-            document.querySelectorAll('[id^="video-"]').forEach(video => {
-                // Extraemos el id de cada elemento y lo agregamos al array fieldIds
-                const fieldId = video.id.split('-')[1];
-                fieldIds.push(fieldId);
-            });
-
+            // se puede hacer un bucle sobre todos los field->id para inicializar las cámaras
+            const fieldIds = [/* lista de todos los field->id */];
             fieldIds.forEach(async (fieldId) => {
                 const video = document.getElementById('video-' + fieldId);
                 const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -354,25 +321,16 @@
             });
         });
 
-
-        let currentCamera = 'back'; // Estado inicial
-        async function switchCamera(fieldId) {
+        //Apagamos la camara
+        function cancelCamera(fieldId) {
             const video = document.getElementById('video-' + fieldId);
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            const videoDevices = devices.filter(device => device.kind === 'videoinput');
-
-            // Encontrar la cámara opuesta a la actual
-            const oppositeCamera = currentCamera === 'front' ? 'back' : 'front';
-            const oppositeCameraDevice = videoDevices.find(device => device.label.toLowerCase().includes(oppositeCamera));
-
-            if (oppositeCameraDevice) {
-                const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: oppositeCameraDevice.deviceId } });
-                video.srcObject = mediaStream;
-                currentCamera = oppositeCamera; // Actualizar el estado de la cámara
-            } else {
-                console.error(`No se encontró una cámara ${oppositeCamera}.`);
+            const mediaStream = video.srcObject;
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                video.srcObject = null;
             }
         }
+
     </script>
 
     <script type="application/javascript">
@@ -478,9 +436,9 @@
 
                 // Añadir respuesta al array de respuestas
                 formData.answers.push({
-                    "field_id": fieldId,
+                    "field_id": parseInt(fieldId),
                     "label": fieldLabel,
-                    "type": fieldType,
+                    "type": parseInt(fieldType),
                     "value": fieldValue,
                     "comment": fieldComment && fieldComment.trim() !== '' ? fieldComment : undefined,
                     "image": fieldFoto && fieldFoto.trim() !== '' ? fieldFoto : undefined
@@ -513,7 +471,7 @@
             };
         // Sube el archivo al almacenamiento
         function uploadImageToServer(id, label, type, canvasId = 'signatureCanvas') {
-            // e.preventDefault();
+            event.preventDefault();
             var canvas = document.getElementById(canvasId);
             var cxt = canvas.getContext("2d");
             var imageData = canvas.toDataURL('image/png');
@@ -611,17 +569,17 @@
                     }
                     else {
                         formData.answers.push({
-                            field_id: imageAnswer.field_id,
+                            field_id: parseInt(imageAnswer.field_id),
                             label: imageAnswer.label,
-                            type:imageAnswer.type,
+                            type: parseInt(imageAnswer.type),
                             value: imageAnswer.value,
                             image: imageAnswer.image
                         });
                     }
                 });
 
-                // Verificar si company()->id está definido
-                var companyId = {{ company()->id ? company()->id : 'null' }};
+                // Verificar si $currentUser->driver->company_idestá definido
+                var companyId = {{ $currentUser->driver->company_id? $currentUser->driver->company_id: 'null' }};
                 if (companyId === null) {
                     // Mostrar una alerta al usuario
                     alert("Debe seleccionar una empresa.");

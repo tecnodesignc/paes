@@ -21,25 +21,15 @@ class FueltankTransformer extends JsonResource
 
         $data = [
             'id' => $this->when($this->id, $this->id),
+            'fuel_date' => $this->when($this->fuel_date, $this->fuel_date),
+            'quantity' => $this->when($this->quantity, $this->quantity),
+            'type' => $this->when($this->type, $this->type),
+            'value' => $this->when($this->value, $this->value),
+            'vehicle_id' => $this->when($this->vehicle_id, $this->vehicle_id),
+            'company_id' => $this->when($this->company_id, $this->company_id),
             'created_at' => $this->when($this->created_at, $this->created_at),
-            'update_at' => $this->when($this->created_at, $this->created_at),
-        ]
-
-        $filter = json_decode($request->filter);
-
-        if (isset($filter->allTranslations) && $filter->allTranslations) {
-
-              $languages = \LaravelLocalization::getSupportedLocales();
-
-              foreach ($languages as $lang => $value) {
-
-              /* $data[$lang]['title'] = $this->hasTranslation($lang) ?
-                        $this->translate("$lang")['title'] : '';*/
-
-
-              }
-        }
-
+            'updated_at' => $this->when($this->updated_at, $this->updated_at),
+        ];
         return $data;
 
     }

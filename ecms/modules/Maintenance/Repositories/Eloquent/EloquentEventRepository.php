@@ -58,6 +58,11 @@ class EloquentEventRepository extends EloquentBaseRepository implements EventRep
             if (isset($filter->status)) {
                 $query->where('status', $filter->status);
             }
+            if (isset($filter->vehicle_id)) {
+
+                $query->where('eventable_id', $filter->vehicle_id);
+                $query->where('eventable_type', 'Modules\\Transport\\Entities\\Vehicles');
+            }
             //add filter by search
             if (isset($filter->search) && $filter->search) {
                 //find search in columns

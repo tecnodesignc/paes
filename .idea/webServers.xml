@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="50c61788-dd7b-4b69-9468-c1b3a7f54db7" name="paes-v2.ejesatelital.com">
+        <fileTransfer rootFolder="/var/www/paes" accessType="SFTP" host="3.211.37.194" port="22" sshConfigId="b3edaca0-b6c0-4745-87da-469b38332481" sshConfig="bitnami@3.211.37.194:22 key" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="fd46c047-c997-49b2-b833-5b4c56e975ea" name="hostinger" url="http://185.28.21.142">
+        <fileTransfer host="185.28.21.142" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
