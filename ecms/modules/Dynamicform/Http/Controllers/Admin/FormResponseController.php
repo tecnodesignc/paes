@@ -31,9 +31,7 @@ class FormResponseController extends AdminBaseController
      */
     public function index()
     {
-        //$formresponses = $this->formresponse->all();
-
-        return view('dynamicform::admin.formresponses.index', compact(''));
+        return view('dynamicform::admin.formresponses.index');
     }
 
     /**

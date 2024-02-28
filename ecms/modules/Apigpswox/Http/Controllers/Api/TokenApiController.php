@@ -1,48 +1,55 @@
 <?php
 
-namespace Modules\Apigpswox\Http\Controllers\Admin;
+namespace Modules\Apigpswox\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Log;
 use Mockery\CountValidator\Exception;
-use Modules\Apigpswox\Entities\Token;
 use Modules\Apigpswox\Http\Requests\CreateTokenRequest;
-use Modules\Apigpswox\Http\Requests\UpdateTokenRequest;
 use Modules\Apigpswox\Repositories\TokenRepository;
-use Modules\Apigpswox\Transformers\TokenTransformer;
-use Modules\Core\Http\Controllers\Api\BaseApiController;
+use Modules\Apigpswox\Services\AuthService;
 
-class TokenController extends BaseApiController
+class TokenApiController extends Controller
 {
     /**
      * @var TokenRepository
      */
     private TokenRepository $token;
+    private $user;
 
     public function __construct(TokenRepository $token)
     {
-        parent::__construct();
-
         $this->token = $token;
+        $this->user = Auth::user();
     }
 
+
     /**
-    * Get listing of the resource
-    *
-    * @return JsonResponse
-    */
-    public function index(Request $request): JsonResponse
+     * Store a newly created resource in storage.
+     *
+     * @param CreateTokenRequest $request
+     * @return JsonResponse
+     */
+    public function store(CreateTokenRequest $request): JsonResponse
     {
         try {
 
-          $params = $this->getParamsRequest($request);
+            $credentials = [
+                'email' => $request->input('email'),
+                'password' => $request->input('password')
+            ];
+            $authService=app(AuthService::class);
+            $token = $authService->setToken($credentials);
 
-          tokens = $this->token->getItemsBy($params);
+            if ($token->status){
+                $response = ["data" => $token->user_api_hash];
+            }else{
+                throw new Exception('Uuario o contraseña incorrecta', '401');
+            }
 
-          $response = ["data" => TokenTransformer::collection($tokens)];
-
-          $params->page ? $response["meta"] = ["page" => $this->pageTransformer($tokens)] : false;
 
         } catch (Exception $e) {
 
@@ -53,147 +60,7 @@ class TokenController extends BaseApiController
         }
 
         return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
-    }
-    /**
-    * Get a resource item
-    * @param string $criteria
-    * @return JsonResponse
-    */
-    public function show(string $criteria, Request $request): JsonResponse
-    {
-        try {
-
-          $params = $this->getParamsRequest($request);
-
-          $token = $this->token->getItem($params);
-
-          if(!$token) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('apigpswox::tokens.title.tokens')]),404);
-
-          $response = ["data" => new TokenTransformer($token)];
-
-        } catch (Exception $e) {
-
-            Log::Error($e);
-            $status = $this->getStatusError($e->getCode());
-            $response = ["errors" => $e->getMessage()];
-
-        }
-
-        return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
-    }
-
-    /**
-    * Store a newly created resource in storage.
-    *
-    * @param Request $request
-    * @return JsonResponse
-    */
-    public function store(Request $request): JsonResponse
-    {
-        \DB::beginTransaction();
-
-        try {
-
-            $data = $request->input('attributes') ?? [];
-
-            $this->validateRequestApi(new CreateTokenRequest($data));
-
-            $token = $this->token->create($data);
-
-            $response = ["data" => new TokenTransformer($token)];
-
-            \DB::commit();
-
-        } catch (Exception $e) {
-
-            Log::Error($e);
-            \DB::rollback();
-            $status = $this->getStatusError($e->getCode());
-            $response = ["errors" => $e->getMessage()];
-
-        }
-
-        return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
 
     }
 
-    /**
-    * Update the specified resource in storage..
-    *
-    * @param string $criteria
-    * @param Request $request
-    * @return JsonResponse
-    */
-    public function update(string $criteria, Request $request): JsonResponse
-    {
-        \DB::beginTransaction();
-
-        try {
-
-            $data = $request->input('attributes') ?? [];
-
-            $this->validateRequestApi(new UpdateTokenRequest($data));
-
-            $params = $this->getParamsRequest($request);
-
-            $token = $this->token->getItem($params);
-
-            if(!$token) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('apigpswox::tokens.title.tokens')]),404);
-
-            $this->token->update($token, $request->all());
-
-            $response = ["data" => trans('core::core.messages.resource updated', ['name' => trans('apigpswox::tokens.title.tokens')];
-
-            \DB::commit();
-
-        } catch (Exception $e) {
-
-            Log::Error($e);
-            \DB::rollback();
-            $status = $this->getStatusError($e->getCode());
-            $response = ["errors" => $e->getMessage()];
-
-        }
-
-        return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
-
-    }
-
-    /**
-    * Remove the specified resource from storage.
-    *
-    * @param string $criteria
-    * @param Request $request
-    * @return JsonResponse
-    */
-    public function destroy(string $criteria, Request $request): JsonResponse
-    {
-        \DB::beginTransaction();
-
-        try {
-
-            $params = $this->getParamsRequest($request);
-
-            $token = $this->token->getItem($params);
-
-            if(!$token) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('apigpswox::tokens.title.tokens')]),404);
-
-            $this->token->destroy($token);
-
-            $response = ["data" => trans('core::core.messages.resource deleted', ['name' => trans('apigpswox::tokens.title.tokens')];
-
-            \DB::commit();
-
-        } catch (Exception $e) {
-
-            Log::Error($e);
-            \DB::rollback();
-            $status = $this->getStatusError($e->getCode());
-            $response = ["errors" => $e->getMessage()];
-
-        }
-
-        return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
-
-    }
 }

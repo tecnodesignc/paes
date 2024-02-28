@@ -27,9 +27,8 @@ class DriverTransformer extends JsonResource
             'user_id' => $this->when($this->user_id, $this->user_id),
             'driver_license' => $this->when($this->driver_license, $this->driver_license),
             'phone' => $this->when($this->phone, $this->phone),
-            'itineraries'=> RouteItineraryTransformer::collection($this->whenLoaded('itineraries')),
             'user'=> new UserProfileTransformer($this->user),
-            'companies'=> CompanyTransformer::collection($this->whenLoaded('companies')),
+            'company'=> new CompanyTransformer($this->whenLoaded('company')),
             'created_at' => $this->when($this->created_at, $this->created_at),
             'update_at' => $this->when($this->update_at, $this->update_at),
         ];

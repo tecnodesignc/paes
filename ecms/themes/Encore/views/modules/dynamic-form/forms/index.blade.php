@@ -15,10 +15,9 @@
             Eje Satelital
         @endslot
         @slot('title')
-           Formularios de Preoperativo
+           Formularios
         @endslot
     @endcomponent
-
 
     <div class="row">
         <div class="col-12">
@@ -69,6 +68,7 @@
                     {
                         id: 'id',
                         name: '#',
+                        width: '50px',
                         sort: {
                             enabled: false
                         },
@@ -79,11 +79,16 @@
                     {
                         id: 'name',
                         name: 'Titulo',
+                        width: '400px',
 
                     },
                     {
                         id: 'icon',
                         name: 'Iconos',
+                        width: '100px',
+                        sort: {
+                            enabled: false
+                        },
                         formatter: (function (cell) {
                             return gridjs.html('<i class="'+cell+' me-2"></i>');
                         })
@@ -91,22 +96,27 @@
                     {
                         id: 'color',
                         name: 'Color',
+                        width: '100px',
+                        sort: {
+                            enabled: false
+                        },
                         formatter: (function (cell) {
-                            return gridjs.html('<span class="badge rounded-pill text-white  font-size-12" style="background:'+cell+'"></span>');
+                            return gridjs.html('<i class="mdi mdi-water mdi-24px" style="color:' + cell + '"></i>');
                         })
                     },
                     {
                         id: 'active',
                         name: 'Estado',
+                        width: '150px',
                         formatter: (function (cell) {
-
-                            return gridjs.html(cell? '<span class="badge badge-pill badge-soft-success font-size-12">Actvio</span>' : '<span class="badge badge-pill badge-soft-danger font-size-12">Inactivo</span>');
+                            return gridjs.html(cell == '1' ? '<span class="badge badge-pill badge-soft-success font-size-12">Habilitado</span>' : '<span class="badge badge-pill badge-soft-danger font-size-12">No Habilitado</span>');
                         })
                     },
                         @if($currentUser->hasAccess('sass.companies.index') && empty(company()->id))
                     {
                         id: 'companies',
                         name: 'Empresas asignadas',
+                        width: '200px',
                         formatter: (function (cell) {
                             const bussisnes = cell.map((item)=>{
                                 return   '<span class="badge badge-pill badge-soft-success font-size-12">'+item.name+'</span>'
@@ -118,18 +128,37 @@
                     {
                         id: "created_at",
                         name: "Creado el",
-                        formatter:(_,cell)=> moment(cell).format( 'YYYY-MM-DD')
+                        width: '150px',
+                        formatter:(cell)=> moment(cell).format( 'YYYY-MM-DD')
                     },
                     {
                         id: "id",
-                        name: "Action",
+                        name: "Ver Respuestas",
                         sort: {
                             enabled: false
                         },
+                        width: '150px',
                         formatter: (function (cell) {
-                            return gridjs.html('<div class="d-flex gap-3"><a href="/preoperativo/form/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="text-success"><i class="mdi mdi-eye-outline font-size-18"></i></a><a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a></div>');
+                            return gridjs.html('<div class="d-flex justify-content-center align-items-center">' +
+                            '<a href="/preoperativo/form/' + cell + '/response" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Respuestas" class="text-primary btn-lg">' +
+                            '<i class="mdi mdi-layers-search mdi-24px"></i></a></div>');
                         })
-                    }
+                    },
+                    {
+                        id: "id",
+                        name: "Acciones",
+                        sort: {
+                            enabled: false
+                        },
+                        width: '150px',
+                        formatter: (cell, row) => {
+                            return gridjs.html('<div class="d-flex justify-content-center align-items-center gap-4">'
+                                + '<a href="/preoperativo/form/'+ row.cells[0].data + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Vista previa" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a>'
+                                + '<a href="/preoperativo/form/' + row.cells[0].data + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success btn-lg"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'
+                                + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" onclick="deleteField(event, '+ row.cells[0].data +')" >' + (row.cells[4].data == '1' ? '<i class="mdi mdi-lock-open mdi-24px"></i>' : '<i class="mdi mdi-lock mdi-24px text-secondary"></i>') + '</a>'
+                                + '</div>');
+                        }
+                    },
 
                 ],
             pagination: {
@@ -140,6 +169,7 @@
             },
             sort: true,
             search: {
+                debounceTimeout: 300,
                 server: {
                     url: (prev, keyword) => `${prev}&search=${keyword}`
                 }
@@ -158,9 +188,44 @@
                 },
                 then: data => data.data,
                 total: data => data.meta.page.total
-            }
+            },
+            style: {
+                table: {
+                    'overflow-x': 'auto',  // scrolling horizontal
+                    'max-height': '400px', // establece la altura máxima para scrolling vertical
+                }
+            },
         }).render(document.getElementById("table-form"));
 
+        function deleteField(event, field) {
+            event.preventDefault(); // Evita que el navegador siga el enlace
+
+            if (confirm("¿Estás seguro de que quieres eliminar este campo?")) {
+                // Realizar la solicitud DELETE con Axios
+                axios.put(`/preoperativo/form/${field}/borrar`, {
+                    headers: {
+                        'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    // Verificar si la solicitud fue exitosa
+                    if (response.status === 200) {
+                        alert('Campo eliminado exitosamente');
+                        // Actualizamos la tabla después de la eliminación
+                        mygrid.forceRender();
+                    } else {
+                        // Manejar el caso en que la solicitud no fue exitosa
+                        throw new Error('Error al eliminar el campo');
+                    }
+                })
+                .catch(error => {
+                    // Manejar errores
+                    console.error(error);
+                    alert('Error al eliminar el campo');
+                });
+            }
+        }
     </script>
 
     <style>

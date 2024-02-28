@@ -118,7 +118,7 @@
                     {
                         id: "created_at",
                         name: "Creado el",
-                        formatter:(_,cell)=> moment(cell).format( 'YYYY-MM-DD')
+                        formatter:(cell)=> moment(cell).format( 'YYYY-MM-DD')
                     },
                     {
                         id: "id",

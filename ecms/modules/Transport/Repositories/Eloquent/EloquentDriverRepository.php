@@ -25,7 +25,6 @@ class EloquentDriverRepository extends EloquentBaseRepository implements DriverR
         $user = $user[0];
         $data['user_id'] = $user->id;
         $model = $this->model->create($data);
-        $model->companies()->sync(Arr::get($data, 'companies', []));
         return $model;
     }
 
@@ -39,8 +38,6 @@ class EloquentDriverRepository extends EloquentBaseRepository implements DriverR
     {
         event(new  DriverIsUpdating($model, $data));
         $model->update($data);
-        $model->companies()->sync(Arr::get($data, 'companies', []));
-
         return $model;
     }
 
@@ -77,8 +74,9 @@ class EloquentDriverRepository extends EloquentBaseRepository implements DriverR
                 if (isset($date->to))//to a date
                     $query->whereDate($date->field, '<=', $date->to);
             }
-            if (isset($filter->company)) {
-                $query->where('company_id', $filter->company);
+            if (isset($filter->company_id)) {
+                $companies = is_array($filter->company_id) ? $filter->company_id : [$filter->company_id];
+                $query->whereIn('company_id', $companies);
             }
 
 

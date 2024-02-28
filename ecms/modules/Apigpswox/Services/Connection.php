@@ -32,7 +32,6 @@ class Connection
 
         $default_params = [
             'lang' => 'en',
-            'user_api_hash' => $this->getToken()
         ];
 
         $this->params = array_merge($default_params, $array);
@@ -41,11 +40,9 @@ class Connection
     /**
      * @return string
      */
-    public function getToken(): string
+    public function getToken($token): string
     {
-        $auth = app(Authentication::class);
-
-        return $auth->user()->apigpswox_token->user_api_hash;
+        return $token;
     }
 
     /**

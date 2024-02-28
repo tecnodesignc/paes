@@ -25,25 +25,27 @@ class FueltankApiController extends BaseApiController
         parent::__construct();
 
         $this->fueltank = $fueltank;
-         $this->auth = app(Authentication::class);
+        $this->auth = app(Authentication::class);
     }
 
     /**
-    * Get listing of the resource
-    *
-    * @return JsonResponse
-    */
+     * Get listing of the resource
+     *
+     * @return JsonResponse
+     */
     public function index(Request $request): JsonResponse
     {
         try {
 
-          $params = $this->getParamsRequest($request);
+            $includes = explode(',', $request->input('include'));
 
-          $fueltanks = $this->fueltank->getItemsBy($params);
+            $params = json_decode(json_encode(['filter' => ['search' => $request->input('search'), 'companies' => $request->input('companies'), 'status' => $request->input('status')], 'include' => ['*'], 'page' => $request->input('page'), 'take' => $request->input('limit')]));
 
-          $response = ["data" => FueltankTransformer::collection($fueltanks)];
+            $fueltanks = $this->fueltank->getItemsBy($params);
 
-          $params->page ? $response["meta"] = ["page" => $this->pageTransformer($fueltanks)] : false;
+            $response = ["data" => FueltankTransformer::collection($fueltanks)];
+
+            $params->page ? $response["meta"] = ["page" => $this->pageTransformer($fueltanks)] : false;
 
         } catch (Exception $e) {
 
@@ -55,22 +57,23 @@ class FueltankApiController extends BaseApiController
 
         return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
     }
+
     /**
-    * Get a resource item
-    * @param string $criteria
-    * @return JsonResponse
-    */
+     * Get a resource item
+     * @param string $criteria
+     * @return JsonResponse
+     */
     public function show(string $criteria, Request $request): JsonResponse
     {
         try {
 
-          $params = $this->getParamsRequest($request);
+            $params = $this->getParamsRequest($request);
 
-          $fueltank = $this->fueltank->getItem($params);
+            $fueltank = $this->fueltank->getItem($params);
 
-          if(!$fueltank) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('maintenance::fueltanks.title.fueltanks')]),404);
+            if (!$fueltank) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('maintenance::fueltanks.title.fueltanks')]), 404);
 
-          $response = ["data" => new FueltankTransformer($fueltank)];
+            $response = ["data" => new FueltankTransformer($fueltank)];
 
         } catch (Exception $e) {
 
@@ -84,21 +87,19 @@ class FueltankApiController extends BaseApiController
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @param Request $request
-    * @return JsonResponse
-    */
-    public function store(Request $request): JsonResponse
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function store(CreateFueltankRequest $request): JsonResponse
     {
         \DB::beginTransaction();
 
         try {
 
-            $data = $request->input('attributes') ?? [];
-
-            $this->validateRequestApi(new CreateFueltankRequest($data));
-
+            $data = $request->all() ?? [];
+            $data['type'] = 1;
             $fueltank = $this->fueltank->create($data);
 
             $response = ["data" => new FueltankTransformer($fueltank)];
@@ -119,12 +120,12 @@ class FueltankApiController extends BaseApiController
     }
 
     /**
-    * Update the specified resource in storage..
-    *
-    * @param string $criteria
-    * @param Request $request
-    * @return JsonResponse
-    */
+     * Update the specified resource in storage..
+     *
+     * @param string $criteria
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function update(string $criteria, Request $request): JsonResponse
     {
         \DB::beginTransaction();
@@ -139,7 +140,7 @@ class FueltankApiController extends BaseApiController
 
             $fueltank = $this->fueltank->getItem($params);
 
-            if(!$fueltank) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('maintenance::fueltanks.title.fueltanks')]),404);
+            if (!$fueltank) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('maintenance::fueltanks.title.fueltanks')]), 404);
 
             $this->fueltank->update($fueltank, $request->all());
 
@@ -161,12 +162,12 @@ class FueltankApiController extends BaseApiController
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param string $criteria
-    * @param Request $request
-    * @return JsonResponse
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param string $criteria
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function destroy(string $criteria, Request $request): JsonResponse
     {
         \DB::beginTransaction();
@@ -177,7 +178,7 @@ class FueltankApiController extends BaseApiController
 
             $fueltank = $this->fueltank->getItem($params);
 
-            if(!$fueltank) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('maintenance::fueltanks.title.fueltanks')]),404);
+            if (!$fueltank) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('maintenance::fueltanks.title.fueltanks')]), 404);
 
             $this->fueltank->destroy($fueltank);
 

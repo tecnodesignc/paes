@@ -2,6 +2,7 @@
 
 namespace Modules\Dynamicform\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Filesystem\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +16,10 @@ use Modules\Dynamicform\Repositories\FormResponseRepository;
 use Modules\Dynamicform\Transformers\FormResponseTransformer;
 use Modules\Core\Http\Controllers\Api\BaseApiController;
 use Modules\Media\Helpers\FileHelper;
+use Modules\Transport\Transformers\VehiclesTransformer;
 use Modules\User\Contracts\Authentication;
+
+use Modules\Transport\Repositories\VehiclesRepository;
 
 class FormResponseApiController extends Controller
 {
@@ -25,14 +29,22 @@ class FormResponseApiController extends Controller
     private FormResponseRepository $formresponse;
 
     /**
+     * @var VehiclesRepository
+     */
+    private VehiclesRepository $vehicle;
+
+
+    /**
      * @var Factory
      */
     private Factory $filesystem;
-    public function __construct(FormResponseRepository $formresponse, Factory $filesystem)
+    public function __construct(FormResponseRepository $formresponse, Factory $filesystem, VehiclesRepository $vehicle)
     {
         $this->formresponse = $formresponse;
         $this->auth = app(Authentication::class);
         $this->filesystem = $filesystem;
+        $this->vehicle=$vehicle;
+
     }
 
     /**
@@ -45,7 +57,13 @@ class FormResponseApiController extends Controller
         try {
             $includes = explode(',', $request->input('include'));
 
-            $params = json_decode(json_encode(['filter' => ['search' => $request->input('search'), 'companies' => $request->input('companies'),'form_id' => $request->input('form_id')], 'include' => $includes, 'page' => $request->input('page'), 'take' => $request->input('limit')]));
+            $params = json_decode(json_encode(['filter' =>
+             [
+                'search' => $request->input('search'),
+                'companies' => $request->input('companies'),
+                'form_id' => $request->input('form_id')
+            ],
+             'include' => $includes, 'page' => $request->input('page'), 'take' => $request->input('limit')]));
 
             $formresponses = $this->formresponse->getItemsBy($params);
 
@@ -250,6 +268,29 @@ class FormResponseApiController extends Controller
         return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
 
     }
+
+        /**
+     * Get listing of the resource
+     *
+     * @return JsonResponse
+     */
+    public function vehicles($companyId): JsonResponse
+    {
+        try {
+
+            $response=$this->vehicle->all()->where('company_id',$companyId)->pluck('plate','plate');
+
+        } catch (Exception $e) {
+
+            \Log::Error($e);
+            $status = $this->getStatusError($e->getCode());
+            $response = ["errors" => $e->getMessage()];
+
+        }
+
+        return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
+    }
+
 
     protected function pageTransformer($data): array
     {

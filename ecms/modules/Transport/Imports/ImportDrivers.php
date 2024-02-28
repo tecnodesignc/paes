@@ -10,8 +10,8 @@ class ImportDrivers implements WithMultipleSheets
     public function sheets(): array
     {
         return [
-           'vehicles'=> new VehiclesSheetImport(),
-           'driver' =>new DriversSheetImport()
+           'driver' =>new DriversSheetImport(),
+            'vehicles'=> new VehiclesSheetImport(),
         ];
     }
 

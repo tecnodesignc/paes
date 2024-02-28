@@ -68,7 +68,42 @@ $router->group(['prefix' =>'/fueltanks'], function (Router $router) {
 
 });
 
+$router->group(['prefix' =>'/tires'], function (Router $router) {
+    $router->bind('tire', function ($id) {
+        return app('Modules\Maintenance\Repositories\TireRepository')->find($id);
+    });
+    $router->get('/', [
+        'as' => 'api.maintenance.tire.index',
+        'uses' => 'TireApiController@index',
+       'middleware' => ['token-can:maintenance.tires.index']
+    ]);
+
+    $router->post('/', [
+        'as' => 'api.maintenance.tire.store',
+        'uses' => 'TireApiController@store',
+        'middleware' => ['auth:api']
+    ]);
+
+    $router->get('/{tire}', [
+        'as' => 'api.maintenance.tire.show',
+        'uses' => 'TireApiController@show',
+        'middleware' => ['token-can:maintenance.tires.create']
+    ]);
+    $router->put('/{tire}', [
+        'as' => 'api.maintenance.tire.update',
+        'uses' => 'TireController@update',
+        'middleware' => ['auth:api']
+    ]);
+    $router->delete('/{tire}', [
+        'as' => 'api.maintenance.tire.destroy',
+        'uses' => 'TireApiController@destroy',
+        'middleware' => ['auth:api']
+    ]);
+
+});
+
 // append
+
 
 
 });

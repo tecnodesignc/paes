@@ -3,7 +3,7 @@
     Conductores
 @endsection
 @section('css')
-    <link rel="stylesheet" href="{{Theme::url('libs/gridjs/gridjs.min.css')}}">
+    <link href="https://cdn.jsdelivr.net/npm/gridjs@6.1.1/dist/theme/mermaid.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{Theme::url('libs/flatpickr/flatpickr.min.css')}}">
     <link href="{{Theme::url('libs/alertifyjs/alertifyjs.min.css')}}" rel="stylesheet" type="text/css"/>
     <link href="{{Theme::url('libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css"/>
@@ -39,7 +39,7 @@
     </div>
 @endsection
 @section('script')
-    <script src="{{ Theme::url('libs/gridjs/gridjs.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridjs@6.1.1/dist/gridjs.production.min.js"></script>
     <script src="{{ Theme::url('libs/flatpickr/flatpickr.min.js') }}"></script>
     <script src="{{ Theme::url('js/app.js') }}"></script>
     <script src="{{ Theme::url('libs/alertifyjs/alertifyjs.min.js') }}"></script>
@@ -74,18 +74,21 @@
                         },
                         formatter: (function (cell) {
                             return gridjs.html('<div class="form-check font-size-16"><input class="form-check-input" type="checkbox" id="orderidcheck' + cell + '"><label class="form-check-label" for="orderidcheck' + cell + '">' + cell + '</label></div>');
-                        })
+                        }),
+                        width: '100px',
                     },
                     {
                         id: 'driver_license',
                         name: 'Licencia de Transito ',
                         formatter: (function (cell) {
                             return cell;
-                        })
+                        }),
+                        width: '150px',
                     },
                     {
                         id: 'user',
                         name: 'Nombre ',
+                        width: '200px',
                         formatter: (function (cell) {
                             return cell.first_name;
                         })
@@ -95,11 +98,13 @@
                         name: 'Apellido ',
                         formatter: (function (cell) {
                             return cell.last_name;
-                        })
+                        }),
+                        width: '200px',
                     },
                     {
                         id: 'phone',
                         name: 'Telefono',
+                        width: '150px',
                         formatter: (function (cell) {
                             return cell;
                         })
@@ -107,6 +112,7 @@
                     {
                         id: 'user',
                         name: 'Email',
+                        width: '300px',
                         formatter: (function (cell) {
                             return cell.email;
                         })
@@ -114,6 +120,7 @@
                     {
                         id: "user",
                         name: "Estado",
+                        width: '100px',
                         formatter: (function (cell) {
 
                             return gridjs.html(cell.is_activated ? '<span class="badge badge-pill badge-soft-success font-size-12">Actvio</span>' : '<span class="badge badge-pill badge-soft-danger font-size-12">Inactivo</span>');
@@ -122,16 +129,17 @@
                     {
                         id: "created_at",
                         name: "Creado el",
-                        formatter: (_, cell) => moment(cell).format('YYYY-MM-DD')
+                        width: '200px',
+                        formatter: (function (cell) {
+                            return  moment(cell).format('YYYY-MM-DD')
+                        })
                     },
                     {
-                        id: 'companies',
+                        id: 'company',
                         name: 'Empresas asignadas',
+                        width: '200px',
                         formatter: (function (cell) {
-                          const bussisnes = cell.map((item)=>{
-                                return   '<span class="badge badge-pill badge-soft-success font-size-12">'+item.name+'</span>'
-                            })
-                            return gridjs.html(bussisnes)
+                            return gridjs.html('<span class="badge badge-pill badge-soft-success font-size-12">'+cell.name+'</span>')
                         })
                     },
                     {
@@ -143,17 +151,7 @@
                         formatter: (function (cell) {
                             return gridjs.html('<div class="d-flex gap-3"><a href="/transport/drivers/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="text-success"><i class="mdi mdi-eye-outline font-size-18"></i></a><a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a></div>');
                         })
-                    },
-                    {
-                        id: "user",
-                        name: "QR",
-                        sort: {
-                            enabled: false
-                        },
-                        formatter: (function (cell) {
-                            return gridjs.html('<button type="button" class="btn btn-outline-primary waves-effect waves-light" onclick="viewQr(`' + cell.api_key + '`)"><i class="mdi mdi-qrcode-scan font-size-26"></i></button>');
-                        })
-                    },
+                    }
 
                 ],
             pagination: {
@@ -163,6 +161,7 @@
                 }
             },
             sort: true,
+            autoWidth: true,
             search: {
                 server: {
                     url: (prev, keyword) => `${prev}&search=${keyword}`
@@ -171,10 +170,10 @@
 
             server: {
                 @php
-                    $params=['include'=>"user,companies"];
-                        if(!$currentUser->hasAccess('sass.companies.index') || company()->id){
-                             $params=['include'=>'user,companies','companies'=>company()->id];
-                        }
+                    $companies=company()->id?company()->id:array_values(companies()->map(function ($company){
+                                            return $company->id;
+                                          })->toArray());
+                    $params=['include'=>'user,company','company_id'=>$companies];
                 @endphp
                 url: '{!!route('api.transport.driver.index',$params)!!}',
                 headers: {

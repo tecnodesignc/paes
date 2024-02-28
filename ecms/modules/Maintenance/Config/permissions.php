@@ -13,7 +13,14 @@ return [
         'edit' => 'maintenance::fueltanks.edit resource',
         'destroy' => 'maintenance::fueltanks.destroy resource',
     ],
+    'maintenance.tires' => [
+        'index' => 'maintenance::tires.list resource',
+        'create' => 'maintenance::tires.create resource',
+        'edit' => 'maintenance::tires.edit resource',
+        'destroy' => 'maintenance::tires.destroy resource',
+    ],
 // append
+
 
 
 ];

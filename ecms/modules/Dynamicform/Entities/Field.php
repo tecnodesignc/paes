@@ -17,6 +17,7 @@ class Field extends Model
     protected $casts = [
         'selectable' => 'array',
     ];
+    
     /**
      * @return BelongsTo
      */

@@ -82,7 +82,43 @@ $router->group(['prefix' =>'/fueltanks'], function (Router $router) {
 
 });
 
+$router->group(['prefix' =>'/tires'], function (Router $router) {
+
+    $router->get('/', [
+        'as' => 'admin.maintenance.tire.index',
+        'uses' => 'TireController@index',
+        'middleware' => 'can:maintenance.tires.index'
+    ]);
+    $router->get('/create', [
+        'as' => 'admin.maintenance.tire.create',
+        'uses' => 'TireController@create',
+        'middleware' => 'can:maintenance.tires.create'
+    ]);
+    $router->post('/', [
+        'as' => 'admin.maintenance.tire.store',
+        'uses' => 'TireController@store',
+        'middleware' => 'can:maintenance.tires.create'
+    ]);
+    $router->get('/{tire}/edit', [
+        'as' => 'admin.maintenance.tire.edit',
+        'uses' => 'TireController@edit',
+        'middleware' => 'can:maintenance.tires.edit'
+    ]);
+    $router->put('/{tire}', [
+        'as' => 'admin.maintenance.tire.update',
+        'uses' => 'TireController@update',
+        'middleware' => 'can:maintenance.tires.edit'
+    ]);
+    $router->delete('/{tire}', [
+        'as' => 'admin.maintenance.tire.destroy',
+        'uses' => 'TireController@destroy',
+        'middleware' => 'can:maintenance.tires.destroy'
+    ]);
+
+});
+
 // append
+
 
 
 });

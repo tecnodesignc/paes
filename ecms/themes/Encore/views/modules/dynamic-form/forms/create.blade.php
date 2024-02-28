@@ -65,7 +65,8 @@
                                                        placeholder="Agrega Nombre del Formulario"
                                                        type="text"
                                                        value="{{old('name')}}"
-                                                       class="form-control">
+                                                       class="form-control"
+                                                       required>
                                                 {!! $errors->first('name', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("caption") ? ' was-validated' : '' }}">
@@ -74,22 +75,23 @@
                                                           name="caption"
                                                           placeholder="Agrega Descripción Corta"
                                                           rows="3"
-                                                          class="form-control">{{old('caption')}}</textarea>
+                                                          class="form-control"
+                                                          required>{{old('caption')}}</textarea>
                                                 {!! $errors->first('caption', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                                <div class="mb-3 {{ $errors->has("companies") ? ' was-validated' : '' }}" style="{{$currentUser->hasAccess('sass.companies.indexall')|| (companies() > 0 && empty(company()->id))?"display:block":"display:none"}}">
-                                                    <label for="companies" class="form-label font-size-13 text-muted">Empresas
-                                                        Asignadas</label>
-                                                    <select class="form-control" name="companies[]"
-                                                            id="companies"
-                                                            placeholder="Selecciones Compañias " multiple>
-                                                        @foreach(companies() as $company)
-                                                            <option
-                                                                    value="{{$company->id}}" {{in_array($company->id ,old('companies',[])) ? 'selected' : ''}} >{{$company->name}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
-                                                </div>
+                                            <div class="mb-3 {{ $errors->has("companies") ? ' was-validated' : '' }}" style="{{$currentUser->hasAccess('sass.companies.indexall') || (companies() > 0 && empty(company()->id)) ? 'display:block' : 'display:none'}}">
+                                                <label for="companies" class="form-label font-size-13 text-muted">Empresas Asignadas</label>
+                                                <select class="form-control" name="companies[]" id="companies" placeholder="Seleccione Compañías" multiple>
+                                                    {{-- por defecto se seleccionará la empresa que tiene en la variable de sesión, verifica si esa empresa está presente en la variable de sesión y, en ese caso, agregar el atributo selected al elemento <option> --}}
+                                                    @foreach(companies() as $company)
+                                                        <option value="{{$company->id}}" {{ (in_array($company->id, old('companies', [])) || $company->id == session('company')) ? 'selected' : '' }}>
+                                                            {{$company->name}}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -117,19 +119,19 @@
                                                 </div>
                                                 {!! $errors->first('color', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                            <div
-                                                    class="checkbox{{ $errors->has('active') ? ' was-validated' : '' }}">
+                                            <div class="checkbox{{ $errors->has('active') ? ' was-validated' : '' }}">
                                                 <label for="active">
                                                     <input id="active"
                                                            name="active"
                                                            type="checkbox"
                                                            class="form-check-input"
-                                                           {{ old('active') }}
+                                                           checked
                                                            value="1"/>
                                                     Activo
                                                     {!! $errors->first('activated', '<div class="invalid-feedback">:message</div>') !!}
                                                 </label>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -142,7 +144,7 @@
     </div>
     <div class="row mb-4">
         <div class="col text-end">
-            <a href="{{route('transport.vehicles.index')}}" class="btn btn-danger"> <i class="bx bx-x me-1"></i>
+            <a href="{{route('dynamicform.form.index')}}" class="btn btn-danger"> <i class="bx bx-x me-1"></i>
                 Cancelar </a>
             <button type="submit" class="btn btn-success"><i class=" bx bx-file me-1"></i> Guardar</button>
         </div> <!-- end col -->
@@ -212,6 +214,7 @@
             })
         })();
     </script>
+
     <style>
         .fade:not(.show) {
             opacity: 1;

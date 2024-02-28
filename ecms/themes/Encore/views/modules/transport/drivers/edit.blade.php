@@ -100,18 +100,13 @@
                                             <div class="mb-3">
                                                 <label for="companies" class="form-label font-size-13 text-muted">Empresas
                                                     Asignadas</label>
-                                                @php
-                                                    $companiesOld=$driver->companies->map(function ($company){
-                                                        return $company->id;
-                                                    })->toArray();
-                                                @endphp
-                                                <select class="form-control" name="companies[]"
+                                                <select class="form-control" name="company_id"
                                                         id="companies"
-                                                        placeholder="Selecciones Compañias " multiple>
+                                                        placeholder="Selecciones Compañias " >
 
                                                     @foreach($companies as $company)
                                                         <option
-                                                            value="{{$company->id}}" {{in_array($company->id ,old('companies',$companiesOld)) ? 'selected' : ''}} >{{$company->name}}</option>
+                                                            value="{{$company->id}}" {{old('company_id',$driver->company_id)==$company->id ? 'selected' : ''}} >{{$company->name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -137,31 +132,28 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="card">
-                                                        <div class="card-body">
-                                                        <div id="qrcode"></div>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <button
-                                                                class="btn btn-success waves-effect waves-light mb-2 me-2" id="restar-qr" type="button">
-                                                                <i
-                                                                    class="mdi mdi-qrcode-scan me-1"></i> Reiniciar QR
-                                                            </button>
-                                                            <button
-                                                                class="btn btn-primary waves-effect waves-light mb-2 me-2" id="download-qr" type="button">
-                                                                <i
-                                                                    class="mdi mdi-qrcode-scan me-1"></i> Descargar QR
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h6 class="mb-3">{{ trans('user::users.new password setup') }}</h6>
+                                            <div class="form-group mb-3 {{ $errors->has('password') ? ' has-error' : '' }}">
+                                                {!! Form::label('password', trans('user::users.form.new password')) !!}
+                                                {!! Form::input('password', 'password', '', ['class' => 'form-control']) !!}
+                                                {!! $errors->first('password', '<span class="help-block">:message</span>') !!}
+                                            </div>
+                                            <div class="form-group  mb-3{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
+                                                {!! Form::label('password_confirmation', trans('user::users.form.new password confirmation')) !!}
+                                                {!! Form::input('password', 'password_confirmation', '', ['class' => 'form-control']) !!}
+                                                {!! $errors->first('password_confirmation', '<span class="help-block">:message</span>') !!}
                                             </div>
                                         </div>
+                                        <div class="col-md-12">
+                                            <h6 class="mb-3">{{ trans('user::users.tabs.or send reset password mail') }}</h6>
+                                            <a href="{{ route("admin.user.user.sendResetPassword", $driver->user_id) }}" class="btn btn-outline-primary">
+                                                {{ trans('user::users.send reset password email') }}
+                                            </a>
+                                        </div>
                                     </div>
+                                </div>
                                 </div>
                             </div>
                             <div class="row mb-4">

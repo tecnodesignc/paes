@@ -10,7 +10,10 @@
     "priority": 1,
     "providers": [
         "Modules\\Dynamicform\\Providers\\DynamicformServiceProvider",
-        "Modules\\Dynamicform\\Providers\\RouteServiceProvider"
+        "Modules\\Dynamicform\\Providers\\RouteServiceProvider",
+        "Modules\\Dynamicform\\Providers\\EventServiceProvider"
     ],
-    "files": []
+    "files": [
+        "helpers.php"
+    ]
 }

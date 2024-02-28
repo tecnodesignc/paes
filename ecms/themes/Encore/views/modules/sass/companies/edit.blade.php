@@ -4,7 +4,7 @@
 @endsection
 
 @section('css')
-@endsection
+   {!! Theme::style('libs/alertifyjs/alertifyjs.min.css') !!}
 
 @section('content')
     @component('components.breadcrumb')
@@ -55,6 +55,10 @@
                                 {!! Form::text('name', old('name',$company->name), ['class' => 'form-control', 'placeholder' => 'Agrega Nombre']) !!}
                             </div>
                             <div class="mb-3">
+                                <label class="form-label" for="identification">NIT</label>
+                                {!! Form::text('identification', old('identification',$company->identification), ['class' => 'form-control', 'placeholder' => 'Agrega NIT']) !!}
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label" for="email">Correo Electrónico</label>
                                 {!! Form::text('email', old('email', $company->email), ['class' => 'form-control', 'placeholder' => 'Agrega Email']) !!}
                             </div>
@@ -68,18 +72,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="website">Sitio Web</label>
-                                {!! Form::tel('website', old('website',$company->website), ['class' => 'form-control', 'placeholder' => 'Agrega Sitio Web']) !!}
-                            </div>
-                            <div class="mb-3 ">
-                                <label class="form-label" for="type">Tipo de Compañia</label>
-                                <div class="col-md-10">
-                                    <select class="form-select" name="type">
-                                        @foreach($types as $i=>$type)
-                                            <option
-                                                value="{{$i}}" {{$i == old('type',$company->type) ? 'selected' : ''}}>{{$type}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                {!! Form::text('website', old('website'), ['class' => 'form-control', 'placeholder' => 'Agrega Sitio Web']) !!}
                             </div>
                         </div>
                     </div>
@@ -115,7 +108,7 @@
                     <div id="addproduct-alert-collapse" class="collapse" data-bs-parent="#addproduct-accordion">
                         <div class="p-4 border-top">
                             <div class="row">
-                                <div class="col-lg-12">
+                                {{--                                <div class="col-lg-6">
                                     <div class="card">
                                         <div class="card-header">
                                             <h4 class="card-title mb-0">Configuración General</h4>
@@ -134,8 +127,8 @@
                                                     @php
                                                     $count_passenger=$company->settings->count_passenger??0;
                                                     @endphp
-                                                    {{--                                                    <input type="hidden" value="{{$count_passenger }}"
-                                                           name="settings[count_passenger]"/>--}}
+                                                    {{&#45;&#45;                                                    <input type="hidden" value="{{$count_passenger }}"
+                                                           name="settings[count_passenger]"/>&#45;&#45;}}
                                                     <label for="settings[count_passenger]">
                                                         <input id="count_passenger"
                                                                name="settings[count_passenger]"
@@ -153,8 +146,8 @@
                                                     @php
                                                         $route_validate=$company->settings->route_validate??0;
                                                     @endphp
-                                               {{--     <input type="hidden" value="{{$route_validate}}"
-                                                           name="settings[route_validate]"/>--}}
+                                               {{&#45;&#45;     <input type="hidden" value="{{$route_validate}}"
+                                                           name="settings[route_validate]"/>&#45;&#45;}}
                                                     <label for="route_validate">
                                                         <input id="count_passenger"
                                                                name="settings[route_validate]"
@@ -191,8 +184,8 @@
                                                     @php
                                                         $send_whatsapp=$company->settings->send_whatsapp??0;
                                                     @endphp
-                                                 {{-- <input type="hidden" value="{{ $send_whatsapp}}"
-                                                           name="settings[send_whatsapp]"/>--}}
+                                                 {{&#45;&#45; <input type="hidden" value="{{ $send_whatsapp}}"
+                                                           name="settings[send_whatsapp]"/>&#45;&#45;}}
                                                     <label for="send_whatsapp">
                                                         <input id="send_whatsapp"
                                                                name="settings[send_whatsapp]"
@@ -204,6 +197,47 @@
                                                         {!! $errors->first('send_whatsapp', '<span class="help-block">:message</span>') !!}
                                                     </label>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>--}}
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title mb-0">Configuración Cuenta de Rastreo</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                @php
+                                                    $user_tracking=$company->settings->user_tracking??'';
+                                                @endphp
+                                                <label class="form-label" for="settings[user_tracking]">Usuario</label>
+                                                {!! Form::text('settings[user_tracking]', old('settings[user_tracking]',$user_tracking), ['class' => 'form-control', 'placeholder' => 'Numero de Pasajes','id'=>'user_tracking']) !!}
+                                            </div>
+                                            @php
+                                                $password_tracking=$company->settings->password_tracking??'';
+                                            @endphp
+                                            <div class="mb-3">
+                                                <label class="form-label" for="settings[password_tracking]">Contraseña</label>
+                                                <input type="password" class="form-control" id="password_tracking"  name="settings[password_tracking]" value="{{old('password_tracking',$password_tracking)}}" placeholder="*********">
+                                            </div>
+                                            @php
+                                                $user_api_hash=$company->settings->user_api_hash??'';
+                                            @endphp
+                                            <div class="mb-3">
+                                                <button type="button" onclick="tokenGenerate()" id="btnTokenGenerate"
+                                                        class="btn btn-success waves-effect waves-light mb-2 me-2">
+                                                    Generar Token
+                                                </button>
+                                            </div>
+                                            <div class="mb-3" id="getToken">
+                                                <label class="form-label" for="settings[user_api_hash]">User API
+                                                    Hash</label>
+                                                <input type="password" class="form-control"
+                                                       name="settings[user_api_hash]"
+                                                       id="user_api_hash"
+                                                       value="{){old('settings[user_api_hash]',$user_api_hash)}}"
+                                                       placeholder="*********">
                                             </div>
                                         </div>
                                     </div>
@@ -234,17 +268,14 @@
                                                  @php
                                                     $email_username = $company->settings->email_username??'';
                                                 @endphp
-                                                <label class="form-label" for="settings[email_username]">Nombre de
-                                                    usuario de
-                                                    Email</label>
+                                                <label class="form-label" for="settings[email_username]">Nombre de usuario </label>
                                                 {!! Form::text('settings[email_username]', old('settings[email_username]',$email_username ), ['class' => 'form-control', 'placeholder' => 'info@ejemplo.com']) !!}
                                             </div>
                                             <div class="mb-3">
                                                  @php
                                                     $email_password = $company->settings->email_password??'';
                                                 @endphp
-                                                <label class="form-label" for="settings[email_password]">Contraseña de
-                                                    Email</label>
+                                                <label class="form-label" for="settings[email_password]">Contraseña </label>
                                                 {!! Form::text('settings[email_password]', old('settings[email_password]',$email_password ), ['class' => 'form-control', 'placeholder' => '**********']) !!}
                                             </div>
                                             <div class="mb-3">
@@ -254,7 +285,7 @@
                                                 <label class="form-label" for="settings[email_encryption]">Encriptación
                                                     de
                                                     Email</label>
-                                                {!! Form::text('settings[email_encryption]', old('settings[email_encryption]',$email_encryption ), ['class' => 'form-control', 'placeholder' => 'Servidor de Email']) !!}
+                                                {!! Form::text('settings[email_encryption]', old('settings[email_encryption]',$email_encryption ), ['class' => 'form-control', 'placeholder' => 'TLS, SSL']) !!}
                                             </div>
                                             <div class="mb-3">
                                                  @php
@@ -263,31 +294,27 @@
                                                 <label class="form-label" for="settings[email_from_address]">Dirección de
                                                     envío de
                                                     Email</label>
-                                                {!! Form::email('settings[email_from_address]', old('settings[email_from_address]',$email_from_address ), ['class' => 'form-control', 'placeholder' => 'Servidor de Email']) !!}
+                                                {!! Form::email('settings[email_from_address]', old('settings[email_from_address]',$email_from_address ), ['class' => 'form-control', 'placeholder' => 'Dirección de envío']) !!}
                                             </div>
                                             <div class="mb-3">
                                                  @php
                                                     $email_from_name = $company->settings->email_from_name??'';
                                                 @endphp
-                                                <label class="form-label" for="settings[email_from_name]">Nombre de envío
-                                                    de
-                                                    Email</label>
-                                                {!! Form::text('settings[email_from_name]', old('settings[email_from_name]',$email_from_name ), ['class' => 'form-control', 'placeholder' => 'Servidor de Email']) !!}
+                                                <label class="form-label" for="settings[email_from_name]">Remitentes</label>
+                                                {!! Form::text('settings[email_from_name]', old('settings[email_from_name]',$email_from_name ), ['class' => 'form-control', 'placeholder' => 'Nombre de envío de  Email']) !!}
                                             </div>
                                             <div class="mb-3">
                                                  @php
                                                     $email_subject = $company->settings->email_subject??'';
                                                 @endphp
-                                                <label class="form-label" for="settings[email_subject]">Asunto
-                                                    Email</label>
-                                                {!! Form::text('settings[email_subject]', old('settings[email_subject]',$email_subject ), ['class' => 'form-control', 'placeholder' => 'Servidor de Email']) !!}
+                                                <label class="form-label" for="settings[email_subject]">Asunto</label>
+                                                {!! Form::text('settings[email_subject]', old('settings[email_subject]',$email_subject ), ['class' => 'form-control', 'placeholder' => 'Asunto']) !!}
                                             </div>
                                             <div class="mb-3">
                                                  @php
                                                     $email_message = $company->settings->email_message??'';
                                                 @endphp
-                                                <label class="form-label" for="settings[email_message]">Mensaje de
-                                                    Email</label>
+                                                <label class="form-label" for="settings[email_message]">Mensaje </label>
                                                 {!! Form::textarea('settings[email_message]', old('settings[email_message]',$email_message ), ['class' => 'form-control', 'rows'=>2]) !!}
                                             </div>
                                         </div>
@@ -376,6 +403,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.3/skins/flat/blue.min.css"
           integrity="sha512-NFzPiFD5sIrKyFzW9/n3DgL45vt0/5SL5KbQXsHyf63cQOXR5jjWBvU9mY3A80LOGPJSGApK8rNwk++RwZAS6Q=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="{{ Theme::url('libs/alertifyjs/alertifyjs.min.js') }}"></script>
+    <script src="{{ Theme::url('libs/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"
+            integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script type="application/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
@@ -384,6 +417,82 @@
         });
     })
 </script>
+    <script type="application/javascript">
 
+        const loading = new Loader();
+
+        function tokenGenerate() {
+            loading.show()
+            const email = document.getElementById('user_tracking').value;
+            const password = document.getElementById('password_tracking').value
+
+            const data = {
+                email: email,
+                password: password
+            };
+            let token = "{{$currentUser->getFirstApiKey() }}";
+
+            axios.post('{{route('api.apigpswox.token.store')}}', data, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': '{{csrf_token()}}',
+                }
+            }).then(function (response) {
+                document.getElementById('getToken').style.display = "block";
+                document.getElementById('btnTokenGenerate').style.display = "none";
+                document.getElementById('user_api_hash').value = response.data.data
+                alertify.success('Token Generado Satisfactoriamente');
+                loading.hidden();
+            }).catch(function (error) {
+                console.log(error);
+                alertify.error('Algo Salio Mal');
+            });
+            loading.hidden()
+        }
+
+    </script>
+    <script type="application/javascript">
+        document.addEventListener("DOMContentLoaded", function (event) {
+
+            $('#user_api_hash').change(function(){
+                document.getElementById('getToken').style.display = "none";
+                document.getElementById('btnTokenGenerate').style.display = "block";
+            });
+            $('#user_tracking').change(function(){
+                if(ValidateEmail(this)){
+                    document.getElementById('btnTokenGenerate').disabled = false;
+                }else {
+                    document.getElementById('btnTokenGenerate').disabled = true;
+                }
+
+            });
+            $('#password_tracking').change(function(){
+                if(this.value.length){
+                    document.getElementById('btnTokenGenerate').disabled = false;
+                }else {
+                    document.getElementById('btnTokenGenerate').disabled = true;
+                }
+            });
+
+        })
+
+        function ValidateEmail(input) {
+
+            var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+            if (input.value.match(validRegex)) {
+
+                return true;
+
+            } else {
+                alertify.success('Invalid email address!');
+
+                return false;
+
+            }
+
+        }
+    </script>
 @stop
 

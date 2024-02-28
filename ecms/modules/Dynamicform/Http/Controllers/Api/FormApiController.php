@@ -5,7 +5,6 @@ namespace Modules\Dynamicform\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Log;
 use Mockery\CountValidator\Exception;
 use Modules\Dynamicform\Entities\Form;
 use Modules\Dynamicform\Http\Requests\CreateFormRequest;
@@ -37,8 +36,16 @@ class FormApiController extends Controller
         try {
             $includes = explode(',', $request->input('include'));
 
-            $params = json_decode(json_encode(['filter' => ['search' => $request->input('search'), 'companies' => $request->input('companies')], 'include' => $includes, 'page' => $request->input('page'), 'take' => $request->input('limit')]));
-
+            $params = json_decode(json_encode(
+                ['filter' => 
+                    [
+                        'search' => $request->input('search'), 
+                        'companies' => $request->input('companies')
+                    ], 
+                'include' => $includes, 
+                'page' => $request->input('page'), 
+                'take' => $request->input('limit')
+                ]));
             $forms = $this->form->getItemsBy($params);
 
             $response = ["data" => FormTransformer::collection($forms)];

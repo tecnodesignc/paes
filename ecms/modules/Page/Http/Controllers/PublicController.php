@@ -3,6 +3,7 @@
 namespace Modules\Page\Http\Controllers;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Modules\Core\Http\Controllers\BasePublicController;
 use Modules\Menu\Repositories\MenuItemRepository;
@@ -31,10 +32,13 @@ class PublicController extends BasePublicController
 
     /**
      * @param $slug
-     * @return View
+     * @return View|RedirectResponse
      */
-    public function uri($slug):View
+    public function uri($slug): View|RedirectResponse
     {
+        if(!$this->auth->user()->hasAccess('core.sidebar.group') && $this->auth->user()->hasAccess('dynamicform.formresponses.index')){
+            return  redirect()->route('dynamicform.form.indexcolaboradoresform');
+        }
         $page = $this->findPageForSlug($slug);
 
         $this->throw404IfNotFound($page);
@@ -53,10 +57,13 @@ class PublicController extends BasePublicController
     }
 
     /**
-     * @return View
+     * @return View|RedirectResponse
      */
-    public function homepage():View
+    public function homepage(): View|RedirectResponse
     {
+        if(!$this->auth->user()->hasAccess('core.sidebar.group') && $this->auth->user()->hasAccess('dynamicform.formresponses.index')){
+            return  redirect()->route('dynamicform.form.indexcolaboradoresform');
+        }
         $page = $this->page->findHomepage();
 
         $this->throw404IfNotFound($page);

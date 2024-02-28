@@ -8,15 +8,26 @@ use Illuminate\Contracts\View\View;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\Dynamicform\Entities\Form;
 use Modules\Dynamicform\Http\Requests\CreateFormRequest;
+use Modules\Dynamicform\Http\Requests\UpdateFormRequest;
+use Modules\Dynamicform\Repositories\FieldRepository;
 use Modules\Dynamicform\Repositories\FormRepository;
+use Illuminate\Http\Request;
+use Modules\User\Contracts\Authentication;
 
 class FormController extends AdminBaseController
 {
     private FormRepository $form;
-    public function __construct(FormRepository $form)
+    private FieldRepository $field;
+
+    private $auth;
+
+
+    public function __construct(FormRepository $form, FieldRepository $field)
     {
         parent::__construct();
         $this->form=$form;
+        $this->field=$field;
+        $this->auth = app(Authentication::class);
 
     }
 
@@ -29,6 +40,48 @@ class FormController extends AdminBaseController
     {
 
         return view('modules.dynamic-form.forms.index');
+    }
+
+        /**
+     * Display a listing of the resource.
+     *
+     * @return Application|Factory|View
+     */
+    public function indexcolaboradoresform():Application|Factory|View
+    {
+        //consulta para los formularios
+        $params_form = json_decode(json_encode([
+            'filter' => [
+                'companies' => [$this->auth->user()->driver->company_id],
+                'status' => 1
+            ],  'include' => ['*'], 'page' => 1, 'take' => 10000
+        ]));
+
+        $forms=$this->form->getItemsBy($params_form);
+
+        return view('modules.dynamic-form.forms.indexcolaboradoresform', compact('forms'));
+    }
+
+       /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  Form $form
+     * @return Response
+     */
+    public function show(Form $form) :Factory|View
+    {
+
+        $params = json_decode(json_encode([
+            'filter' => [
+                'form_id' => $form->id,
+                'order'=>['field'=>'order','way'=>'asc']
+                ],
+            'include' => ['*'], 'page' => 1, 'take' => 10000
+        ]));
+
+        $datos = $this->field->getItemsBy($params);
+        $datos = $datos->items();
+        return view('modules.dynamic-form.forms.show', compact('form','datos'));
     }
 
     /**
@@ -49,9 +102,13 @@ class FormController extends AdminBaseController
      */
     public function store(CreateFormRequest $request)
     {
-        $this->form->create($request->all());
+        $form = $this->form->create($request->all());
 
-        return redirect()->route('dynamicform.form.index')
+        // Obtener el ID del formulario recién creado
+        $formId = $form->id;
+
+        // Redirigir al usuario a la página de edición del formulario recién creado
+        return redirect()->route('dynamicform.form.edit', ['form' => $formId])
             ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('dynamicform::forms.title.forms')]));
     }
 
@@ -61,7 +118,7 @@ class FormController extends AdminBaseController
      * @param  Form $form
      * @return Response
      */
-    public function edit(Form $form)
+    public function edit(Form $form) :Factory|View
     {
         return view('modules.dynamic-form.forms.edit', compact('form'));
     }
@@ -75,10 +132,9 @@ class FormController extends AdminBaseController
      */
     public function update(Form $form, UpdateFormRequest $request)
     {
-        $this->form->update($form, $request->all());
+        // $this->form->update($form, $request->all());
 
-        return redirect()->route('admin.dynamicform.form.index')
-            ->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicform::forms.title.forms')]));
+        return redirect()->route('dynamicform.form.index')->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicform::forms.title.forms')]));
     }
 
     /**
@@ -89,9 +145,7 @@ class FormController extends AdminBaseController
      */
     public function destroy(Form $form)
     {
-        $this->form->destroy($form);
-
-        return redirect()->route('admin.dynamicform.form.index')
-            ->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('dynamicform::forms.title.forms')]));
+        $form->update(['active' => 0]);
+        return redirect()->route('dynamicform.form.index')->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('dynamicform::forms.title.forms')]));
     }
 }

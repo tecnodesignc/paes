@@ -14,14 +14,10 @@ class DeviceService extends Connection
      */
     private UserRepository $user;
 
-    public function __construct(UserRepository $user)
-    {
-        $this->user = $user;
-    }
 
-    public function GetDevices()
+    public function GetDevices($params=[])
     {
-        $this->params();
+        $this->params($params);
         $device = $this->get('/get_devices');
 
         return $device;

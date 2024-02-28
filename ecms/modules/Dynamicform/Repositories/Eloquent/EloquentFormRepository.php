@@ -33,7 +33,7 @@ class EloquentFormRepository extends EloquentBaseRepository implements FormRepos
     public function update($model, array $data): Model|Collection|Builder|array|null
     {
         $model->update($data);
-
+        $model->companies()->sync(Arr::get($data, 'companies', []));
         return $model;
     }
 
@@ -77,6 +77,8 @@ class EloquentFormRepository extends EloquentBaseRepository implements FormRepos
                 $orderWay = $filter->order->way ?? 'desc';//Default way
                 $query->orderBy($orderByField, $orderWay);//Add order to query
             }
+
+            // Filter Companies
             if (isset($filter->companies)) {
                 $companies = is_array($filter->companies) ? $filter->companies : [$filter->companies];
 
@@ -84,6 +86,15 @@ class EloquentFormRepository extends EloquentBaseRepository implements FormRepos
                     $q->whereIn('company_id', $companies);
                 });
             }
+
+            // Filter by status
+            if (isset($filter->status)) {
+                $query->whereHas('companies', function ($q) use ($filter) {
+                    $q->where('dynamicform__form_company.active', $filter->status);
+                });
+                $query->where('active', $filter->status);
+            }
+            
             //add filter by search
             if (isset($filter->search) && $filter->search) {
                 //find search in columns
@@ -103,6 +114,37 @@ class EloquentFormRepository extends EloquentBaseRepository implements FormRepos
             $params->take ? $query->take($params->take) : false;//Take
             return $query->get();
         }
+    }
+
+    public function getItem(string $criteria, $params = false): Model|Collection|Builder|array|null
+    {
+        //Initialize query
+        $query = $this->model->query();
+
+        /*== RELATIONSHIPS ==*/
+        if (in_array('*', $params->include)) {//If Request all relationships
+            $query->with([]);
+        } else {//Especific relationships
+            $includeDefault = [];//Default relationships
+            if (isset($params->include))//merge relations with default relationships
+                $includeDefault = array_merge($includeDefault, $params->include);
+            $query->with($includeDefault);//Add Relationships to query
+        }
+
+        /*== FILTER ==*/
+        if (isset($params->filter)) {
+            $filter = $params->filter;
+
+            if (isset($filter->field))//Filter by specific field
+                $field = $filter->field;
+        }
+
+        /*== FIELDS ==*/
+        if (isset($params->fields) && count($params->fields))
+            $query->select($params->fields);
+
+        /*== REQUEST ==*/
+        return $query->where($field ?? 'id', $criteria)->first();
     }
 
 }

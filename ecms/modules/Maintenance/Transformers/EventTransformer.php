@@ -29,7 +29,7 @@ class EventTransformer extends JsonResource
             'description' => $this->when($this->description, $this->description),
             'alert' => $this->alert??null,
             'alert_active' => $this->when($this->alert_active, $this->alert_active),
-            'limit' => $this->limit??null,
+            'limits' => $this->limits??null,
             'status' => intval($this->status),
             'status_name'=>$this->present()->status,
             'status_class'=>$this->present()->status_class,

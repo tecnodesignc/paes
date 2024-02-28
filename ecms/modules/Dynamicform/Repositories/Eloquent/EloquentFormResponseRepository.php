@@ -2,8 +2,11 @@
 
 namespace Modules\Dynamicform\Repositories\Eloquent;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Modules\Dynamicform\Events\FormResponsesWasCreated;
 use Modules\Dynamicform\Repositories\FormResponseRepository;
 use Modules\Core\Repositories\Eloquent\EloquentBaseRepository;
 
@@ -49,9 +52,16 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
                 $orderWay = $filter->order->way ?? 'desc';//Default way
                 $query->orderBy($orderByField, $orderWay);//Add order to query
             }
+
+            // Filter by companies
             if(isset($filter->companies)){
                 $companies = is_array($filter->companies) ? $filter->companies : [$filter->companies];
                 $query->whereIn('company_id',$companies);
+            }
+
+            // Filter by form id
+            if(isset($filter->form_id)){
+                $query->where('form_id', $filter->form_id);
             }
 
             //add filter by search
@@ -63,7 +73,6 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
                         $q->where('title', 'LIKE', "%{$term}%");
                     })->orWhere('id', $term);
                 });
-
             }
         }
 
@@ -80,5 +89,17 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
         }
     }
 
+    /**
+     * Create a resource
+     * @param  $data
+     * @return Model|Collection|Builder|array|null
+     */
+    public function create($data): Model|Collection|Builder|array|null
+    {
+        \Log::info('error en eloquent repository');
+        $formresponse = $this->model->create($data);
+        event(new FormResponsesWasCreated($formresponse, $data));
+        return $formresponse;
+    }
 
 }

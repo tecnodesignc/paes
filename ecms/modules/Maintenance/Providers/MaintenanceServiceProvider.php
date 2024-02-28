@@ -32,7 +32,9 @@ class MaintenanceServiceProvider extends ServiceProvider
         $this->app['events']->listen(LoadingBackendTranslations::class, function (LoadingBackendTranslations $event) {
             $event->load('events', Arr::dot(trans('maintenance::events')));
             $event->load('fueltanks', Arr::dot(trans('maintenance::fueltanks')));
+            $event->load('tires', Arr::dot(trans('maintenance::tires')));
             // append translations
+
 
 
         });
@@ -81,7 +83,20 @@ class MaintenanceServiceProvider extends ServiceProvider
                 return new \Modules\Maintenance\Repositories\Cache\CacheFueltankDecorator($repository);
             }
         );
+        $this->app->bind(
+            'Modules\Maintenance\Repositories\TireRepository',
+            function () {
+                $repository = new \Modules\Maintenance\Repositories\Eloquent\EloquentTireRepository(new \Modules\Maintenance\Entities\Tire());
+
+                if (! config('app.cache')) {
+                    return $repository;
+                }
+
+                return new \Modules\Maintenance\Repositories\Cache\CacheTireDecorator($repository);
+            }
+        );
 // add bindings
+
 
 
     }

@@ -42,10 +42,46 @@
                         <span class="menu-item" data-key="t-dashboards">{{ trans('dashboard::dashboard.name') }}</span>
                     </a>
                 </li>
+
+                {{-- Inicio componentes de formularios --}}
+                @if($currentUser->hasAccess('dynamicform.forms.index') || $currentUser->hasAccess('dynamicform.formresponses.index') )
+
+                <li class="menu-title" data-key="t-menu">Formularios</li>
+                @endif
+                {{-- dashboard forms--}}
+                @if($currentUser->hasAccess('dynamicform.forms.index'))
+                <li>
+                    <a href="{{ route('dynamicform.dashboard') }}">
+                        <i class="mdi mdi-chart-bar icon nav-icon"></i>
+                        <span class="menu-item" data-key="t-dashboards">Dashboard</span>
+                    </a>
+                </li>
+                @endif
+                {{-- Fin dashboard forms--}}
+                {{-- Formularios de colaboradores --}}
+                @if($currentUser->hasAccess('dynamicform.formresponses.index'))
+                <li>
+                    <a href="{{ route('dynamicform.form.indexcolaboradoresform') }}">
+                        <i class="mdi mdi-notebook icon nav-icon"></i>
+                        <span class="menu-item text-truncate" data-key="t-business">Formularios</span>
+                    </a>
+                </li>
+                @endif
+                {{-- Fin de componentes de Formularios de colaboradores --}}
+                {{-- Admin de formularios --}}
+                @if($currentUser->hasAccess('dynamicform.forms.index'))
+                <li>
+                    <a href="{{ route('dynamicform.form.index') }}">
+                        <i class="mdi mdi-notebook-edit icon nav-icon"></i>
+                        <span class="menu-item text-truncate" data-key="t-business">Admin Formularios</span>
+                    </a>
+                </li>
+                @endif
+                {{-- Fin de componentes de Admin de formularios --}}
+
                 @if($currentUser->hasAccess('sass.companies.index'))
 
                 <li class="menu-title" data-key="t-applications">Empresas</li>
-
                     @if($currentUser->hasAccess('sass.companies.index'))
                         <li><a href="{{route('sass.company.index')}}">
                                 <i class="mdi mdi-account-group icon nav-icon"></i>
@@ -66,6 +102,7 @@
                         </li>
                     @endif
                 @endif
+                @if($currentUser->hasAccess('transport.vehicles.index') || $currentUser->hasAccess('transport.drivers.index'))
                 <li class="menu-title" data-key="t-applications">Transporte</li>
                 @if($currentUser->hasAccess('transport.vehicles.index'))
                 <li>
@@ -96,6 +133,7 @@
                             <!--                        <li><a href="ecommerce-orders" data-key="t-orders">Api KEYS</a></li>-->
                         </ul>
                     </li>
+                @endif
                 @endif
 <!--                <li>
                     <a href="javascript: void(0);" class="has-arrow">

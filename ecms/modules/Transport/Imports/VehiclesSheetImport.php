@@ -27,7 +27,7 @@ class VehiclesSheetImport implements ToCollection
                 $data = [
                     'id' => $row[0],
                     'brand'=>$row[1],
-                    'plate'=>strtoupper(str_replace(' ', '', $row[2])),
+                    'plate'=>strtoupper(str_replace(' ', '-', $row[2])),
                     'model'=>$row[3],
                     'class'=>$row[4],
                     'imei'=>$row[5],
