@@ -304,9 +304,21 @@
 
             // Verificar si hay un stream de video activo
             if (!mediaStream) {
-                // Si no hay ningún stream de video, solicitar acceso a la cámara
-                mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = mediaStream;
+                try {
+                    const constraints = { video: { facingMode: "environment" }, audio: false };
+                     // Solicitar el acceso a la cámara con las nuevas restricciones
+                    navigator.mediaDevices.getUserMedia(constraints)
+                        .then(mediaStream => {
+                            // Asignar el stream de la cámara al elemento de video
+                            video.srcObject = mediaStream;
+                        })
+                        .catch(error => {
+                            console.log("Error al acceder a la cámara:", error);
+                        });
+                        return;
+                } catch (error) {
+                    console.log("Conexión de la cámara denegada para el campo con ID:", fieldId);
+                }
             }
 
             const canvasId = 'canvas-' + fieldId;
@@ -342,55 +354,47 @@
             fieldIds.forEach(async (fieldId) => {
                 const video = document.getElementById('video-' + fieldId);
                 try {
-                    const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-                    video.srcObject = mediaStream;
+                    const constraints = { video: { facingMode: "environment" }, audio: false };
+                     // Solicitar el acceso a la cámara con las nuevas restricciones
+                    navigator.mediaDevices.getUserMedia(constraints)
+                        .then(mediaStream => {
+                            // Asignar el stream de la cámara al elemento de video
+                            video.srcObject = mediaStream;
+                        })
+                        .catch(error => {
+                            console.log("Error al acceder a la cámara:", error);
+                        });
                 } catch (error) {
-                    console.log("Conexión de la camara denegada");
+                    console.log("Conexión de la cámara denegada para el campo con ID:", fieldId);
                 }
             });
         });
 
-        // let currentCamera = 'front'; // Estado inicial
-        // async function switchCamera(fieldId) {
-        //     const video = document.getElementById('video-' + fieldId);
-        //     const devices = await navigator.mediaDevices.enumerateDevices();
-        //     const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        // Variable para indicar si la cámara frontal está activa o no
+        let front = true;
 
-        //     // Encontrar la cámara opuesta a la actual
-        //     const oppositeCamera = currentCamera === 'front' ? 'back' : 'front';
-        //     const oppositeCameraDevice = videoDevices.find(device => device.label.toLowerCase().includes(oppositeCamera));
+        // Función para cambiar entre las cámaras
+        function switchCamera(fieldId) {
+            // Invertir el estado de la cámara frontal
+            front = !front;
 
-        //     if (oppositeCameraDevice) {
-        //         try {
-        //             const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: oppositeCameraDevice.deviceId } });
-        //             video.srcObject = mediaStream;
-        //             currentCamera = oppositeCamera; // Actualizar el estado de la cámara
-        //         } catch (error) {
-        //             console.log("Conexión de la camara denegada");
-        //         }
-        //     } else {
-        //         console.error(`No se encontró una cámara ${oppositeCamera}.`);
-        //     }
-        // }
-
-        let currentCamera = "environment"; // Estado inicial: cámara trasera
-
-        async function switchCamera(fieldId) {
+            // Obtener el elemento de video
             const video = document.getElementById('video-' + fieldId);
 
-            // Determinar la cámara opuesta a la actual
-            const oppositeCamera = currentCamera === "environment" ? "user" : "environment";
-            console.log(oppositeCamera);
-            try {
-                const mediaStream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: oppositeCamera }
+            // Actualizar las restricciones de la cámara con el modo de frente según el valor actual de 'front'
+            const constraints = { video: { facingMode: front ? "user" : "environment" }, audio: false };
+
+            // Solicitar el acceso a la cámara con las nuevas restricciones
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(mediaStream => {
+                    // Asignar el stream de la cámara al elemento de video
+                    video.srcObject = mediaStream;
+                })
+                .catch(error => {
+                    console.log("Error al acceder a la cámara:", error);
                 });
-                video.srcObject = mediaStream;
-                currentCamera = oppositeCamera; // Actualizar el estado de la cámara
-            } catch (error) {
-                console.log("Error al acceder a la cámara:", error);
-            }
         }
+
 
 
     </script>
