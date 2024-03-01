@@ -86,17 +86,17 @@
             },
             columns:
                 [
-                    {
-                        id: 'id',
-                        name: '#',
-                        width: '50px',
-                        sort: {
-                            enabled: false
-                        },
-                        formatter: (function (cell) {
-                            return gridjs.html('<div class="form-check font-size-16"><input class="form-check-input" type="checkbox" id="orderidcheck' + cell + '"><label class="form-check-label" for="orderidcheck' + cell + '">' + cell + '</label></div>');
-                        })
-                    },
+                    // {
+                    //     id: 'id',
+                    //     name: '#',
+                    //     width: '50px',
+                    //     sort: {
+                    //         enabled: false
+                    //     },
+                    //     formatter: (function (cell) {
+                    //         return gridjs.html('<div class="form-check font-size-16"><input class="form-check-input" type="checkbox" id="orderidcheck' + cell + '"><label class="form-check-label" for="orderidcheck' + cell + '">' + cell + '</label></div>');
+                    //     })
+                    // },
                     {
                         id: 'user',
                         name: 'Colaborador',
@@ -107,7 +107,7 @@
                     },
                     {
                         id: 'negative_num',
-                        name: 'Respuestas negativas',
+                        name: 'Hallazgos',
                         width: '150px',
                     },
                     {

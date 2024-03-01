@@ -52,7 +52,9 @@ class FormController extends AdminBaseController
         //consulta para los formularios
         $params_form = json_decode(json_encode([
             'filter' => [
-                'companies' => [$this->auth->user()->driver->company_id],
+                'companies' => company()->id?company()->id:array_values(companies()->map(function ($company){
+                    return $company->id;
+                })->toArray()),
                 'status' => 1
             ],  'include' => ['*'], 'page' => 1, 'take' => 10000
         ]));
@@ -132,8 +134,7 @@ class FormController extends AdminBaseController
      */
     public function update(Form $form, UpdateFormRequest $request)
     {
-        // $this->form->update($form, $request->all());
-
+        $this->form->update($form, $request->all());
         return redirect()->route('dynamicform.form.index')->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicform::forms.title.forms')]));
     }
 

@@ -83,6 +83,12 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
                 'uses' => 'FieldController@orden',
                 'middleware' => 'can:dynamicform.fields.edit'
             ]);
+            $router->post('/import', [
+                'as' => 'dynamicform.field.import',
+                'uses' => 'FieldController@import',
+                // 'middleware' => 'can:dynamicform.fields.create'
+            ]);
+
         });
 
         // Rutas de las respuesta de los formularios

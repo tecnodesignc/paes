@@ -6,15 +6,15 @@
                 <div class="col-lg-7 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <div class="btn-group border border-primary" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check dynamic-field" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-1" autocomplete="off" value="1" data-field-type="5" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}"
-                                {{$field->value === 1 ? 'checked' : ''}}>
+                        <input type="radio" class="btn-check dynamic-field" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-1" autocomplete="off" value="0" data-field-type="5" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-hallazgo="{{$field->hallazgo}}"
+                                {{$field->value === 0 ? 'checked' : ''}}>
                         <label class="btn btn-outline-dark mb-0" for="btnradio-{{$field->id}}-1">Si</label>
 
-                        <input type="radio" class="btn-check dynamic-field" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-2" autocomplete="off" value="0" data-field-type="5" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}"
-                                {{$field->value === 0 ? 'checked' : ''}}>
+                        <input type="radio" class="btn-check dynamic-field" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-2" autocomplete="off" value="1" data-field-type="5" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-hallazgo="{{$field->hallazgo}}"
+                                {{$field->value === 1 ? 'checked' : ''}}>
                         <label class="btn btn-outline-dark mb-0" for="btnradio-{{$field->id}}-2">No</label>
 
-                        <input type="radio" class="btn-check dynamic-field" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-3" autocomplete="off" value="2" data-field-type="5" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}"
+                        <input type="radio" class="btn-check dynamic-field" name="btnradio-{{$field->id}}" id="btnradio-{{$field->id}}-3" autocomplete="off" value="2" data-field-type="5" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-hallazgo="{{$field->hallazgo}}"
                                 {{$field->value === 2 ? 'checked' : ''}}>
                         <label class="btn btn-outline-dark mb-0" for="btnradio-{{$field->id}}-3">N/A</label>
                     </div>
@@ -124,7 +124,7 @@
                 <div class="col-lg-7 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
 
-                    <select class="form-select dynamic-field" name="btnselect-{{$field->id}}" id="btnselect-{{$field->id}}" style="width: 100%;" data-field-type="6" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}">
+                    <select class="form-select dynamic-field" name="btnselect-{{$field->id}}" id="btnselect-{{$field->id}}" style="width: 100%;" data-field-type="6" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-hallazgo="{{$field->hallazgo}}">
                         @if(empty($field->selectable[0]))
                             <option disabled>No hay opciones disponibles</option>
                         @else
@@ -158,7 +158,7 @@
             <div class="row mt-3">
                 <div class="col-lg-7 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
-                    <select class="form-select-multiple dynamic-field" name="btnselect-multiple-{{$field->id}}[]" id="btnselect-multiple-{{$field->id}}" style="width: 100%; height: 150px;" multiple="multiple" data-field-type="7" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}">
+                    <select class="form-select-multiple dynamic-field" name="btnselect-multiple-{{$field->id}}[]" id="btnselect-multiple-{{$field->id}}" style="width: 100%; height: 150px;" multiple="multiple" data-field-type="7" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-hallazgo="{{$field->hallazgo}}">
                         @if(empty($field->selectable[0]))
                             <option disabled>No hay opciones disponibles</option>
                         @else
@@ -244,7 +244,7 @@
                                 $options = explode(',', $options);
                             @endphp
                             @foreach($options as $option)
-                                <input type="radio" class="btn-check dynamic-field" id="option_{{ $field->id }}_{{ $option }}" name="option_{{ $field->id }}" value="{{ $option }}" data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}">
+                                <input type="radio" class="btn-check dynamic-field" id="option_{{ $field->id }}_{{ $option }}" name="option_{{ $field->id }}" value="{{ $option }}" data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-hallazgo="{{$field->hallazgo}}" >
                                 <label for="option_{{ $field->id }}_{{ $option }}" class="btn btn-outline-dark mb-0">{{ $option }}</label>
                             @endforeach
                         @endforeach
@@ -277,14 +277,13 @@
                                     </div>
                                     <div class="card-body">
                                         <video id="video-{{$field->id}}" width="240" height="240" autoplay></video>
-                                        <canvas id="canvas-{{$field->id}}" width="240" height="240" style="display: none;"></canvas>
+                                        <canvas id="canvas-{{$field->id}}" width="240" height="240"></canvas>
                                         <div id="gallery-{{$field->id}}"></div>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-end">
                                     <p class="waves-effect text-primary m-3 mt-1" data-bs-dismiss="modal" data-bs-target="#myModal-{{$field->id}}" onclick="cancelCamera('{{$field->id}}')">Cerrar camara</p>
                                 </div>
-
 
                             </div>
                         </div>

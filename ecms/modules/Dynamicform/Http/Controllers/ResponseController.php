@@ -66,7 +66,6 @@ class ResponseController extends AdminBaseController
         $datos = $this->field->getItemsBy($params);
 
         $datos = $datos->items();
-
         return view('modules.dynamic-form.response.create', compact('form','datos'));
     }
 

@@ -56,7 +56,7 @@
                     <div id="addproduct-productinfo-collapse" class="collapse show"
                          data-bs-parent="#addproduct-accordion">
                         <div class="p-4 border-top">
-                            <div class="row">
+                            <div class="row d-flex justify-content-center align-items-center">
                                 <div class="col-lg-8">
                                     <div class="card">
                                         <div class="card-body">
@@ -89,6 +89,19 @@
                                                     <option value="11">Estados</option>
                                                 </select>
                                             </div>
+
+                                            <div id="limits" class="mb-3" style="display: none;">
+                                                <label for="selectable" class="form-label font-size-13 text-muted"><strong>*</strong>Opciones del Campo</label>
+                                                <input class="form-control" id="selectable" name="selectable[]" type="text" value="{{ old('selectable') }}" placeholder="Agregar Opciones">
+                                                {!! $errors->first('selectable', '<div class="invalid-feedback">:message</div>') !!}
+                                            </div>
+
+                                            <div id="divhallazgo" class="mb-3 {{ $errors->has('hallazgo') ? 'was-validated' : '' }}" style="display: none;">
+                                                <label class="form-label" for="caption" title="Ingrese una posición">Hallazgo</label>
+                                                <input id="hallazgo" placeholder="Contará hallazgo en la posición" name="hallazgo" type="number" value="{{ old('hallazgo') }}" class="form-control" min="0">
+                                                {!! $errors->first('hallazgo', '<div class="invalid-feedback">:message</div>') !!}
+                                            </div>
+                                            <hr>
                                             <div class="checkbox {{ $errors->has('required') ? 'was-validated' : '' }}">
                                                 <label for="required">
                                                     <input id="required" name="required" type="checkbox" class="form-check-input" {{ old('required') ? 'checked' : '' }}  checked value="1">
@@ -96,10 +109,15 @@
                                                     {!! $errors->first('required', '<div class="invalid-feedback">:message</div>') !!}
                                                 </label>
                                             </div>
-                                            <div id="limits" class="mb-3" style="display: none;">
-                                                <label for="selectable" class="form-label font-size-13 text-muted"><strong>*</strong>Opciones del Campo</label>
-                                                <input class="form-control" id="selectable" name="selectable[]" type="text" value="{{ old('selectable') }}" placeholder="Agregar Opciones">
-                                                {!! $errors->first('selectable', '<div class="invalid-feedback">:message</div>') !!}
+
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="row mb-4">
+                                                <div class="col text-end">
+                                                    <a href="{{route('dynamicform.form.edit',[$form->id])}}" class="btn btn-danger"> <i class="bx bx-x me-1"></i>
+                                                        Cancelar </a>
+                                                    <button type="submit" class="btn btn-success"><i class=" bx bx-file me-1"></i> Guardar</button>
+                                                </div> <!-- end col -->
                                             </div>
                                         </div>
                                     </div>
@@ -110,14 +128,9 @@
                 </div>
             </div>
         </div>
+
     </div>
-    <div class="row mb-4">
-        <div class="col text-end">
-            <a href="{{route('dynamicform.form.edit',[$form->id])}}" class="btn btn-danger"> <i class="bx bx-x me-1"></i>
-                Cancelar </a>
-            <button type="submit" class="btn btn-success"><i class=" bx bx-file me-1"></i> Guardar</button>
-        </div> <!-- end col -->
-    </div>
+
     {!! Form::close() !!}
 
 @endsection
@@ -152,18 +165,28 @@
             // Función para actualizar la visibilidad y opciones del campo de opciones del campo
             function updateOptionsFieldVisibilityAndOptions() {
                 var typeValue = $('#type').val();
-                if (typeValue === '6' || typeValue === '7' || typeValue === '10' || typeValue === '11') {
+                if (typeValue ==='5') {
+                    $('#divhallazgo').css('display', 'block');
+                    $('#limits').css('display', 'none');
+                }
+                else if (typeValue === '6' || typeValue === '7' ) {
                     // Mostrar las opciones específicas cuando se selecciona 'Estados'
-                    if (typeValue === '11') {
+                    $('#limits').css('display', 'block');
+                    $('#divhallazgo').css('display', 'none');
+                }
+                else if(typeValue === '10' || typeValue === '11'){
+                       // Mostrar las opciones específicas cuando se selecciona 'Estados'
+                       if (typeValue === '11') {
                         textUniqueVals.removeActiveItems();
                         textUniqueVals.setValue(['BUENO','REGULAR','MALO','NO APLICA', 'NO TIENE'])
                     }
                     $('#limits').css('display', 'block');
-                } else {
-                    $('#limits').css('display', 'none');
+                    $('#divhallazgo').css('display', 'block');
                 }
-
-
+                else {
+                    $('#limits').css('display', 'none');
+                    $('#divhallazgo').css('display', 'none');
+                }
             }
 
             // Llamada a la función para actualizar la visibilidad y opciones del campo cuando se carga la página

@@ -190,6 +190,15 @@
                      data-bs-parent="#addproduct-accordion">
                     <div class="p-4 border-top">
                         <div class="row">
+                            <form id="importForm" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <input type="file" name="excel_file">
+                                <a href="#" class="btn btn-success waves-effect waves-light mb-2 me-2" onclick="importFields(event)">
+                                    <i class="mdi mdi-file-export-outline me-1"></i> Importar
+                                </a>
+                            </form>
+                        </div>
+                        <div class="row">
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-body">
@@ -197,12 +206,12 @@
                                             <div class="modal-button mt-2">
                                                 <div class="row align-items-start">
                                                     <div class="col-sm">
-                                                        <div>
+                                                        <div class="d-flex">
 
                                                             <a href="{{route('dynamicform.form.show',[$form->id])}}"
                                                                 title="Vista previa"
                                                                 class="btn btn-info waves-effect waves-light mb-2 me-2">
-                                                                <i class="mdi mdi-eye-outline me-1"></i>Vista previa
+                                                                <i class="mdi mdi-eye-outline me-1"></i>Previsualización
                                                             </a>
 
                                                             <a href="{{route('dynamicform.field.create',[$form->id])}}"
@@ -231,37 +240,6 @@
         </div>
     </div>
     {{-- FIN DEL COMPONENTE DE PREGUNTAS --}}
-
-    <!-- MODAL PARA MOSTRAR LA TABLA DE FILES-->
-    <div class="modal fade" id="table-modal" tabindex="-1" role="dialog" aria-labelledby="table-modal-label" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="table-modal-label">Tabla de Campos</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="position-relative">
-                        <div class="modal-button mt-2">
-                            <div class="row align-items-start">
-                                <div class="col-sm">
-                                    <div>
-                                        <a href="{{route('dynamicform.field.create',[$form->id])}}"
-                                        class="btn btn-primary waves-effect waves-light mb-2 me-2"
-                                        id="add-file">
-                                        <i class="mdi mdi-plus me-1"></i> Agregar </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="table-fields2"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- FIN MODAL -->
 
 @endsection
 @section('script')
@@ -353,12 +331,12 @@
             },
             columns:
                 [
-                    {
-                        id: 'order',
-                        name: 'Orden',
-                        width: '100px',
+                    // {
+                    //     id: 'order',
+                    //     name: 'Orden',
+                    //     width: '100px',
 
-                    },
+                    // },
                     {
                         id: 'label',
                         name: 'Etiqueta',
@@ -381,12 +359,12 @@
                     {
                         id: "id",
                         name: "Action",
-                        width: '110px',
+                        width: '150px',
                         sort: {
                             enabled: false
                         },
                         formatter: (function (cell) {
-                            return gridjs.html('<div class="d-flex gap-3">'
+                            return gridjs.html('<div class="d-flex justify-content-center align-items-center gap-3">'
                                 + '<a href="/preoperativo/form/{{$form->id}}/field/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success"><i class="mdi mdi-clipboard-edit-outline mdi-24px" ></i></a>'
                                 + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" class="text-danger"  onclick="deleteField(event, '+ cell +')" ><i class="mdi mdi-delete mdi-24px"></i></a>'
                                 + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Subir" class="text-secondary" onclick="orderField(event, '+ cell +',1)"><i class="mdi mdi-arrow-up-bold-circle-outline mdi-24px"></i></a>'
@@ -481,6 +459,38 @@
                 // Manejar errores
                 alert('Error al ordenar el campo');
             });
+        }
+
+        function importFields(event) {
+            event.preventDefault(); // Evita que el navegador siga el enlace
+
+            if (confirm("¿Estás seguro de que deseas cargar este archivo?")) {
+                // Obtener el formulario y el archivo
+                const form = document.getElementById('importForm');
+                const formData = new FormData(form);
+                //Realizar la solicitud POST con Axios
+                axios.post(`/preoperativo/form/{{$form->id}}/field/import`, formData, {
+                    headers: {
+                        'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                        'Content-Type': 'multipart/form-data' // Establecer el tipo de contenido a multipart/form-data
+                    }
+                })
+                .then(response => {
+                    // Verificar si la solicitud fue exitosa
+                    if (response.status === 200) {
+                        console.log('Importación exitosa');
+                        // Aquí puedes realizar acciones adicionales después de una importación exitosa
+                    } else {
+                        // Manejar el caso en que la solicitud no fue exitosa
+                        throw new Error('Error en la importación');
+                    }
+                })
+                .catch(error => {
+                    // Manejar errores
+                    console.error(error);
+                    console.log('Error en la importación');
+                });
+            }
         }
 
     </script>

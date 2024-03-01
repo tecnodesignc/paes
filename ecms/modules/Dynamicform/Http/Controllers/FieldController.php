@@ -12,7 +12,8 @@ use Modules\Dynamicform\Http\Requests\CreateFieldRequest;
 use Modules\Dynamicform\Http\Requests\UpdateFieldRequest;
 use Modules\Dynamicform\Repositories\FieldRepository;
 use Modules\Dynamicform\Entities\Form;
-
+use Modules\Dynamicform\Imports\ImportFields;
+use Maatwebsite\Excel\Facades\Excel;
 class FieldController extends AdminBaseController
 {
     private FieldRepository $field;
@@ -72,7 +73,7 @@ class FieldController extends AdminBaseController
 
         return redirect()->route('dynamicform.form.edit', $field->form_id)->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicfield::fields.title.fields')]));
     }
-    
+
 
     /**
      * Remove the specified resource from storage.
@@ -86,7 +87,7 @@ class FieldController extends AdminBaseController
 
         return response()->json(['message' => trans('core::core.messages.resource deleted', ['name' => trans('dynamicfield::fields.title.fields')])]);
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -105,37 +106,55 @@ class FieldController extends AdminBaseController
                 'filter' => [
                     'form_id' => $formId->id,
                     'order'=>['field'=>'order','way'=>'desc']
-                    ], 
+                    ],
                 'include' => ['*'], 'page' => 1, 'take' => 10000
             ]));
-    
+
             $fiels = $this->field->getItemsBy($params);
 
             // Encontrar el índice del campo actual en la colección de todos los campos
             $index = $fiels->search(function ($item) use ($field) {
                 return $item->id == $field->id;
             });
-    
+
             // Verificar si el campo actual está en la colección de campos
             if ($index !== false) {
                 // Calcular el nuevo índice del campo después de moverlo hacia arriba o hacia abajo
                 $newIndex = $index + $ordenValue;
-    
+
                 // Asegurarse de que el nuevo índice esté dentro de los límites de la colección
                 if ($newIndex >= 0 && $newIndex < $fiels->count()) {
                     // Intercambiar los valores de orden del campo actual y el campo en el nuevo índice
                     $currentOrder = $field->order;
                     $field->order = $fiels[$newIndex]->order;
                     $field->save();
-    
+
                     $fiels[$newIndex]->order = $currentOrder;
                     $fiels[$newIndex]->save();
                 }
             }
         }
-    
+
         return response()->json(['message' => trans('core::core.messages.resource updated', ['name' => trans('dynamicfield::fields.title.fields')])]);
     }
-    
+
+        /**
+     * Update the specified resource in storage.
+     *
+     * @param  Request $request
+     * @return Response
+     */
+    public function import($form_id, Request $request)
+    {
+        $fileImport=$request->file('file');
+
+        Excel::Import(new ImportFields(),$fileImport);
+
+        // return redirect()->route('transport.driver.index')
+        //     ->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('transport::passengers.title.passengers')]));
+        return response()->json(['message' => trans('core::core.messages.resource updated', ['name' => trans('dynamicfield::fields.title.fields')])]);
+
+    }
+
 
 }

@@ -127,7 +127,8 @@
                             enabled: false
                         },
                         formatter: (function (cell) {
-                            return gridjs.html('<div class="d-flex gap-3"><a href="/preoperativo/form/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="text-success"><i class="mdi mdi-eye-outline font-size-18"></i></a><a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a></div>');
+                            return gridjs.html('<div class="d-flex gap-3"><a href="/preoperativo/form/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="text-success"><i class="mdi mdi-eye-outline font-size-18"></i></a>'
+                                +'<a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a></div>');
                         })
                     }
 

@@ -273,7 +273,7 @@
                 const imageContainer = document.createElement('div');
                 imageContainer.classList.add('image-container');
                 imageContainer.innerHTML = `
-                    <img src="${imageData}" width="200" height="150" alt="Image ${imageIndex}">
+                    <img src="${imageData}" width="240" height="240" alt="Image ${imageIndex}">
                     <a onclick="removeImage(this, '${fieldId}')" class="btn btn-danger"><i class="fas fa-times-circle"></i></a>
                     `;
                 gallery.appendChild(imageContainer);
@@ -304,21 +304,9 @@
 
             // Verificar si hay un stream de video activo
             if (!mediaStream) {
-                try {
-                    const constraints = { video: { facingMode: "environment" }, audio: false };
-                     // Solicitar el acceso a la cámara con las nuevas restricciones
-                    navigator.mediaDevices.getUserMedia(constraints)
-                        .then(mediaStream => {
-                            // Asignar el stream de la cámara al elemento de video
-                            video.srcObject = mediaStream;
-                        })
-                        .catch(error => {
-                            console.log("Error al acceder a la cámara:", error);
-                        });
-                        return;
-                } catch (error) {
-                    console.log("Conexión de la cámara denegada para el campo con ID:", fieldId);
-                }
+                // Si no hay ningún stream de video, solicitar acceso a la cámara
+                mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = mediaStream;
             }
 
             const canvasId = 'canvas-' + fieldId;
@@ -354,47 +342,55 @@
             fieldIds.forEach(async (fieldId) => {
                 const video = document.getElementById('video-' + fieldId);
                 try {
-                    const constraints = { video: { facingMode: "environment" }, audio: false };
-                     // Solicitar el acceso a la cámara con las nuevas restricciones
-                    navigator.mediaDevices.getUserMedia(constraints)
-                        .then(mediaStream => {
-                            // Asignar el stream de la cámara al elemento de video
-                            video.srcObject = mediaStream;
-                        })
-                        .catch(error => {
-                            console.log("Error al acceder a la cámara:", error);
-                        });
+                    const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    video.srcObject = mediaStream;
                 } catch (error) {
-                    console.log("Conexión de la cámara denegada para el campo con ID:", fieldId);
+                    console.log("Conexión de la camara denegada");
                 }
             });
         });
 
-        // Variable para indicar si la cámara frontal está activa o no
-        let front = true;
+        // let currentCamera = 'front'; // Estado inicial
+        // async function switchCamera(fieldId) {
+        //     const video = document.getElementById('video-' + fieldId);
+        //     const devices = await navigator.mediaDevices.enumerateDevices();
+        //     const videoDevices = devices.filter(device => device.kind === 'videoinput');
 
-        // Función para cambiar entre las cámaras
-        function switchCamera(fieldId) {
-            // Invertir el estado de la cámara frontal
-            front = !front;
+        //     // Encontrar la cámara opuesta a la actual
+        //     const oppositeCamera = currentCamera === 'front' ? 'back' : 'front';
+        //     const oppositeCameraDevice = videoDevices.find(device => device.label.toLowerCase().includes(oppositeCamera));
 
-            // Obtener el elemento de video
+        //     if (oppositeCameraDevice) {
+        //         try {
+        //             const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { deviceId: oppositeCameraDevice.deviceId } });
+        //             video.srcObject = mediaStream;
+        //             currentCamera = oppositeCamera; // Actualizar el estado de la cámara
+        //         } catch (error) {
+        //             console.log("Conexión de la camara denegada");
+        //         }
+        //     } else {
+        //         console.error(`No se encontró una cámara ${oppositeCamera}.`);
+        //     }
+        // }
+
+        let currentCamera = "environment"; // Estado inicial: cámara trasera
+
+        async function switchCamera(fieldId) {
             const video = document.getElementById('video-' + fieldId);
 
-            // Actualizar las restricciones de la cámara con el modo de frente según el valor actual de 'front'
-            const constraints = { video: { facingMode: front ? "user" : "environment" }, audio: false };
-
-            // Solicitar el acceso a la cámara con las nuevas restricciones
-            navigator.mediaDevices.getUserMedia(constraints)
-                .then(mediaStream => {
-                    // Asignar el stream de la cámara al elemento de video
-                    video.srcObject = mediaStream;
-                })
-                .catch(error => {
-                    console.log("Error al acceder a la cámara:", error);
+            // Determinar la cámara opuesta a la actual
+            const oppositeCamera = currentCamera === "environment" ? "user" : "environment";
+            console.log(oppositeCamera);
+            try {
+                const mediaStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: oppositeCamera }
                 });
+                video.srcObject = mediaStream;
+                currentCamera = oppositeCamera; // Actualizar el estado de la cámara
+            } catch (error) {
+                console.log("Error al acceder a la cámara:", error);
+            }
         }
-
 
 
     </script>
@@ -427,8 +423,9 @@
                 var fieldFoto;
                 var fieldComment;
                 var foto;
-                var fieldValue;
-
+                var fieldValue=null; //valor del campo
+                var fieldPosicionValue; //de los # de opciones guarda la posicion del campo seleccionado
+                var fieldHallazgo = field.getAttribute("data-field-hallazgo");
                 // Recolectar valor dependiendo del tipo de campo
                 switch (fieldType) {
                     // Texto
@@ -491,9 +488,8 @@
                         // Obtener el valor seleccionado si hay un botón de radio seleccionado
                         if (radioButtons.length > 0) {
                             fieldValue = radioButtons[0].value;
-                        } else {
-                            // Si no hay botón de radio seleccionado, asignar un valor predeterminado o null según tu lógica
-                            fieldValue = null; // O cualquier otro valor predeterminado
+                            fieldPosicionValue = Array.from(radioButtons[0].parentNode.parentNode.children).indexOf(radioButtons[0].parentNode);
+                            console.log(fieldPosicionValue);
                         }
                         // Obtener el comentario del textarea correspondiente
                         fieldComment = document.getElementById("btncomment-" + fieldId).value;
@@ -507,9 +503,10 @@
                     "type": fieldType,
                     "value": fieldValue,
                     "comment": fieldComment && fieldComment.trim() !== '' ? fieldComment : undefined,
-                    "image": fieldFoto && fieldFoto.trim() !== '' ? fieldFoto : undefined
+                    "image": fieldFoto && fieldFoto.trim() !== '' ? fieldFoto : undefined,
+                    "hallazgo": (fieldType == '5' || fieldType == '10' || fieldType == '11') && fieldHallazgo == fieldPosicionValue ? fieldHallazgo : undefined
                 });
-
+                console.log(formData);
             });
 
             // Eliminar duplicados de respuestas
@@ -626,7 +623,7 @@
             document.querySelector("button[type='submit']").addEventListener("click", function(event) {
                 event.preventDefault();
                 var formData = collectFormData();
-                //recorremos el formulario de respuestas
+                //recorremos el formulario de respuestas de campo imagenes y firmas
                 formImagesAnswers.answers.forEach(function(imageAnswer) {
                     //validamos el id de la respuesta de la imagen existe contra los datos del form
                     const existingIndex = formData.answers.findIndex(item => item.field_id === imageAnswer.field_id);
@@ -661,26 +658,28 @@
                     data: formData,
                     company_id: companyId
                 };
-                var createUrl = "{{ route('api.dynamicform.formresponse.store') }}";
-                axios.post(createUrl, datos, {
-                    headers: {
-                        'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }).then(response => {
-                    // Verificar si la solicitud fue exitosa
-                    if (response.status === 200) {
-                        // Redirigir al usuario a otra página
-                        window.location.href = "{{ route('dynamicform.form.indexcolaboradoresform') }}";
-                    } else {
-                        // Manejar el caso en que la solicitud no fue exitosa
-                        // console.log(response.status);
-                        throw new Error('Error al cargar la imagen');
-                    }
-                }).catch(error => {
-                    // Manejar errores
-                    console.log('Error al cargar la data ' + error);
-                });
+                console.log(datos);
+
+                // var createUrl = "{{ route('api.dynamicform.formresponse.store') }}";
+                // axios.post(createUrl, datos, {
+                //     headers: {
+                //         'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                //         'Content-Type': 'multipart/form-data'
+                //     }
+                // }).then(response => {
+                //     // Verificar si la solicitud fue exitosa
+                //     if (response.status === 200) {
+                //         // Redirigir al usuario a otra página
+                //         window.location.href = "{{ route('dynamicform.form.indexcolaboradoresform') }}";
+                //     } else {
+                //         // Manejar el caso en que la solicitud no fue exitosa
+                //         // console.log(response.status);
+                //         throw new Error('Error al cargar la imagen');
+                //     }
+                // }).catch(error => {
+                //     // Manejar errores
+                //     console.log('Error al cargar la data ' + error);
+                // });
 
             });// Fin del axios
         }); //fin del documentLoaded

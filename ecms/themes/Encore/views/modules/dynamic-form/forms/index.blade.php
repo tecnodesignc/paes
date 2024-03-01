@@ -66,14 +66,16 @@
             columns:
                 [
                     {
-                        id: 'id',
-                        name: '#',
-                        width: '50px',
+                        id: "id",
+                        name: "Respuestas",
                         sort: {
                             enabled: false
                         },
+                        width: '100px',
                         formatter: (function (cell) {
-                            return gridjs.html('<div class="form-check font-size-16"><input class="form-check-input" type="checkbox" id="orderidcheck' + cell + '"><label class="form-check-label" for="orderidcheck' + cell + '">' + cell + '</label></div>');
+                            return gridjs.html('<div class="d-flex justify-content-center align-items-center">' +
+                            '<a href="/preoperativo/form/' + cell + '/response" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Respuestas" class="text-primary btn-lg">' +
+                            '<i class="mdi mdi-layers-search mdi-24px"></i></a></div>');
                         })
                     },
                     {
@@ -130,19 +132,6 @@
                         name: "Creado el",
                         width: '150px',
                         formatter:(cell)=> moment(cell).format( 'YYYY-MM-DD')
-                    },
-                    {
-                        id: "id",
-                        name: "Ver Respuestas",
-                        sort: {
-                            enabled: false
-                        },
-                        width: '150px',
-                        formatter: (function (cell) {
-                            return gridjs.html('<div class="d-flex justify-content-center align-items-center">' +
-                            '<a href="/preoperativo/form/' + cell + '/response" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Respuestas" class="text-primary btn-lg">' +
-                            '<i class="mdi mdi-layers-search mdi-24px"></i></a></div>');
-                        })
                     },
                     {
                         id: "id",

@@ -69,7 +69,7 @@
                                                        class="form-control" required>
                                                 {!! $errors->first('label', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                            <div class="mb-3 {{ $errors->has("order") ? ' was-validated' : '' }}">
+                                            {{-- <div class="mb-3 {{ $errors->has("order") ? ' was-validated' : '' }}">
                                                 <label class="form-label" for="caption">Order</label>
                                                 <input id="order"
                                                     name="order"
@@ -78,7 +78,7 @@
                                                     value="{{old('order',$field->order)}}"
                                                     class="form-control">
                                                 {!! $errors->first('order', '<div class="invalid-feedback">:message</div>') !!}
-                                            </div>
+                                            </div> --}}
 
                                             <div class="mb-3">
                                                 <label class="form-label">Tipo de Campo</label>
@@ -100,6 +100,21 @@
                                                 </select>
                                             </div>
 
+                                            <div id="limits" class="mb-3 {{ $errors->has("selectable") ? ' was-validated' : '' }}">
+                                                <label for="selectable" class="form-label font-size-13 text-muted">Opciones del Campo</label>
+                                                <input class="form-control" id="selectable" name="selectable[]" type="text"
+                                                    value="{{ old('selectable', is_array($field->selectable) ? implode(',', $field->selectable) : $field->selectable) }}" placeholder="Agregar Opciones" />
+                                                {!! $errors->first('selectable', '<div class="invalid-feedback">:message</div>') !!}
+                                            </div>
+
+                                            <div id="divhallazgo" class="mb-3 {{ $errors->has('hallazgo') ? 'was-validated' : '' }}" style="display: none;">
+                                                <label class="form-label" for="caption" title="Ingrese una posición">Hallazgo</label>
+                                                <input id="hallazgo" placeholder="Contará hallazgo en la posición" name="hallazgo" type="number" value="{{old('hallazgo',$field->hallazgo)}}" class="form-control" min="0">
+                                                {!! $errors->first('hallazgo', '<div class="invalid-feedback">:message</div>') !!}
+                                            </div>
+
+                                            <hr>
+
                                             <div class="checkbox {{ $errors->has('required') ? 'was-validated' : '' }}">
                                                 <label for="required">
                                                     <input id="required" name="required" type="checkbox" class="form-check-input" {{ $field->required?'checked':"" }} value="1">
@@ -108,14 +123,18 @@
                                                 </label>
                                             </div>
 
-                                            <div id="limits" class="mb-3 {{ $errors->has("selectable") ? ' was-validated' : '' }}">
-                                                <label for="companies" class="form-label font-size-13 text-muted">Opciones del Campo</label>
-                                                <input class="form-control" id="selectable" name="selectable[]" type="text"
-                                                    value="{{ old('selectable', is_array($field->selectable) ? implode(',', $field->selectable) : $field->selectable) }}" placeholder="Agregar Opciones" />
-                                                {!! $errors->first('selectable', '<div class="invalid-feedback">:message</div>') !!}
-                                            </div>
-
                                         </div>
+
+                                        <div class="card-footer">
+                                            <div class="row mb-4">
+                                                <div class="col text-end">
+                                                    <a href="{{route('dynamicform.form.edit',[$form->id])}}" class="btn btn-danger"> <i class="bx bx-x me-1"></i>
+                                                        Cancelar </a>
+                                                    <button type="submit" class="btn btn-success"><i class=" bx bx-file me-1"></i> Guardar</button>
+                                                </div> <!-- end col -->
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -126,13 +145,7 @@
             </div>
         </div>
     </div>
-    <div class="row mb-4">
-        <div class="col text-end">
-            <a href="{{route('dynamicform.form.edit',[$form->id])}}" class="btn btn-danger"> <i class="bx bx-x me-1"></i>
-                Cancelar </a>
-            <button type="submit" class="btn btn-success"><i class=" bx bx-file me-1"></i> Guardar</button>
-        </div> <!-- end col -->
-    </div>
+
     {!! Form::close() !!}
 
 @endsection
@@ -167,16 +180,27 @@
             // Función para actualizar la visibilidad y opciones del campo de opciones del campo
             function updateOptionsFieldVisibilityAndOptions() {
                 var typeValue = $('#type').val();
-                if (typeValue === '6' || typeValue === '7' || typeValue === '10' || typeValue === '11') {
-                    $('#limits').css('display', 'block');
-                } else {
+                if (typeValue ==='5') {
+                    $('#divhallazgo').css('display', 'block');
                     $('#limits').css('display', 'none');
                 }
-
-                // Mostrar las opciones específicas cuando se selecciona 'Estados'
-                if (typeValue === '11') {
-                    textUniqueVals.removeActiveItems();
-                    textUniqueVals.setValue(['BUENO','REGULAR','MALO','NO APLICA', 'NO TIENE'])
+                else if (typeValue === '6' || typeValue === '7' ) {
+                    // Mostrar las opciones específicas cuando se selecciona 'Estados'
+                    $('#limits').css('display', 'block');
+                    $('#divhallazgo').css('display', 'none');
+                }
+                else if(typeValue === '10' || typeValue === '11'){
+                       // Mostrar las opciones específicas cuando se selecciona 'Estados'
+                       if (typeValue === '11') {
+                        textUniqueVals.removeActiveItems();
+                        textUniqueVals.setValue(['BUENO','REGULAR','MALO','NO APLICA', 'NO TIENE'])
+                    }
+                    $('#limits').css('display', 'block');
+                    $('#divhallazgo').css('display', 'block');
+                }
+                else {
+                    $('#limits').css('display', 'none');
+                    $('#divhallazgo').css('display', 'none');
                 }
             }
 
