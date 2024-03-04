@@ -1,5 +1,5 @@
 {{--<!-- Right Sidebar -->--}}
-<a href="#" class="right-bar-toggle layout-setting-btn" id="right-bar-toggle">
+<a href="#" class="right-bar-toggle layout-setting-btn d-print-none" id="right-bar-toggle">
     <i class="icon-sm mb-2" data-feather="settings"></i> <span class="align-middle"></span>
 </a>
 

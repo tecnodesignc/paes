@@ -40,7 +40,7 @@
         {{-- Input tipo text --}}
         @case(0)
             <div class="row mt-3">
-                <div class="col-lg-12 col-md-12">
+                <div class="col-lg-6 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <input type="text" value="{{$field->value}}" class="form-control" disabled>
                 </div>
@@ -50,7 +50,7 @@
         {{-- Input tipo Area de texto --}}
         @case(1)
             <div class="row mt-3">
-                <div class="col-lg-12 col-md-12">
+                <div class="col-lg-6 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <textarea class="form-control" rows="5" cols="50" disabled>{{$field->value ?? ''}}</textarea>
                 </div>
@@ -60,7 +60,7 @@
         {{-- Input tipo Numero--}}
         @case(2)
             <div class="row mt-3">
-                <div class="col-lg-12 col-md-12">
+                <div class="col-lg-6 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <input type="number" class="form-control" value="{{$field->value}}" disabled>
                 </div>
@@ -70,7 +70,7 @@
         {{-- Input tipo Teléfono --}}
         @case(3)
             <div class="row mt-3">
-                <div class="col-lg-12 col-md-12">
+                <div class="col-lg-6 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <input type="tel"  value="{{$field->value}}" class="form-control" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" size='10' disabled>
                 </div>
@@ -80,7 +80,7 @@
         {{-- Input tipo Email --}}
         @case(4)
             <div class="row mt-3">
-                <div class="col-lg-12 col-md-12">
+                <div class="col-lg-6 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <input type="email" value="{{$field->value}}" class="form-control" pattern=".+@example\.com" size="30" disabled>
                 </div>
@@ -90,7 +90,7 @@
         {{-- Input tipo Selector --}}
         @case(6)
             <div class="row mt-3">
-                <div class="col-lg-9 col-md-12">
+                <div class="col-lg-6 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <input type="text" value="{{$field->value}}" class="form-control" disabled>
                 </div>
@@ -105,7 +105,7 @@
         {{-- Input tipo Selector Multiple --}}
         @case(7)
             <div class="row mt-3">
-                <div class="col-lg-9 col-md-12">
+                <div class="col-lg-6 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
 
                     @if(isset($field->value))
@@ -130,7 +130,7 @@
         {{-- Input tipo Imagen--}}
         @case(8)
             <div class="row mt-3">
-                <div class="col-lg-12 col-md-12">
+                <div class="col-lg-6 col-md-12">
                     @if(isset($field->value))
                         <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
 
@@ -145,7 +145,7 @@
         {{-- Input tipo Firma --}}
         @case(9)
             <div class="row mt-3">
-                <div class="col-lg-12 col-md-12">
+                <div class="col-lg-6 col-md-12">
                     @if(isset($field->value))
                         <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
 
@@ -168,7 +168,7 @@
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <input type="text" value="{{$field->value ?? null}}" class="form-control {{isset($field->hallazgo) ? 'border border-danger' : 'border border-success'}}" disabled>
                 </div>
-                <div class="col-lg-3 col-md-12 text-center">
+                <div class="col-lg-3 col-md-12 text-center d-lg-flex justify-content-center align-items-center">
                     @if(isset($field->image))
                         <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
                             <div class="img-fluid" >
@@ -188,7 +188,7 @@
         {{-- Input tipo título --}}
         @case(12)
             <div class="row mt-3">
-                <div class="col-lg-12 col-md-12 text-center">
+                <div class="col-lg-6 col-md-12 text-center">
                     <hr>
                     <h2 class="mb-2">{{$field->label}}</h2>
                 </div>
@@ -198,7 +198,7 @@
         {{-- Input tipo párrafo --}}
         @case(13)
         <div class="row mt-3">
-            <div class="col-lg-12 col-md-12 text-center">
+            <div class="col-lg-6 col-md-12 text-center">
                 <p class="mb-2 ">{{$field->label}}</p>
             </div>
         </div>

@@ -113,7 +113,7 @@
                     {
                         id: 'company',
                         name: 'Empresa',
-                        width: '150px',
+                        width: '300px',
                         formatter: (function (cell) {
                             return cell.name;
                         })
@@ -127,12 +127,12 @@
                     {
                         id: "id",
                         name: "Acciones",
-                        width: '150px',
+                        width: '100px',
                         sort: {
                             enabled: false
                         },
                         formatter: (function (cell) {
-                            return gridjs.html('<div class="d-flex gap-4"><a href="/preoperativo/form/{{$form->id}}/response/' + cell + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Respuestas" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a><a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger"><i class="mdi mdi-delete me-1 mdi-24px"></i></a></div>');
+                            return gridjs.html('<div class="d-flex justify-content-center align-items-center gap-4"><a href="/preoperativo/form/{{$form->id}}/response/' + cell + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Respuestas" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a><a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger"><i class="mdi mdi-delete me-1 mdi-24px"></i></a></div>');
                         })
                     }
 
