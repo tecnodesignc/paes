@@ -1,7 +1,7 @@
 @if(isset($field->type))
     @switch($field->type)
         {{-- Input tipo si/no/no aplica --}}
-        @case(5)
+        {{-- @case(5)
             <div class="row mt-3">
                 <div class="col-lg-7 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
@@ -64,7 +64,7 @@
                 </div>
 
             </div>
-            @break
+            @break --}}
 
         {{-- Input tipo text --}}
         @case(0)
@@ -233,6 +233,7 @@
             @break
 
         {{-- Input tipo Opciones --}}
+        @case(5)
         @case(10)
         @case(11)
             <div class="row mt-3">
@@ -277,7 +278,7 @@
                                     </div>
                                     <div class="card-body">
                                         <video id="video-{{$field->id}}" width="240" height="240" autoplay></video>
-                                        <canvas id="canvas-{{$field->id}}" width="240" height="240"></canvas>
+                                        <canvas id="canvas-{{$field->id}}" width="240" height="240" style="display: none;"></canvas>
                                         <div id="gallery-{{$field->id}}"></div>
                                     </div>
                                 </div>

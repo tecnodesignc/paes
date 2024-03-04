@@ -307,22 +307,21 @@
                 // Si no hay ningún stream de video, solicitar acceso a la cámara
                 mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
                 video.srcObject = mediaStream;
+                return;
             }
 
             const canvasId = 'canvas-' + fieldId;
             const canvas = document.getElementById(canvasId);
             const gallery = document.getElementById('gallery-' + fieldId);
-            // Limpiar el contenedor de imágenes antes de agregar una nueva
-            gallery.innerHTML = '';
 
             const imageIndex = gallery.querySelectorAll('.image-container').length;
             if (imageIndex < maxImages) {
                 const context = canvas.getContext('2d');
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                // Llamar a la función para subir el archivo al almacenamiento
-                uploadImageToServer(fieldId, label, type, canvasId);
                 const imageData = canvas.toDataURL('image/jpeg');
                 displayImage(imageData, fieldId);
+                // Llamar a la función para subir el archivo al almacenamiento
+                uploadImageToServer(fieldId, label, type, canvasId);
             } else {
                 alert('¡Ya has alcanzado el límite de imágenes!');
             }
@@ -449,21 +448,21 @@
                         fieldValue = document.getElementById("btnemail-" + fieldId).value;
                         break;
                     // inputs si/no/noaplica
-                    case "5":
-                        // Obtener los valores de los tres radio buttons
-                        let radio1 = document.getElementById("btnradio-" + fieldId + "-1").checked;
-                        let radio2 = document.getElementById("btnradio-" + fieldId + "-2").checked;
-                        let radio3 = document.getElementById("btnradio-" + fieldId + "-3").checked;
+                    // case "5":
+                    //     // Obtener los valores de los tres radio buttons
+                    //     let radio1 = document.getElementById("btnradio-" + fieldId + "-1").checked;
+                    //     let radio2 = document.getElementById("btnradio-" + fieldId + "-2").checked;
+                    //     let radio3 = document.getElementById("btnradio-" + fieldId + "-3").checked;
 
-                        if (radio1) {
-                            fieldValue = 1;
-                        } else if (radio2) {
-                            fieldValue = 0;
-                        } else if (radio3) {
-                            fieldValue = 2;
-                        }
-                        fieldComment = document.getElementById("btncomment-" + fieldId).value;
-                        break;
+                    //     if (radio1) {
+                    //         fieldValue = 1;
+                    //     } else if (radio2) {
+                    //         fieldValue = 0;
+                    //     } else if (radio3) {
+                    //         fieldValue = 2;
+                    //     }
+                    //     fieldComment = document.getElementById("btncomment-" + fieldId).value;
+                    //     break;
                     // select
                     case "6":
                         fieldValue = document.getElementById("btnselect-" + fieldId).value;
@@ -481,6 +480,7 @@
                         fieldComment = document.getElementById("btncomment-" + fieldId).value;
                         break;
 
+                    case "5":
                     case "10":
                     case "11":
                         // Obtener los botones de radio para este campo
@@ -488,14 +488,19 @@
                         // Obtener el valor seleccionado si hay un botón de radio seleccionado
                         if (radioButtons.length > 0) {
                             fieldValue = radioButtons[0].value;
-                            fieldPosicionValue = Array.from(radioButtons[0].parentNode.parentNode.children).indexOf(radioButtons[0].parentNode);
-                            console.log(fieldPosicionValue);
+                            // Obtener la posición del valor seleccionado
+                            var allRadioButtons = document.querySelectorAll("input[name='option_" + fieldId + "']");
+                            var positionValue = 0;
+                            allRadioButtons.forEach(function(button, index) {
+                                if (button.value === fieldValue) {
+                                    positionValue = index + 1; // Sumamos 1 para que la posición sea basada en 1
+                                }
+                            });
                         }
                         // Obtener el comentario del textarea correspondiente
                         fieldComment = document.getElementById("btncomment-" + fieldId).value;
                         break;
                     }
-
                 // Añadir respuesta al array de respuestas
                 formData.answers.push({
                     "field_id": fieldId,
@@ -504,9 +509,8 @@
                     "value": fieldValue,
                     "comment": fieldComment && fieldComment.trim() !== '' ? fieldComment : undefined,
                     "image": fieldFoto && fieldFoto.trim() !== '' ? fieldFoto : undefined,
-                    "hallazgo": (fieldType == '5' || fieldType == '10' || fieldType == '11') && fieldHallazgo == fieldPosicionValue ? fieldHallazgo : undefined
+                    "hallazgo": (fieldType == '5' || fieldType == '10' || fieldType == '11') && fieldHallazgo == positionValue ? positionValue : undefined
                 });
-                console.log(formData);
             });
 
             // Eliminar duplicados de respuestas
@@ -658,30 +662,29 @@
                     data: formData,
                     company_id: companyId
                 };
-                console.log(datos);
-
-                // var createUrl = "{{ route('api.dynamicform.formresponse.store') }}";
-                // axios.post(createUrl, datos, {
-                //     headers: {
-                //         'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
-                //         'Content-Type': 'multipart/form-data'
-                //     }
-                // }).then(response => {
-                //     // Verificar si la solicitud fue exitosa
-                //     if (response.status === 200) {
-                //         // Redirigir al usuario a otra página
-                //         window.location.href = "{{ route('dynamicform.form.indexcolaboradoresform') }}";
-                //     } else {
-                //         // Manejar el caso en que la solicitud no fue exitosa
-                //         // console.log(response.status);
-                //         throw new Error('Error al cargar la imagen');
-                //     }
-                // }).catch(error => {
-                //     // Manejar errores
-                //     console.log('Error al cargar la data ' + error);
-                // });
-
-            });// Fin del axios
+                if (confirm("¿Enviar respuestas?")) {
+                    var createUrl = "{{ route('api.dynamicform.formresponse.store') }}";
+                    axios.post(createUrl, datos, {
+                        headers: {
+                            'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(response => {
+                        // Verificar si la solicitud fue exitosa
+                        if (response.status === 200) {
+                            // Redirigir al usuario a otra página
+                            window.location.href = "{{ route('dynamicform.form.indexcolaboradoresform') }}";
+                        } else {
+                            // Manejar el caso en que la solicitud no fue exitosa
+                            // console.log(response.status);
+                            throw new Error('Error al cargar la imagen');
+                        }
+                    }).catch(error => {
+                        // Manejar errores
+                        console.log('Error al cargar la data ' + error);
+                    }); // Fin del axios
+                } //end if
+            });
         }); //fin del documentLoaded
 
     </script>

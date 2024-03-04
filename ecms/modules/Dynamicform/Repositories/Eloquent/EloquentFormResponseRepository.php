@@ -96,7 +96,7 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
      */
     public function create($data): Model|Collection|Builder|array|null
     {
-        \Log::info('error en eloquent repository');
+        // \Log::info('error en eloquent repository');
         $formresponse = $this->model->create($data);
         event(new FormResponsesWasCreated($formresponse, $data));
         return $formresponse;

@@ -98,7 +98,7 @@
 
                                             <div id="divhallazgo" class="mb-3 {{ $errors->has('hallazgo') ? 'was-validated' : '' }}" style="display: none;">
                                                 <label class="form-label" for="caption" title="Ingrese una posición">Hallazgo</label>
-                                                <input id="hallazgo" placeholder="Contará hallazgo en la posición" name="hallazgo" type="number" value="{{ old('hallazgo') }}" class="form-control" min="0">
+                                                <input id="hallazgo" placeholder="Contará hallazgo en la posición" name="hallazgo" type="number" value="{{ old('hallazgo') }}" class="form-control" min="1">
                                                 {!! $errors->first('hallazgo', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <hr>
@@ -166,8 +166,10 @@
             function updateOptionsFieldVisibilityAndOptions() {
                 var typeValue = $('#type').val();
                 if (typeValue ==='5') {
+                    textUniqueVals.removeActiveItems();
+                    textUniqueVals.setValue(['SI','NO','NO APLICA'])
                     $('#divhallazgo').css('display', 'block');
-                    $('#limits').css('display', 'none');
+                    $('#limits').css('display', 'block');
                 }
                 else if (typeValue === '6' || typeValue === '7' ) {
                     // Mostrar las opciones específicas cuando se selecciona 'Estados'
@@ -177,9 +179,9 @@
                 else if(typeValue === '10' || typeValue === '11'){
                        // Mostrar las opciones específicas cuando se selecciona 'Estados'
                        if (typeValue === '11') {
-                        textUniqueVals.removeActiveItems();
-                        textUniqueVals.setValue(['BUENO','REGULAR','MALO','NO APLICA', 'NO TIENE'])
-                    }
+                            textUniqueVals.removeActiveItems();
+                            textUniqueVals.setValue(['BUENO','REGULAR','MALO','NO APLICA', 'NO TIENE'])
+                        }
                     $('#limits').css('display', 'block');
                     $('#divhallazgo').css('display', 'block');
                 }

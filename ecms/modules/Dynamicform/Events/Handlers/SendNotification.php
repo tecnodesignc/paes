@@ -17,14 +17,10 @@ class SendNotification
         $this->notification = $notification;
     }
 
-
     public function handle($event)
     {
-        \Log::error("error");
         $formresponse=$event->getEntity();
-
         $formresponse_negative = $formresponse->present()->negative_num();
-
         // validamos si hay respuestas negativas
         if($formresponse_negative>=1)
         {
@@ -34,13 +30,11 @@ class SendNotification
             foreach ($users as $user) {
                 // Enviar la notificacion
                 $this->notification->to($user->id)->push('Formulario con hallazgo',
-                "Se ha registrado una respuesta al formulario ".$formresponse->form->name." con ". $formresponse_negative. "hallazgos negativos.",
+                "Se ha registrado una respuesta al formulario ".$formresponse->form->name." con ". $formresponse_negative. " hallazgos negativos.",
                 '<i class="mdi mdi-file-alert-outline"></i>',
                 route('dynamicform.formresponses.show', [$formresponse->form_id, $formresponse->id]));
             }
         }
-
-
     }
 
 

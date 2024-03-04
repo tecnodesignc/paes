@@ -2,7 +2,7 @@
 @if(isset($field->type))
     @switch($field->type)
         {{-- Input tipo si/no/no aplica --}}
-        @case(5)
+        {{-- @case(5)
             <div class="row mt-3">
                 <div class="col-lg-6 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
@@ -35,7 +35,7 @@
                     @endif
                 </div>
             </div>
-            @break
+            @break --}}
 
         {{-- Input tipo text --}}
         @case(0)
@@ -160,12 +160,13 @@
             @break
 
         {{-- Input tipo Opciones --}}
+        @case(5)
         @case(10)
         @case(11)
             <div class="row mt-3">
                 <div class="col-lg-6 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
-                    <input type="text" value="{{$field->value ?? null}}" class="form-control" disabled>
+                    <input type="text" value="{{$field->value ?? null}}" class="form-control {{isset($field->hallazgo) ? 'border border-danger' : 'border border-success'}}" disabled>
                 </div>
                 <div class="col-lg-3 col-md-12 text-center">
                     @if(isset($field->image))

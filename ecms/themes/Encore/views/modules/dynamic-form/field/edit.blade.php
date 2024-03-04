@@ -181,8 +181,10 @@
             function updateOptionsFieldVisibilityAndOptions() {
                 var typeValue = $('#type').val();
                 if (typeValue ==='5') {
+                    textUniqueVals.removeActiveItems();
+                    textUniqueVals.setValue(['SI','NO','NO APLICA'])
                     $('#divhallazgo').css('display', 'block');
-                    $('#limits').css('display', 'none');
+                    $('#limits').css('display', 'block');
                 }
                 else if (typeValue === '6' || typeValue === '7' ) {
                     // Mostrar las opciones específicas cuando se selecciona 'Estados'
@@ -192,9 +194,9 @@
                 else if(typeValue === '10' || typeValue === '11'){
                        // Mostrar las opciones específicas cuando se selecciona 'Estados'
                        if (typeValue === '11') {
-                        textUniqueVals.removeActiveItems();
-                        textUniqueVals.setValue(['BUENO','REGULAR','MALO','NO APLICA', 'NO TIENE'])
-                    }
+                            textUniqueVals.removeActiveItems();
+                            textUniqueVals.setValue(['BUENO','REGULAR','MALO','NO APLICA', 'NO TIENE'])
+                        }
                     $('#limits').css('display', 'block');
                     $('#divhallazgo').css('display', 'block');
                 }
