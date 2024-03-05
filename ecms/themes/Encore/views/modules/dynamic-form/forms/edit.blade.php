@@ -189,7 +189,7 @@
                 <div id="addproduct-alert-collapse" class="collapse show"
                      data-bs-parent="#addproduct-accordion">
                     <div class="p-4 border-top">
-                        <div class="row">
+                        {{-- <div class="row">
                             <form id="importForm" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <input type="file" name="excel_file">
@@ -197,7 +197,7 @@
                                     <i class="mdi mdi-file-export-outline me-1"></i> Importar
                                 </a>
                             </form>
-                        </div>
+                        </div> --}}
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
