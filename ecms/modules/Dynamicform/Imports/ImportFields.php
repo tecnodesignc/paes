@@ -2,16 +2,50 @@
 
 namespace Modules\Dynamicform\Imports;
 
-use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Modules\Dynamicform\Repositories\FieldRepository;
 
-class ImportFields implements WithMultipleSheets
+class ImportFields implements ToCollection, ShouldQueue
 {
-
-    public function sheets(): array
+    // private $form_id;
+    // public function __construct($form_id)
+    // {
+    //     $this->form_id = $form_id;
+    // }
+    public function collection(Collection $rows)
     {
-        return [
-           'fields' =>new FieldsSheetImport(),
-        ];
+        \Log::info('Fields imports');
+        // $fields = app()->singleton(FieldRepository::class);
+        try {
+            foreach ($rows as $row) {
+                $data = [
+                    'label'=> $row[0],
+                    'type'=> $row[1],
+                    'required'=> $row[2],
+                    'order'=> $row[3],
+                    'selectable'=> $row[4],
+                    // 'form_id'=> $this->form_id
+                ];
+                // $fields->create($data);
+            }
+            dd($data);
+        } catch (\Exception $e) {
+            \Log::error($e);
+            dd($e);
+        }
+
     }
 
+    public function batchSize(): int
+    {
+        return 400;
+    }
+
+    public function chunkSize(): int
+    {
+        return 100;
+    }
 }

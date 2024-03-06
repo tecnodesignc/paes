@@ -187,19 +187,19 @@
 
         {{-- Input tipo título --}}
         @case(12)
-            <div class="row mt-3">
-                <div class="col-lg-6 col-md-12 text-center">
+            <div class="row mt-2 mb-1">
+                <div class="col-lg-12 col-md-12 text-center">
                     <hr>
-                    <h2 class="mb-2">{{$field->label}}</h2>
+                    <h2 class="mb-2" >{{$field->label}}</h2>
                 </div>
             </div>
             @break
 
         {{-- Input tipo párrafo --}}
         @case(13)
-        <div class="row mt-3">
-            <div class="col-lg-6 col-md-12 text-center">
-                <p class="mb-2 ">{{$field->label}}</p>
+        <div class="row mt-1 mb-1">
+            <div class="col-lg-12 col-md-12 text">
+                <p class="mb-2 font-size-18">{{$field->label}}</p>
             </div>
         </div>
         @break

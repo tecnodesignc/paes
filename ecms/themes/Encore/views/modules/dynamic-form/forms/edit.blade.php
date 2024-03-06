@@ -119,9 +119,9 @@
                                                            type="hidden"
                                                            value="{{old('icon', $form->icon)}}"
                                                            class="form-control"
-                                                           data-placement="bottomRight"
+                                                           data-placement="bottomLeft"
                                                     >
-                                                    <span class="input-group-addon input-group-text"></span>
+                                                    <span class="input-group-addon input-group-text order-1"></span>
                                                 </div>
                                                 {!! $errors->first('color', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
@@ -189,15 +189,20 @@
                 <div id="addproduct-alert-collapse" class="collapse show"
                      data-bs-parent="#addproduct-accordion">
                     <div class="p-4 border-top">
-                        {{-- <div class="row">
-                            <form id="importForm" method="POST" enctype="multipart/form-data">
+                        <div class="row">
+                            <h5>Cargar campos desde excel</h5>
+                            <form id="importForm">
                                 @csrf
-                                <input type="file" name="excel_file">
-                                <a href="#" class="btn btn-success waves-effect waves-light mb-2 me-2" onclick="importFields(event)">
-                                    <i class="mdi mdi-file-export-outline me-1"></i> Importar
-                                </a>
+                                <div class="col-lg-6">
+                                    <input type="file" name="excel_file">
+                                </div>
+                                <div class="col-lg-6 mt-3">
+                                    <a href="#" class="btn btn-success waves-effect waves-light mb-2 me-2" onclick="importFields(event)">
+                                        <i class="mdi mdi-file-export-outline me-1"></i> Importar Campos
+                                    </a>
+                                </div>
                             </form>
-                        </div> --}}
+                        </div>
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
@@ -300,11 +305,10 @@
                     $("#color").val(data)
                 }).on('init', instance => {
                     const color = nanoPickr.getSelectedColor().toHEXA().toString(0)
-                    console.log();
                     $("#color").val(color)
                 })
                 $('#icon').iconpicker({
-                    placement: 'bottomRight',
+                    placement: 'bottomLeft',
                 });
                 new Choices('#companies', {
                     removeItemButton: true,

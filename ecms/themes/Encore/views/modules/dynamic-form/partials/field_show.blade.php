@@ -299,19 +299,19 @@
 
         {{-- Input tipo text --}}
         @case(12)
-            <div class="row mt-3">
+            <div class="row mt-2">
                 <div class="col-lg-12 col-md-12 text-center">
                     <hr>
-                    <h2 class="mb-2">{{$field->label}}</h2>
+                    <h2 class="mb-2 dynamic-field" id="h2-{{$field->id}}" data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" >{{$field->label}}</h2>
                 </div>
             </div>
             @break
 
         {{-- Input tipo párrafo --}}
         @case(13)
-        <div class="row mt-3">
+        <div class="row mt-2">
             <div class="col-lg-12 col-md-12 text">
-                <p class="mb-2 ">{{$field->label}}</p>
+                <p class="mb-2 dynamic-field font-size-18" id="p-{{$field->id}}" data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" >{{$field->label}}</p>
             </div>
         </div>
         @break

@@ -1,7 +1,7 @@
 <?php
 
 namespace Modules\Dynamicform\Http\Controllers;
-
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -11,9 +11,9 @@ use Modules\Dynamicform\Entities\Field;
 use Modules\Dynamicform\Http\Requests\CreateFieldRequest;
 use Modules\Dynamicform\Http\Requests\UpdateFieldRequest;
 use Modules\Dynamicform\Repositories\FieldRepository;
-use Modules\Dynamicform\Entities\Form;
 use Modules\Dynamicform\Imports\ImportFields;
-use Maatwebsite\Excel\Facades\Excel;
+use Modules\Dynamicform\Entities\Form;
+
 class FieldController extends AdminBaseController
 {
     private FieldRepository $field;
@@ -146,12 +146,22 @@ class FieldController extends AdminBaseController
      */
     public function import($form_id, Request $request)
     {
-        $fileImport=$request->file('file');
+        if($request->hasFile('excel_file')){
 
-        Excel::Import(new ImportFields(),$fileImport);
+            // $path=$request->file('excel_file');
+            // $datos= Excel::load($path, function($reader){
+            // })->get();
 
-        // return redirect()->route('transport.driver.index')
-        //     ->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('transport::passengers.title.passengers')]));
+            // dd($datos);
+            // if(!empty($datos)&& $datos->count()){
+            //     $datos = $datos->toArray();
+            // }
+            $fileImport=$request->file('excel_file');
+            Excel::import(new ImportFields,$fileImport);
+
+        }
+
+
         return response()->json(['message' => trans('core::core.messages.resource updated', ['name' => trans('dynamicfield::fields.title.fields')])]);
 
     }

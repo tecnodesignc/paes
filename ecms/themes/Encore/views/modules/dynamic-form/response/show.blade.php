@@ -73,11 +73,10 @@
                     </div>
                     <!-- end row -->
 
-                    <hr class="my-3">
+                    {{-- <hr class="my-3"> --}}
 
                     {{-- Card de campos del formulario --}}
                     <div class="row">
-                        <h5 class="font-size-28">Resumen del formulario</h5>
                         {{-- Renderizamos los campos del formulario --}}
                         @foreach($form_response->data->answers as $dato)
                             {{-- Incluimos la vista del campo con el valor establecido --}}
