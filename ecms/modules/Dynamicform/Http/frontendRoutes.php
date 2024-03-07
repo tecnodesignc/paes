@@ -86,9 +86,14 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             $router->post('/import', [
                 'as' => 'dynamicform.field.import',
                 'uses' => 'FieldController@import',
-                // 'middleware' => 'can:dynamicform.fields.create'
+                'middleware' => 'can:dynamicform.fields.edit'
             ]);
 
+            $router->get('/download/template',  [
+                'as' => 'dynamicform.field.downloadTemplate',
+                'uses' => 'FieldController@downloadTemplate',
+                'middleware' => 'can:dynamicform.fields.edit'
+            ]);
         });
 
         // Rutas de las respuesta de los formularios

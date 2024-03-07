@@ -1,6 +1,7 @@
 <?php
 
 namespace Modules\Dynamicform\Http\Controllers;
+use Exception;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -146,25 +147,39 @@ class FieldController extends AdminBaseController
      */
     public function import($form_id, Request $request)
     {
-        if($request->hasFile('excel_file')){
+        try {
+            \DB::beginTransaction();
+            if ($request->hasFile('excel_file')) {
+                $path = $request->file('excel_file')->getRealPath();
+                $import = new ImportFields($form_id->id);
+                Excel::import($import, $path);
+                // Obtener los resultados del importador
+                $response = $import->getResults();
+                \DB::commit();
+            }
 
-            // $path=$request->file('excel_file');
-            // $datos= Excel::load($path, function($reader){
-            // })->get();
+            return response()->json([
+                'message' => 'Excel cargado correctamente',
+                'data' => $response,
+            ], 200);
+        } catch (Exception $e) {
+            \DB::rollback();
+            \Log::error($e);
 
-            // dd($datos);
-            // if(!empty($datos)&& $datos->count()){
-            //     $datos = $datos->toArray();
-            // }
-            $fileImport=$request->file('excel_file');
-            Excel::import(new ImportFields,$fileImport);
-
+            // Devolver el error como una respuesta JSON en caso de excepción
+            $status = $this->getStatusError($e);
+            $response = ["errors" => $e->getMessage()];
+            return response()->json($response, $status ?? 200);
         }
-
-
-        return response()->json(['message' => trans('core::core.messages.resource updated', ['name' => trans('dynamicfield::fields.title.fields')])]);
-
     }
+
+    public function downloadTemplate()
+    {
+        $filePath = storage_path('app/public/campos_del_formulario.xlsx');
+
+        return response()->download($filePath, 'campos_del_formulario.xlsx');
+    }
+
 
 
 }

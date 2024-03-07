@@ -7,8 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Venturecraft\\Revisionable' => array($vendorDir . '/venturecraft/revisionable/src'),
-    'PHPExcel' => array($vendorDir . '/phpoffice/phpexcel/Classes'),
     'Mcamara\\LaravelLocalization' => array($vendorDir . '/mcamara/laravel-localization/src'),
-    'Maatwebsite\\Excel\\' => array($vendorDir . '/maatwebsite/excel/src'),
     'Laracasts\\Presenter' => array($vendorDir . '/tecnodesignc/presenter/src'),
+    'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),
 );

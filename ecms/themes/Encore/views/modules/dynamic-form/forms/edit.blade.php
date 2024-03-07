@@ -177,7 +177,7 @@
                             </div>
                             <div class="flex-grow-1 overflow-hidden">
                                 <h5 class="font-size-16 mb-1">Agregar campos</h5>
-                                <p class="text-muted text-truncate mb-0">Configuracion de campos del formulario</p>
+                                <p class="text-muted text-truncate mb-0">Configuración de los campos del formulario</p>
                             </div>
                             <div class="flex-shrink-0">
                                 <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
@@ -190,7 +190,16 @@
                      data-bs-parent="#addproduct-accordion">
                     <div class="p-4 border-top">
                         <div class="row">
-                            <h5>Cargar campos desde excel</h5>
+                            <h5>Cargar campos desde un excel:  <a href="{{route('dynamicform.field.downloadTemplate',[$form->id])}}" class="link waves-effect waves-light mb-2 me-2">
+                                <i class="mdi mdi-file-import-outline me-1"></i> Descargar plantilla
+                            </a></h5>
+                            {{-- <div class="row">
+                                <h5>
+                                    <a href="{{route('dynamicform.field.downloadTemplate',[$form->id])}}" class="link waves-effect waves-light mb-2 me-2">
+                                        <i class="mdi mdi-file-export-outline me-1"></i> Descargar plantilla
+                                    </a>
+                                </h5>
+                            </div> --}}
                             <form id="importForm">
                                 @csrf
                                 <div class="col-lg-6">
@@ -225,9 +234,6 @@
                                                                 id="add-file">
                                                             <i class="mdi mdi-plus me-1"></i> Agregar </a>
 
-                                                            {{-- <button type="button" class="btn btn-primary waves-effect waves-light mb-2 me-2" id="open-modal-button" data-bs-toggle="modal" data-bs-target="#table-modal">
-                                                                <i class="mdi mdi-calendar me-1"></i> Importar campos
-                                                            </button> --}}
 
                                                         </div>
                                                     </div>
@@ -468,11 +474,23 @@
         function importFields(event) {
             event.preventDefault(); // Evita que el navegador siga el enlace
 
+            // Obtener el archivo seleccionado
+            const fileInput = document.querySelector('input[type="file"]');
+            const file = fileInput.files[0];
+
+            // Verificar si se ha seleccionado un archivo
+            if (!file) {
+                // Mostrar mensaje de error al usuario
+                alert('Por favor, selecciona un archivo antes de importar.');
+                return;
+            }
+
             if (confirm("¿Estás seguro de que deseas cargar este archivo?")) {
                 // Obtener el formulario y el archivo
                 const form = document.getElementById('importForm');
                 const formData = new FormData(form);
-                //Realizar la solicitud POST con Axios
+
+                // Realizar la solicitud POST con Axios
                 axios.post(`/preoperativo/form/{{$form->id}}/field/import`, formData, {
                     headers: {
                         'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
@@ -482,121 +500,24 @@
                 .then(response => {
                     // Verificar si la solicitud fue exitosa
                     if (response.status === 200) {
-                        console.log('Importación exitosa');
-                        // Aquí puedes realizar acciones adicionales después de una importación exitosa
+                        mygrid.forceRender();
+                        alert(`Se insertaron ${response.data.data.inserted} registros, se actualizaron ${response.data.data.updated} registros. Total: ${response.data.data.total}`);
                     } else {
                         // Manejar el caso en que la solicitud no fue exitosa
                         throw new Error('Error en la importación');
                     }
                 })
                 .catch(error => {
-                    // Manejar errores
+                    // Mostrar mensaje de error al usuario
                     console.error(error);
                     console.log('Error en la importación');
                 });
             }
         }
 
+
     </script>
     {{-- FIN DE JS DEL RENDERIZADO DE LA TABLA DE CAMPOS --}}
-
-
-    {{-- CODIGO PARA HACER LAS IMPORTACIONES DESDE EL FULL DE PREGUNTAS QUE TENGA CREADA ESA EMPRESA --}}
-  <script type="application/javascript" async>
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     // Escuchar el evento mostrado de la modal
-    //     $('#table-modal').on('shown.bs.modal', function () {
-    //         // Renderizar la tabla dentro de la modal
-    //         renderizarTabla();
-    //     });
-
-    //     // Escuchar el evento ocultado de la modal
-    //     $('#table-modal').on('hidden.bs.modal', function () {
-    //         // Borrar el contenido de la tabla
-    //         document.getElementById("table-fields2").innerHTML = '';
-    //     });
-    // });
-
-
-
-// function renderizarTabla() {
-    // const loading = new Loader();
-    // const mygrid = new gridjs.Grid({
-    //         // Configuración de la tabla...
-    //         language: {
-    //             'search': {
-    //                 'placeholder': 'Buscar...'
-    //             },
-    //             'pagination': {
-    //                 'previous': 'Prev.',
-    //                 'next': 'Sig.',
-    //                 'showing': 'Mostrando',
-    //                 'results': () => 'resultados'
-    //             }
-    //         },
-    //         columns:
-    //             [
-    //                 {
-    //                 id: 'id',
-    //                 name: '#',
-    //                 sort: {
-    //                     enabled: false
-    //                 },
-    //                 formatter: (function (cell) {
-    //                     return gridjs.html('<div class="form-check font-size-16"><input class="form-check-input" type="checkbox" id="orderidcheck' + cell + '"><label class="form-check-label" for="orderidcheck' + cell + '">' + cell + '</label></div>');
-    //                     })
-    //                 },
-    //                 {
-    //                     id: 'order',
-    //                     name: 'Orden',
-    //                 },
-    //                 {
-    //                     id: 'label',
-    //                     name: 'Etiqueta',
-
-    //                 },
-    //                 {
-    //                     id: 'required',
-    //                     name: 'Requerido',
-    //                     formatter: (function (cell) {
-    //                         return gridjs.html(cell == '1' ? '<span class="badge badge-pill badge-soft-success font-size-12">Requerido</span>' : '<span class="badge badge-pill badge-soft-secondary font-size-12">Opcional</span>');
-    //                     })
-    //                 },
-    //                 {
-    //                     id: "created_at",
-    //                     name: "Creado el",
-    //                     formatter: (_, cell) => moment(cell).format('YYYY-MM-DD')
-    //                 }
-    //             ],
-    //         pagination: {
-    //             limit: 12,
-    //             server: {
-    //                 url: (prev, page, limit) => `${prev}&limit=${limit}&page=${page + 1}`
-    //             }
-    //         },
-    //         sort: {
-    //             initialColumn: 'order', // Columna inicial de ordenamiento
-    //             initialDirection: 'asc' // Dirección inicial de ordenamiento
-    //         },
-    //         search: {
-    //             debounceTimeout: 300, // Tiempo de espera en milisegundos (300 ms = 0.3 segundos)
-    //             server: {
-    //                 url: (prev, keyword) => `${prev}&search=${keyword}`
-    //             }
-    //         },
-
-
-
-    //         style: {
-    //             table: {
-    //                 'overflow-x': 'auto',  // scrolling horizontal
-    //                 'max-height': '400px', // establece la altura máxima para scrolling vertical
-    //             }
-    //         },
-    //     }).render(document.getElementById("table-fields2"));
-    // }
-    </script>
-
 
     <style>
         .fade:not(.show) {
