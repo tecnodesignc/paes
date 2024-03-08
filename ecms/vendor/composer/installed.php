@@ -3,7 +3,7 @@
         'name' => 'tecnodes/encore',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '268f6753c52b64dc75df290b22fcf3c833755ab7',
+        'reference' => 'ba6adf82245f7cfbcca343ccaf03add05e70bed6',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -1140,8 +1140,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0.0 || 2.0.0 || 3.0.0',
-                1 => '1.0|2.0|3.0',
+                0 => '1.0|2.0|3.0',
+                1 => '1.0.0 || 2.0.0 || 3.0.0',
             ),
         ),
         'psr/simple-cache' => array(
@@ -1702,7 +1702,7 @@
         'tecnodes/encore' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '268f6753c52b64dc75df290b22fcf3c833755ab7',
+            'reference' => 'ba6adf82245f7cfbcca343ccaf03add05e70bed6',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
