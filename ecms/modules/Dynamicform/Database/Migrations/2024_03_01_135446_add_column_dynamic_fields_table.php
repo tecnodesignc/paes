@@ -11,18 +11,22 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
-    {
+     public function up()
+     {
         Schema::table('dynamicform__fields', function (Blueprint $table) {
-            $table->integer('hallazgo')->nullable();
+            $table->renameColumn('hallazgo', 'finding');
         });
-    }
+     }
 
-    // public function down()
-    // {
-    //     Schema::table('dynamicform__fields', function (Blueprint $table) {
-    //         $table->dropColumn('hallazgo');
-    //     });
-    // }
+    //  public function down()
+    //  {
+    //      Schema::table('dynamicform__fields', function (Blueprint $table) {
+    //          $table->dropColumn('hallazgo');
+    //      });
+    //  }
+
+
+
+
 
 };

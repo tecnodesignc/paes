@@ -157,17 +157,9 @@
             columns:
                 [
                     {
-                        id: 'id',
-                        name: '#',
-                        width: '50px',
-                        sort: {
-                            enabled: false
-                        }
-                    },
-                    {
                         id: 'user',
                         name: 'Colaborador',
-                        width: '350px',
+                        width: '300px',
                         formatter: (function (cell) {
                             return cell.fullname;
                         })
@@ -180,7 +172,7 @@
                     {
                         id: 'company',
                         name: 'Empresa',
-                        width: '150px',
+                        width: '200px',
                         formatter: (function (cell) {
                             return cell.name;
                         })
@@ -189,29 +181,28 @@
                         id: "created_at",
                         name: "registrado el",
                         width: '200px',
-                        formatter: (cell) => moment(cell).format('YYYY-MM-DD')
+                        formatter: (cell) => moment(cell).format('YYYY-MM-DD HH:mm')
                     },
                     {
                         id: "form",
                         name: "Formulario",
-                        width: '200px',
+                        width: '250px',
                         formatter: (function (cell) {
                             return cell.name;
                         })
                     },
                     {
                         id: "id",
-                        name: "Ver respuestas",
+                        name: "Respuesta",
                         width: '100px',
                         sort: {
                             enabled: false
                         },
                         formatter: (function (cell, row) {
                             var form_id = row.cells[5].data.id;
-                            return gridjs.html('<div class="d-flex align-item-center"><a href="/preoperativo/form/'+form_id+'/response/' + cell + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Respuestas" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a></div>');
+                            return gridjs.html('<div class="d-flex justify-content-center align-item-center"><a href="/preoperativo/form/'+form_id+'/response/' + cell + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Respuestas" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a></div>');
                         })
-                    }
-
+                    },
                 ],
             pagination: true,
             search: true,

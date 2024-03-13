@@ -424,7 +424,7 @@
                 var foto;
                 var fieldValue=null; //valor del campo
                 var fieldPosicionValue; //de los # de opciones guarda la posicion del campo seleccionado
-                var fieldHallazgo = field.getAttribute("data-field-hallazgo");
+                var fieldFinding = field.getAttribute("data-field-finding");
                 // Recolectar valor dependiendo del tipo de campo
                 switch (fieldType) {
                     // Texto
@@ -447,22 +447,6 @@
                     case "4":
                         fieldValue = document.getElementById("btnemail-" + fieldId).value;
                         break;
-                    // inputs si/no/noaplica
-                    // case "5":
-                    //     // Obtener los valores de los tres radio buttons
-                    //     let radio1 = document.getElementById("btnradio-" + fieldId + "-1").checked;
-                    //     let radio2 = document.getElementById("btnradio-" + fieldId + "-2").checked;
-                    //     let radio3 = document.getElementById("btnradio-" + fieldId + "-3").checked;
-
-                    //     if (radio1) {
-                    //         fieldValue = 1;
-                    //     } else if (radio2) {
-                    //         fieldValue = 0;
-                    //     } else if (radio3) {
-                    //         fieldValue = 2;
-                    //     }
-                    //     fieldComment = document.getElementById("btncomment-" + fieldId).value;
-                    //     break;
                     // select
                     case "6":
                         fieldValue = document.getElementById("btnselect-" + fieldId).value;
@@ -500,6 +484,12 @@
                         // Obtener el comentario del textarea correspondiente
                         fieldComment = document.getElementById("btncomment-" + fieldId).value;
                         break;
+                    case "14":
+                        fieldValue = document.getElementById("btndate-" + fieldId).value;
+                        break;
+                    case "15":
+                        fieldValue = document.getElementById("btntime-" + fieldId).value;
+                        break;
                     }
                 // Añadir respuesta al array de respuestas
                 formData.answers.push({
@@ -509,7 +499,7 @@
                     "value": fieldValue,
                     "comment": fieldComment && fieldComment.trim() !== '' ? fieldComment : undefined,
                     "image": fieldFoto && fieldFoto.trim() !== '' ? fieldFoto : undefined,
-                    "hallazgo": (fieldType == '5' || fieldType == '10' || fieldType == '11') && fieldHallazgo == positionValue ? positionValue : undefined
+                    "finding": (fieldType == '5' || fieldType == '10' || fieldType == '11') && fieldFinding == positionValue ? positionValue : undefined
                 });
             });
 

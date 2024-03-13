@@ -28,7 +28,7 @@ class ImportFields implements ToCollection, WithHeadingRow
                         'type' => $type,
                         'required' => $row['required'],
                         'selectable' => in_array(strval($type), ['5', '6', '7', '10', '11']) ? [$row['selectable']] : null,
-                        'hallazgo' => in_array(strval($type), ['5', '10', '11']) ? $row['hallazgo'] : null,
+                        'finding' => in_array(strval($type), ['5', '10', '11']) ? $row['finding'] : null,
                     ]);
                     $this->results['updated']++;
                 } else {
@@ -41,7 +41,7 @@ class ImportFields implements ToCollection, WithHeadingRow
                         'order' => $lastOrder,
                         'selectable' => in_array(strval($type), ['5', '6', '7', '10', '11']) ? [$row['selectable']] : null,
                         'form_id' => $this->form_id,
-                        'hallazgo' => in_array(strval($type), ['5', '10', '11']) ? $row['hallazgo'] : null,
+                        'finding' => in_array(strval($type), ['5', '10', '11']) ? $row['finding'] : null,
                     ]);
                     $this->results['inserted']++;
                 }

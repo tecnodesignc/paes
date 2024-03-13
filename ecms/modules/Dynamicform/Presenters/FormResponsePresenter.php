@@ -17,8 +17,8 @@ class FormResponsePresenter extends Presenter
         $count=0;
         $answers=$this->entity->data->answers;
         foreach ($answers as $item){
-            if (isset($item->type) && isset($item->hallazgo)){
-                if ($item->hallazgo){
+            if (isset($item->type) && isset($item->finding)){
+                if ($item->finding){
                     $count++;
                 }
             }

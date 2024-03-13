@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Field extends Model
 {
     protected $table = 'dynamicform__fields';
-    protected $fillable = ['label','name','type','required','order','selectable','form_id','company_id', 'hallazgo'];
+    protected $fillable = ['label','name','type','required','order','selectable','form_id','company_id', 'finding'];
     /**
      * The attributes that should be cast.
      *

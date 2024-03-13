@@ -80,13 +80,15 @@
                                                     <option value="2">Input de Numero</option>
                                                     <option value="3">Input de Teléfono</option>
                                                     <option value="4">Input de Email</option>
+                                                    <option value="14">Input de Fecha</option>
+                                                    <option value="15">Input de Hora</option>
                                                     <option value="5">Si/No/No Aplica</option>
+                                                    <option value="10">Opciones</option>
+                                                    <option value="11">Estados</option>
                                                     <option value="6">Selector</option>
                                                     <option value="7">Selector Multiple</option>
                                                     <option value="8">Imagen</option>
                                                     <option value="9">Firma</option>
-                                                    <option value="10">Opciones</option>
-                                                    <option value="11">Estados</option>
                                                 </select>
                                             </div>
 
@@ -96,10 +98,10 @@
                                                 {!! $errors->first('selectable', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
 
-                                            <div id="divhallazgo" class="mb-3 {{ $errors->has('hallazgo') ? 'was-validated' : '' }}" style="display: none;">
+                                            <div id="divfinding" class="mb-3 {{ $errors->has('finding') ? 'was-validated' : '' }}" style="display: none;">
                                                 <label class="form-label" for="caption" title="Ingrese una posición">Hallazgo</label>
-                                                <input id="hallazgo" placeholder="Contará hallazgo en la posición" name="hallazgo" type="number" value="{{ old('hallazgo') }}" class="form-control" min="1">
-                                                {!! $errors->first('hallazgo', '<div class="invalid-feedback">:message</div>') !!}
+                                                <input id="finding" placeholder="Contará finding en la posición" name="finding" type="number" value="{{ old('finding') }}" class="form-control" min="1">
+                                                {!! $errors->first('finding', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <hr>
                                             <div class="checkbox {{ $errors->has('required') ? 'was-validated' : '' }}">
@@ -168,13 +170,13 @@
                 if (typeValue ==='5') {
                     textUniqueVals.removeActiveItems();
                     textUniqueVals.setValue(['SI','NO','NO APLICA'])
-                    $('#divhallazgo').css('display', 'block');
+                    $('#divfinding').css('display', 'block');
                     $('#limits').css('display', 'block');
                 }
                 else if (typeValue === '6' || typeValue === '7' ) {
                     // Mostrar las opciones específicas cuando se selecciona 'Estados'
                     $('#limits').css('display', 'block');
-                    $('#divhallazgo').css('display', 'none');
+                    $('#divfinding').css('display', 'none');
                 }
                 else if(typeValue === '10' || typeValue === '11'){
                        // Mostrar las opciones específicas cuando se selecciona 'Estados'
@@ -183,11 +185,11 @@
                             textUniqueVals.setValue(['BUENO','REGULAR','MALO','NO APLICA', 'NO TIENE'])
                         }
                     $('#limits').css('display', 'block');
-                    $('#divhallazgo').css('display', 'block');
+                    $('#divfinding').css('display', 'block');
                 }
                 else {
                     $('#limits').css('display', 'none');
-                    $('#divhallazgo').css('display', 'none');
+                    $('#divfinding').css('display', 'none');
                 }
             }
 

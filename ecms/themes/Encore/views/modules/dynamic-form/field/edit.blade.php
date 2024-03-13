@@ -90,13 +90,15 @@
                                                     <option value="2" {{ $field->type == 2 ? 'selected' : '' }}>Input de Número</option>
                                                     <option value="3" {{ $field->type == 3 ? 'selected' : '' }}>Input de Teléfono</option>
                                                     <option value="4" {{ $field->type == 4 ? 'selected' : '' }}>Input de Email</option>
+                                                    <option value="14" {{ $field->type == 14 ? 'selected' : '' }}>Input de Fecha</option>
+                                                    <option value="15" {{ $field->type == 15 ? 'selected' : '' }}>Input de Hora</option>
                                                     <option value="5" {{ $field->type == 5 ? 'selected' : '' }}>Si/No/No Aplica</option>
+                                                    <option value="10" {{ $field->type == 10 ? 'selected' : '' }}>Opciones</option>
+                                                    <option value="11" {{ $field->type == 11 ? 'selected' : '' }}>Estados</option>
                                                     <option value="6" {{ $field->type == 6 ? 'selected' : '' }}>Selector</option>
                                                     <option value="7" {{ $field->type == 7 ? 'selected' : '' }}>Selector Múltiple</option>
                                                     <option value="8" {{ $field->type == 8 ? 'selected' : '' }}>Imagen</option>
                                                     <option value="9" {{ $field->type == 9 ? 'selected' : '' }}>Firma</option>
-                                                    <option value="10" {{ $field->type == 10 ? 'selected' : '' }}>Opciones</option>
-                                                    <option value="11" {{ $field->type == 11 ? 'selected' : '' }}>Estados</option>
                                                 </select>
                                             </div>
 
@@ -107,10 +109,10 @@
                                                 {!! $errors->first('selectable', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
 
-                                            <div id="divhallazgo" class="mb-3 {{ $errors->has('hallazgo') ? 'was-validated' : '' }}" style="display: none;">
+                                            <div id="divfinding" class="mb-3 {{ $errors->has('finding') ? 'was-validated' : '' }}" style="display: none;">
                                                 <label class="form-label" for="caption" title="Ingrese una posición">Hallazgo</label>
-                                                <input id="hallazgo" placeholder="Contará hallazgo en la posición" name="hallazgo" type="number" value="{{old('hallazgo',$field->hallazgo)}}" class="form-control" min="0">
-                                                {!! $errors->first('hallazgo', '<div class="invalid-feedback">:message</div>') !!}
+                                                <input id="finding" placeholder="Contará finding en la posición" name="finding" type="number" value="{{old('finding',$field->finding)}}" class="form-control" min="0">
+                                                {!! $errors->first('finding', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
 
                                             <hr>
@@ -183,13 +185,13 @@
                 if (typeValue ==='5') {
                     textUniqueVals.removeActiveItems();
                     textUniqueVals.setValue(['SI','NO','NO APLICA'])
-                    $('#divhallazgo').css('display', 'block');
+                    $('#divfinding').css('display', 'block');
                     $('#limits').css('display', 'block');
                 }
                 else if (typeValue === '6' || typeValue === '7' ) {
                     // Mostrar las opciones específicas cuando se selecciona 'Estados'
                     $('#limits').css('display', 'block');
-                    $('#divhallazgo').css('display', 'none');
+                    $('#divfinding').css('display', 'none');
                 }
                 else if(typeValue === '10' || typeValue === '11'){
                        // Mostrar las opciones específicas cuando se selecciona 'Estados'
@@ -198,11 +200,11 @@
                             textUniqueVals.setValue(['BUENO','REGULAR','MALO','NO APLICA', 'NO TIENE'])
                         }
                     $('#limits').css('display', 'block');
-                    $('#divhallazgo').css('display', 'block');
+                    $('#divfinding').css('display', 'block');
                 }
                 else {
                     $('#limits').css('display', 'none');
-                    $('#divhallazgo').css('display', 'none');
+                    $('#divfinding').css('display', 'none');
                 }
             }
 
