@@ -89,11 +89,6 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
                 'middleware' => 'can:dynamicform.fields.edit'
             ]);
 
-            $router->get('/download/template',  [
-                'as' => 'dynamicform.field.downloadTemplate',
-                'uses' => 'FieldController@downloadTemplate',
-                'middleware' => 'can:dynamicform.fields.edit'
-            ]);
         });
 
         // Rutas de las respuesta de los formularios

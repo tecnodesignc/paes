@@ -173,13 +173,4 @@ class FieldController extends AdminBaseController
         }
     }
 
-    public function downloadTemplate()
-    {
-        $filePath = storage_path('app/public/campos_del_formulario.xlsx');
-
-        return response()->download($filePath, 'campos_del_formulario.xlsx');
-    }
-
-
-
 }

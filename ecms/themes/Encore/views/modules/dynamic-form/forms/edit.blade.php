@@ -190,7 +190,7 @@
                      data-bs-parent="#addproduct-accordion">
                     <div class="p-4 border-top">
                         <div class="row">
-                            <h5>Cargar campos desde un excel:  <a href="{{route('dynamicform.field.downloadTemplate',[$form->id])}}" class="link waves-effect waves-light mb-2 me-2">
+                            <h5>Cargar campos desde un excel:  <a href="{{asset('modules/dynamicform/templates/fields_form.xlsx')}}" class="link waves-effect waves-light mb-2 me-2">
                                 <i class="mdi mdi-file-import-outline me-1"></i> Descargar plantilla
                             </a></h5>
                             {{-- <div class="row">
