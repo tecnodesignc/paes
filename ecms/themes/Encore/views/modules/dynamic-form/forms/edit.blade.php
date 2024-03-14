@@ -431,7 +431,7 @@
                 .then(response => {
                     // Verificar si la solicitud fue exitosa
                     if (response.status === 200) {
-                        alert('Campo eliminado exitosamente');
+                        Swal.fire('Campo eliminado exitosamente');
                         // Actualizamos la tabla después de la eliminación
                         mygrid.forceRender();
                     } else {
@@ -442,7 +442,7 @@
                 .catch(error => {
                     // Manejar errores
                     console.error(error);
-                    alert('Error al eliminar el campo');
+                    Swal.fire('Error al eliminar el campo');
                 });
             }
         }
@@ -467,7 +467,7 @@
             })
             .catch(error => {
                 // Manejar errores
-                alert('Error al ordenar el campo');
+                Swal.fire('Error al ordenar el campo');
             });
         }
 
@@ -481,7 +481,7 @@
             // Verificar si se ha seleccionado un archivo
             if (!file) {
                 // Mostrar mensaje de error al usuario
-                alert('Por favor, selecciona un archivo antes de importar.');
+                Swal.fire('Por favor, selecciona un archivo antes de importar.');
                 return;
             }
 
@@ -501,7 +501,7 @@
                     // Verificar si la solicitud fue exitosa
                     if (response.status === 200) {
                         mygrid.forceRender();
-                        alert(`Se insertaron ${response.data.data.inserted} registros, se actualizaron ${response.data.data.updated} registros. Total: ${response.data.data.total}`);
+                        Swal.fire(`Se insertaron ${response.data.data.inserted} registros, se actualizaron ${response.data.data.updated} registros. Total: ${response.data.data.total}`);
                     } else {
                         // Manejar el caso en que la solicitud no fue exitosa
                         throw new Error('Error en la importación');

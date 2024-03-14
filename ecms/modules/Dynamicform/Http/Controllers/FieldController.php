@@ -167,7 +167,7 @@ class FieldController extends AdminBaseController
             \Log::error($e);
 
             // Devolver el error como una respuesta JSON en caso de excepción
-            $status = $this->getStatusError($e);
+            $status = $e->getCode();
             $response = ["errors" => $e->getMessage()];
             return response()->json($response, $status ?? 200);
         }
