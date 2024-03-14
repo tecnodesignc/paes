@@ -121,6 +121,12 @@ class ImportFields implements ToCollection, WithHeadingRow
         case 'estados':
             $type = 11;
             break;
+        case 'fecha':
+            $type = 14;
+            break;
+        case 'hora':
+            $type = 15;
+            break;
         default:
             // En caso de un tipo de campo no válido, podrías almacenar un valor predeterminado
             $type = 0;
