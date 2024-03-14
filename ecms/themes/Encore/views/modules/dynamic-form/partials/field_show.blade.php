@@ -175,15 +175,17 @@
                 <div class="col-lg-7 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
                     <div class="btn-group border border-primary d-flex flex-wrap" role="group" aria-label="Opciones">
-                        @foreach($field->selectable as $options)
-                            @php
-                                $options = explode(',', $options);
-                            @endphp
-                            @foreach($options as $option)
-                                <input type="radio" class="btn-check dynamic-field" id="option_{{ $field->id }}_{{ $option }}" name="option_{{ $field->id }}" value="{{ $option }}" data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-finding="{{$field->finding}}" >
-                                <label for="option_{{ $field->id }}_{{ $option }}" class="btn btn-outline-dark mb-0">{{ $option }}</label>
+                        @if(isset($field->selectable) && !empty($field->selectable))
+                            @foreach($field->selectable as $options)
+                                @php
+                                    $options = explode(',', $options);
+                                @endphp
+                                @foreach($options as $option)
+                                    <input type="radio" class="btn-check dynamic-field" id="option_{{ $field->id }}_{{ $option }}" name="option_{{ $field->id }}" value="{{ $option }}" data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-finding="{{$field->finding}}" >
+                                    <label for="option_{{ $field->id }}_{{ $option }}" class="btn btn-outline-dark mb-0">{{ $option }}</label>
+                                @endforeach
                             @endforeach
-                        @endforeach
+                        @endif
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-12 text-lg-center">

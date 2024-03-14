@@ -150,7 +150,7 @@ class FieldController extends AdminBaseController
         try {
             \DB::beginTransaction();
             if ($request->hasFile('excel_file')) {
-                $path = $request->file('excel_file')->getRealPath();
+                $path = $request->file('excel_file');
                 $import = new ImportFields($form_id->id);
                 Excel::import($import, $path);
                 // Obtener los resultados del importador
