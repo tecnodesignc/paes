@@ -2,6 +2,7 @@
 
 return [
     'dynamicform.forms' => [
+        'indexall' => 'dynamicform::forms.list all resource',
         'index' => 'dynamicform::forms.list resource',
         'create' => 'dynamicform::forms.create resource',
         'edit' => 'dynamicform::forms.edit resource',

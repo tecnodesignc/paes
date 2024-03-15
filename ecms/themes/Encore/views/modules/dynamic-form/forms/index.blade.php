@@ -140,12 +140,26 @@
                             enabled: false
                         },
                         width: '150px',
+                        // formatter: (cell, row) => {
+                            // return gridjs.html(
+                                // '<div class="d-flex justify-content-center align-items-center gap-4">'
+                                // + '<a href="/preoperativo/form/'+ row.cells[0].data + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Vista previa" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a>'
+                                // + '<a href="/preoperativo/form/' + row.cells[0].data + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success btn-lg"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'
+                                // + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" onclick="deleteField(event, '+ row.cells[0].data +')" >' + (row.cells[4].data == '1' ? '<i class="mdi mdi-lock-open mdi-24px"></i>' : '<i class="mdi mdi-lock mdi-24px text-secondary"></i>') + '</a>'
+                                // + '</div>'
+                                // );
+                        // }
                         formatter: (cell, row) => {
-                            return gridjs.html('<div class="d-flex justify-content-center align-items-center gap-4">'
-                                + '<a href="/preoperativo/form/'+ row.cells[0].data + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Vista previa" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a>'
-                                + '<a href="/preoperativo/form/' + row.cells[0].data + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success btn-lg"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'
-                                + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" onclick="deleteField(event, '+ row.cells[0].data +')" >' + (row.cells[4].data == '1' ? '<i class="mdi mdi-lock-open mdi-24px"></i>' : '<i class="mdi mdi-lock mdi-24px text-secondary"></i>') + '</a>'
-                                + '</div>');
+                            let actionsHtml = '<div class="d-flex justify-content-center align-items-center gap-4">';
+                            actionsHtml += '<a href="/preoperativo/form/'+ row.cells[0].data + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Vista previa" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a>';
+                            if ({{$currentUser->hasAccess('dynamicform.forms.edit')}}) {
+                                actionsHtml +=
+                                  '<a href="/preoperativo/form/' + row.cells[0].data + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success btn-lg"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'
+                                + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" onclick="deleteField(event, '+ row.cells[0].data +')" >' + (row.cells[4].data == '1' ? '<i class="mdi mdi-lock-open mdi-24px"></i>' : '<i class="mdi mdi-lock mdi-24px text-secondary"></i>') + '</a>';
+                            }
+
+                            actionsHtml += '</div>';
+                            return gridjs.html(actionsHtml);
                         }
                     },
 
@@ -165,10 +179,14 @@
             },
             server: {
                 @php
-                    $companies=company()->id?company()->id:array_values(companies()->where('type',1)->map(function ($company){
-                                         return $company->id;
-                                       })->toArray());
-                     $params=['include'=>'companies','companies'=>$companies];
+                    if($currentUser->hasAccess('dynamicform.forms.indexall')){
+                        $companies=company()->id?company()->id:null;
+                    }else{
+                        $companies=company()->id?company()->id:array_values(companies()->map(function ($company){
+                            return $company->id;
+                        })->toArray());
+                    }
+                    $params=['include'=>'companies','companies'=>$companies];
                 @endphp
                 url: '{!!route('api.dynamicform.form.index',$params)!!}',
                 headers: {
