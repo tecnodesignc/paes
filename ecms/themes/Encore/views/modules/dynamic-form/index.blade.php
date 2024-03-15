@@ -199,7 +199,7 @@
                             enabled: false
                         },
                         formatter: (function (cell, row) {
-                            var form_id = row.cells[5].data.id;
+                            var form_id = row.cells[4].data.id;
                             return gridjs.html('<div class="d-flex justify-content-center align-item-center"><a href="/preoperativo/form/'+form_id+'/response/' + cell + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Respuestas" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a></div>');
                         })
                     },

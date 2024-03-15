@@ -52,9 +52,7 @@ class FormController extends AdminBaseController
         //consulta para los formularios
         $params_form = json_decode(json_encode([
             'filter' => [
-                'companies' => company()->id?company()->id:array_values(companies()->map(function ($company){
-                    return $company->id;
-                })->toArray()),
+                'companies' => [$this->auth->user()->driver->company_id],
                 'status' => 1
             ],  'include' => ['*'], 'page' => 1, 'take' => 10000
         ]));

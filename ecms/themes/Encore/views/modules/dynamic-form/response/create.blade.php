@@ -635,12 +635,12 @@
                     }
                 });
 
-                // Verificar si company()->id está definido
-                var companyId = {{ company()->id ? company()->id : 'null' }};
+                // // Verificar si company()->id está definido
+                var companyId = {{ $currentUser->driver->company->id ? $currentUser->driver->company->id: 'null' }};
                 // Mostrar una alerta al usuario
                 if (companyId === null) {
                     // e.preventDefault();
-                    alert("Debe seleccionar una empresa.");
+                    alert("No tienes una empresa asignada.");
                     return;
                 }
 
