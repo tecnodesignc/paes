@@ -1,6 +1,6 @@
 @extends('modules.dynamic-form.layouts.master')
 @section('title')
-    Formularios de Preoperativo
+    Formularios
 @endsection
 @section('css')
     <link href="{{Theme::url('libs/alertifyjs/alertifyjs.min.css')}}" rel="stylesheet" type="text/css"/>
