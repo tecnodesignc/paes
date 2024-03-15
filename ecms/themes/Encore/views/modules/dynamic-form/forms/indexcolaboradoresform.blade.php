@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('modules.dynamic-form.layouts.master')
 @section('title')
     Formularios de Preoperativo
 @endsection
