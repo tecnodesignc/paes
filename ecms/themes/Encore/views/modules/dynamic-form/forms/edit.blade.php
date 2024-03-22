@@ -8,10 +8,10 @@
     {!! Theme::style('libs/dropzone/dropzone.min.css?v='.config('app.version')) !!}
     {!! Theme::style('libs/alertifyjs/alertifyjs.min.css?v='.config('app.version')) !!}
     {!! Theme::style('libs/@simonwep/@simonwep.min.css?v='.config('app.version')) !!}
-    {!! Theme::style('libs/choices.js/choices.js.min.css?v='.config('app.version')) !!}
     {!! Theme::style('libs/gridjs/gridjs.min.css?v='.config('app.version')) !!}
     <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
     {!! Theme::style('libs/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css?v='.config('app.version')) !!}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -79,25 +79,29 @@
                                                           class="form-control">{{old('caption',$form->caption)}}</textarea>
                                                 {!! $errors->first('caption', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                            <div class="mb-3 {{ $errors->has("companies") ? ' was-validated' : '' }}"
-                                                 style="{{$currentUser->hasAccess('sass.companies.indexall')|| (companies() > 0 && empty(company()->id))?"display:block":"display:none"}}">
-                                                <label for="companies" class="form-label font-size-13 text-muted">Empresas
-                                                    Asignadas</label>
-                                                <select class="form-control" name="companies[]"
-                                                        id="companies"
-                                                        placeholder="Selecciones Compañias " multiple>
-                                                    @php
-                                                        $companiesOld=$form->companies->map(function ($company){
-                                                            return $company->id;
-                                                        })->toArray();
-                                                    @endphp
-                                                    @foreach(companies() as $company)
-                                                        <option
-                                                                value="{{$company->id}}" {{in_array($company->id ,old('companies',$companiesOld)) ? 'selected' : ''}} >{{$company->name}}</option>
-                                                    @endforeach
-                                                </select>
+                                            <div class="mb-3 {{ $errors->has("companies") ? ' was-validated' : '' }}" style="{{$currentUser->hasAccess('sass.companies.indexall') || (companies()->count() > 0 && !empty(company()->id))?"display:block":"display:none"}}">
+                                                @php
+                                                    $companiesOld=$form->companies->map(function ($company){
+                                                        return $company->id;
+                                                    })->toArray();
+                                                @endphp
+                                                <label for="companies" class="form-label font-size-13 text-muted">Empresas Asignadas</label>
+                                                @if ($companiesOld)
+                                                    <select required name="companies[]" id="companies" class="form-control companies" multiple="multiple" >
+                                                        @foreach(companies() as $company)
+                                                            <option value="{{$company->id}}" {{in_array($company->id ,old('companies',$companiesOld)) ? 'selected' : ''}} >
+                                                                {{$company->name}}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                @else
+                                                    <input type="text" value="No cuenta con ninguna empresa asignada" class="form-control" disabled>
+                                                @endif
+
                                                 {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
+
+                                            <input id="company_create" name="company_create" type="hidden" value="{{session('company')}}" class="form-control" required>
                                         </div>
                                     </div>
                                 </div>
@@ -203,7 +207,7 @@
                             <form id="importForm">
                                 @csrf
                                 <div class="col-lg-6">
-                                    <input type="file" name="excel_file">
+                                    <input type="file" name="excel_file" id="excel_file">
                                 </div>
                                 <div class="col-lg-6 mt-3">
                                     <a href="#" class="btn btn-success waves-effect waves-light mb-2 me-2" onclick="importFields(event)">
@@ -261,11 +265,11 @@
     <script src="{{ Theme::url('libs/alertifyjs/alertifyjs.min.js') }}"></script>
     <script src="{{ Theme::url('libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ Theme::url('libs/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.min.js') }}"></script>
-    <script src="{{ Theme::url('libs/choices.js/choices.js.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"
             integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     {{-- JS PARA EDICION DEL FORM --}}
     <script type="application/javascript" async>
@@ -316,8 +320,9 @@
                 $('#icon').iconpicker({
                     placement: 'bottomLeft',
                 });
-                new Choices('#companies', {
-                    removeItemButton: true,
+                $('.companies').select2({
+                    placeholder: "--Seleccione--",
+                    width: '100%'
                 });
             })
         })();
@@ -391,12 +396,6 @@
                 }
             },
             sort: true,
-            search: {
-                debounceTimeout: 300, // Tiempo de espera en milisegundos (300 ms = 0.3 segundos)
-                server: {
-                    url: (prev, keyword) => `${prev}&search=${keyword}`
-                }
-            },
             server: {
                 @php
                      $params=['include'=>'form','form'=>$form->id, 'order'=>['field'=>'order','way'=>'asc']];
@@ -409,6 +408,12 @@
                 then: data => data.data,
                 total: data => data.meta.page.total
             },
+            search: {
+                debounceTimeout: 1000, // Tiempo de espera en milisegundos (300 ms = 0.3 segundos)
+                server: {
+                    url: (prev, keyword) => `${prev}&search=${keyword}`
+                }
+            },
             style: {
                 table: {
                     'overflow-x': 'auto',  // scrolling horizontal
@@ -420,31 +425,46 @@
         function deleteField(event, field) {
             event.preventDefault(); // Evita que el navegador siga el enlace
 
-            if (confirm("¿Estás seguro de que quieres eliminar este campo?")) {
-                // Realizar la solicitud DELETE con Axios
-                axios.delete(`/preoperativo/form/{{$form->id}}/field/${field}/borrar`, {
-                    headers: {
-                        'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => {
-                    // Verificar si la solicitud fue exitosa
-                    if (response.status === 200) {
-                        Swal.fire('Campo eliminado exitosamente');
-                        // Actualizamos la tabla después de la eliminación
-                        mygrid.forceRender();
-                    } else {
-                        // Manejar el caso en que la solicitud no fue exitosa
-                        throw new Error('Error al eliminar el campo');
-                    }
-                })
-                .catch(error => {
-                    // Manejar errores
-                    console.error(error);
-                    Swal.fire('Error al eliminar el campo');
-                });
-            }
+            Swal.fire({
+                title: "¿Estás seguro de que quieres eliminar este campo?",
+                text: "Esta acción no se puede revertir!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Eliminar!",
+                cancelButtonText: "Cancelar"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                     // Realizar la solicitud DELETE con Axios
+                    axios.delete(`/preoperativo/form/{{$form->id}}/field/${field}/borrar`, {
+                        headers: {
+                            'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        // Verificar si la solicitud fue exitosa
+                        if (response.status === 200) {
+                            Swal.fire({
+                                title: "Eliminado!",
+                                text: "Campo eliminado exitosamente.",
+                                icon: "success"
+                            });
+                            // Actualizamos la tabla después de la eliminación
+                            mygrid.forceRender();
+                        } else {
+                            // Manejar el caso en que la solicitud no fue exitosa
+                            throw new Error('Error al eliminar el campo');
+                        }
+                    })
+                    .catch(error => {
+                        // Manejar errores
+                        console.error(error);
+                        Swal.fire('Error al eliminar el campo');
+                    });
+                }
+            });
         }
 
         function orderField(event,field, order) {
@@ -471,6 +491,10 @@
             });
         }
 
+    </script>
+
+    {{-- Import de archivo --}}
+    <script type="application/javascript">
         function importFields(event) {
             event.preventDefault(); // Evita que el navegador siga el enlace
 
@@ -481,43 +505,60 @@
             // Verificar si se ha seleccionado un archivo
             if (!file) {
                 // Mostrar mensaje de error al usuario
-                Swal.fire('Por favor, selecciona un archivo antes de importar.');
+                Swal.fire({
+                    icon: "warning",
+                    title: 'Por favor, selecciona un archivo antes de importar.'
+                });
                 return;
             }
 
-            if (confirm("¿Estás seguro de que deseas cargar este archivo?")) {
-                // Obtener el formulario y el archivo
-                const form = document.getElementById('importForm');
-                const formData = new FormData(form);
+            Swal.fire({
+                title: "¿Estás seguro de que deseas cargar este archivo?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Cargar",
+                cancelButtonText: "Cancelar",
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    // Obtener el formulario y el archivo
+                    const form = document.getElementById('importForm');
+                    const formData = new FormData(form);
 
-                // Realizar la solicitud POST con Axios
-                axios.post(`/preoperativo/form/{{$form->id}}/field/import`, formData, {
-                    headers: {
-                        'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
-                        'Content-Type': 'multipart/form-data' // Establecer el tipo de contenido a multipart/form-data
-                    }
-                })
-                .then(response => {
-                    // Verificar si la solicitud fue exitosa
-                    if (response.status === 200) {
-                        mygrid.forceRender();
-                        Swal.fire(`Se insertaron ${response.data.data.inserted} registros, se actualizaron ${response.data.data.updated} registros. Total: ${response.data.data.total}`);
-                    } else {
-                        // Manejar el caso en que la solicitud no fue exitosa
-                        throw new Error('Error en la importación');
-                    }
-                })
-                .catch(error => {
-                    // Mostrar mensaje de error al usuario
-                    console.error(error);
-                    console.log('Error en la importación');
-                });
-            }
+                    // Realizar la solicitud POST con Axios
+                    axios.post(`/preoperativo/form/{{$form->id}}/field/import`, formData, {
+                        headers: {
+                            'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                            'Content-Type': 'multipart/form-data' // Establecer el tipo de contenido a multipart/form-data
+                        }
+                    })
+                    .then(response => {
+                        // Verificar si la solicitud fue exitosa
+                        if (response.status === 200) {
+                            mygrid.forceRender();
+                            Swal.fire(`Se insertaron ${response.data.data.inserted} registros, se actualizaron ${response.data.data.updated} registros. Total: ${response.data.data.total}`);
+                            document.getElementById("excel_file").value = '';
+                        } else {
+                            // Manejar el caso en que la solicitud no fue exitosa
+                            throw new Error('Error en la importación');
+                        }
+                    })
+                    .catch(error => {
+                        // Mostrar mensaje de error al usuario
+                        console.error(error);
+                        console.log('Error en la importación');
+                    });
+                }
+            });
         }
+    </script>
 
+    <script type="application/javascript">
 
     </script>
-    {{-- FIN DE JS DEL RENDERIZADO DE LA TABLA DE CAMPOS --}}
+
 
     <style>
         .fade:not(.show) {

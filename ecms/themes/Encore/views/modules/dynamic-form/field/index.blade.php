@@ -147,7 +147,7 @@
             },
             server: {
                 @php
-                    $companies=company()->id?company()->id:array_values(companies()->where('type',1)->map(function ($company){
+                    $companies=company()->id?company()->id:array_values(companies()->map(function ($company){
                                          return $company->id;
                                        })->toArray());
                      $params=['include'=>'companies','companies'=>$companies];

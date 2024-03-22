@@ -30,6 +30,7 @@ class FormTransformer extends JsonResource
             'companies'=> CompanyTransformer::collection($this->whenLoaded('companies')),
             'created_at' => $this->when($this->created_at, $this->created_at),
             'update_at' => $this->when($this->created_at, $this->created_at),
+            'company_create' => $this->when($this->company_create, $this->company_create),
         ];
 
         return $data;

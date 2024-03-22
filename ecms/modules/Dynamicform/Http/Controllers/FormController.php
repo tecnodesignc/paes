@@ -5,6 +5,7 @@ namespace Modules\Dynamicform\Http\Controllers;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\Dynamicform\Entities\Form;
 use Modules\Dynamicform\Http\Requests\CreateFormRequest;
@@ -89,8 +90,13 @@ class FormController extends AdminBaseController
      *
      * @return Application|Factory|View
      */
-    public function create():Application|Factory|View
+    public function create():Application|Factory|View|RedirectResponse
     {
+        if (!session()->has('company')) {
+            return redirect()->back()->with("warning", "Selecciona una empresa");
+        }
+
+
         return view('modules.dynamic-form.forms.create');
     }
 
@@ -118,8 +124,13 @@ class FormController extends AdminBaseController
      * @param  Form $form
      * @return Response
      */
-    public function edit(Form $form) :Factory|View
+    public function edit(Form $form) :Factory|View|RedirectResponse
     {
+        if (!session()->has('company')) {
+            return redirect()->back()->with("warning", "Selecciona una empresa");
+        }
+
+
         return view('modules.dynamic-form.forms.edit', compact('form'));
     }
 

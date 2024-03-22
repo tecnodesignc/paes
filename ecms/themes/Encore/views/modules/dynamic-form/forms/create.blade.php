@@ -8,9 +8,9 @@
     {!! Theme::style('libs/dropzone/dropzone.min.css?v='.config('app.version')) !!}
     {!! Theme::style('libs/alertifyjs/alertifyjs.min.css?v='.config('app.version')) !!}
     {!! Theme::style('libs/@simonwep/@simonwep.min.css?v='.config('app.version')) !!}
-    {!! Theme::style('libs/choices.js/choices.js.min.css?v='.config('app.version')) !!}
     <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
     {!! Theme::style('libs/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css?v='.config('app.version')) !!}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -75,13 +75,13 @@
                                                           name="caption"
                                                           placeholder="Agrega Descripción Corta"
                                                           rows="3"
-                                                          class="form-control"
-                                                          required>{{old('caption')}}</textarea>
+                                                          class="form-control" required>{{old('caption')}}</textarea>
                                                 {!! $errors->first('caption', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                            <div class="mb-3 {{ $errors->has("companies") ? ' was-validated' : '' }}" style="{{$currentUser->hasAccess('sass.companies.indexall') || (companies() > 0 && empty(company()->id)) ? 'display:block' : 'display:none'}}">
+
+                                            <div class="mb-3 {{ $errors->has("companies") ? ' was-validated' : '' }}" style="{{$currentUser->hasAccess('sass.companies.indexall') || (companies()->count() > 0 && !empty(company()->id))?"display:block":"display:none"}}">
                                                 <label for="companies" class="form-label font-size-13 text-muted">Empresas Asignadas</label>
-                                                <select class="form-control" name="companies[]" id="companies" placeholder="Seleccione Compañías" multiple>
+                                                <select required name="companies[]" id="companies" class="form-control companies" multiple="multiple" >
                                                     {{-- por defecto se seleccionará la empresa que tiene en la variable de sesión, verifica si esa empresa está presente en la variable de sesión y, en ese caso, agregar el atributo selected al elemento <option> --}}
                                                     @foreach(companies() as $company)
                                                         <option value="{{$company->id}}" {{ (in_array($company->id, old('companies', [])) || $company->id == session('company')) ? 'selected' : '' }}>
@@ -92,6 +92,7 @@
                                                 {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
 
+                                            <input id="company_create" name="company_create" type="hidden" value="{{session('company')}}" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -159,8 +160,8 @@
     <script src="{{ Theme::url('libs/alertifyjs/alertifyjs.min.js') }}"></script>
     <script src="{{ Theme::url('libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ Theme::url('libs/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.min.js') }}"></script>
-    <script src="{{Theme::url('libs/choices.js/choices.js.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script type="application/javascript" async>
         (function () {
             'use strict';
@@ -208,11 +209,13 @@
                 $('#icon').iconpicker({
                     placement: 'bottomRight',
                 });
-                new Choices('#companies', {
-                    removeItemButton: true,
+                $('.companies').select2({
+                    placeholder: "--Seleccione--",
+                    width: '100%'
                 });
             })
         })();
+
     </script>
 
     <style>

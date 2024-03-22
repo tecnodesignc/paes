@@ -82,13 +82,12 @@ class EloquentFieldRepository extends EloquentBaseRepository implements FieldRep
             if (isset($filter->search) && $filter->search) {
                 //find search in columns
                 $term = $filter->search;
-                $query->where(function ($subQuery) use ($term) {
-                    $subQuery->whereHas('translations', function ($q) use ($term) {
-                        $q->where('title', 'LIKE', "%{$term}%");
-                    })->orWhere('id', $term);
+                $query->where(function ($query) use ($term) {
+                        $query->where('label', 'LIKE', "%{$term}%")
+                            ->orWhere('id', $term);
                 });
-
             }
+
         }
 
         /*== FIELDS ==*/

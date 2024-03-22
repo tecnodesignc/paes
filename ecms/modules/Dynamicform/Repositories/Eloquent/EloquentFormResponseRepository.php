@@ -68,10 +68,10 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
             if (isset($filter->search) && $filter->search) {
                 //find search in columns
                 $term = $filter->search;
-                $query->where(function ($subQuery) use ($term) {
-                    $subQuery->whereHas('translations', function ($q) use ($term) {
-                        $q->where('title', 'LIKE', "%{$term}%");
-                    })->orWhere('id', $term);
+                $query->where(function ($q) use ($term) {
+                    // $subQuery->whereHas('translations', function ($q) use ($term) {
+                        $q->where('title', 'LIKE', "%{$term}%")->orWhere('id', $term);
+                    // })->orWhere('id', $term);
                 });
             }
         }

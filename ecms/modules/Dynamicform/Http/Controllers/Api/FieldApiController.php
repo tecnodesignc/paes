@@ -12,9 +12,6 @@ use Modules\Dynamicform\Http\Requests\CreateFieldRequest;
 use Modules\Dynamicform\Http\Requests\UpdateFieldRequest;
 use Modules\Dynamicform\Repositories\FieldRepository;
 use Modules\Dynamicform\Transformers\FieldTransformer;
-use Modules\Core\Http\Controllers\Api\BaseApiController;
-use Modules\User\Contracts\Authentication;
-
 class FieldApiController extends Controller
 {
     /**
@@ -38,11 +35,11 @@ class FieldApiController extends Controller
             $includes = explode(',', $request->input('include'));
 
             $params = json_decode(json_encode(['filter' => [
-                'search' => $request->input('search'), 
-                'companies' => $request->input('companies'), 
+                'search' => $request->input('search'),
+                'companies' => $request->input('companies'),
                 'form_id' => $form->id,
                 'order'=>$request->input('order')
-            ], 
+            ],
             'include' => $includes, 'page' => $request->input('page'), 'take' => $request->input('limit')]));
 
             $fields = $this->field->getItemsBy($params);

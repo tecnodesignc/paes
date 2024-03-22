@@ -19,6 +19,13 @@
         @endslot
     @endcomponent
 
+    @if(session()->has('warning'))
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ session('warning') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -134,6 +141,10 @@
                         formatter:(cell)=> moment(cell).format( 'YYYY-MM-DD')
                     },
                     {
+                        id: "company_create",
+                        hidden: true
+                    },
+                    {
                         id: "id",
                         name: "Acciones",
                         sort: {
@@ -141,20 +152,23 @@
                         },
                         width: '150px',
                         formatter: (cell, row) => {
+                            let company={{company()->id??0}};
                             let actionsHtml = '<div class="d-flex justify-content-center align-items-center gap-4">';
                             actionsHtml += '<a href="/preoperativo/form/'+ row.cells[0].data + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Vista previa" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a>';
                             let hasAccessEdit = {{$currentUser->hasAccess('dynamicform.forms.edit') ? 'true' : 'false'}};
-                            if (hasAccessEdit) {
-                                actionsHtml +=
+                            let hasAccessIndexall = {{$currentUser->hasAccess('dynamicform.forms.indexall') ? 'true' : 'false'}};
+
+                            if (hasAccessEdit ) {
+                                if (company == row.cells[6].data){
+                                    actionsHtml +=
                                     '<a href="/preoperativo/form/' + row.cells[0].data + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success btn-lg"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'
                                     + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" onclick="deleteField(event, '+ row.cells[0].data +')" >' + (row.cells[4].data == '1' ? '<i class="mdi mdi-lock-open mdi-24px"></i>' : '<i class="mdi mdi-lock mdi-24px text-secondary"></i>') + '</a>';
+                                }
                             }
-
                             actionsHtml += '</div>';
                             return gridjs.html(actionsHtml);
-                        }
-                    },
-
+                        },
+                    }
                 ],
             pagination: {
                 limit: 12,
@@ -163,12 +177,6 @@
                 }
             },
             sort: true,
-            search: {
-                debounceTimeout: 300,
-                server: {
-                    url: (prev, keyword) => `${prev}&search=${keyword}`
-                }
-            },
             server: {
                 @php
                     if($currentUser->hasAccess('dynamicform.forms.indexall')){
@@ -188,6 +196,12 @@
                 then: data => data.data,
                 total: data => data.meta.page.total
             },
+            search: {
+                debounceTimeout: 1000,
+                server: {
+                    url: (prev, keyword) => `${prev}&search=${keyword}`
+                }
+            },
             style: {
                 table: {
                     'overflow-x': 'auto',  // scrolling horizontal
@@ -199,31 +213,45 @@
         function deleteField(event, field) {
             event.preventDefault(); // Evita que el navegador siga el enlace
 
-            if (confirm("¿Estás seguro de que quieres eliminar este campo?")) {
-                // Realizar la solicitud DELETE con Axios
-                axios.put(`/preoperativo/form/${field}/borrar`, {
-                    headers: {
-                        'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => {
-                    // Verificar si la solicitud fue exitosa
-                    if (response.status === 200) {
-                        alert('Campo eliminado exitosamente');
-                        // Actualizamos la tabla después de la eliminación
-                        mygrid.forceRender();
-                    } else {
-                        // Manejar el caso en que la solicitud no fue exitosa
-                        throw new Error('Error al eliminar el campo');
-                    }
-                })
-                .catch(error => {
-                    // Manejar errores
-                    console.error(error);
-                    alert('Error al eliminar el campo');
-                });
-            }
+            Swal.fire({
+                title: "¿Estás seguro de que quieres cambiar el estado de este formulario?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Cambiar!",
+                cancelButtonText: "Cancelar"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    // Realizar la solicitud DELETE con Axios
+                    axios.put(`/preoperativo/form/${field}/borrar`, {
+                        headers: {
+                            'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        // Verificar si la solicitud fue exitosa
+                        if (response.status === 200) {
+                            Swal.fire({
+                                title: "Actualizado!",
+                                text: "Campo actualizado exitosamente.",
+                                icon: "success"
+                            });
+                            // Actualizamos la tabla después de la eliminación
+                            mygrid.forceRender();
+                        } else {
+                            // Manejar el caso en que la solicitud no fue exitosa
+                            throw new Error('Error al eliminar el campo');
+                        }
+                    })
+                    .catch(error => {
+                        // Manejar errores
+                        console.error(error);
+                        Swal.fire('Error al eliminar el campo');
+                    });
+                }
+            });
         }
     </script>
 

@@ -37,19 +37,18 @@ class FormApiController extends Controller
             $includes = explode(',', $request->input('include'));
 
             $params = json_decode(json_encode(
-                ['filter' => 
+                ['filter' =>
                     [
-                        'search' => $request->input('search'), 
+                        'search' => $request->input('search'),
                         'companies' => $request->input('companies')
-                    ], 
-                'include' => $includes, 
-                'page' => $request->input('page'), 
+                    ],
+                'include' => $includes,
+                'page' => $request->input('page'),
                 'take' => $request->input('limit')
                 ]));
             $forms = $this->form->getItemsBy($params);
 
             $response = ["data" => FormTransformer::collection($forms)];
-
             $response["meta"] = ["page" => $this->pageTransformer($forms)];
 
         } catch (Exception $e) {

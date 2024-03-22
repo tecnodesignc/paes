@@ -5,10 +5,8 @@
 
 @section('css')
     {!! Theme::style('libs/sweetalert2/sweetalert2.min.css?v='.config('app.version')) !!}
-    {!! Theme::style('libs/dropzone/dropzone.min.css?v='.config('app.version')) !!}
     {!! Theme::style('libs/alertifyjs/alertifyjs.min.css?v='.config('app.version')) !!}
     {!! Theme::style('libs/@simonwep/@simonwep.min.css?v='.config('app.version')) !!}
-    {!! Theme::style('libs/choices.js/choices.js.min.css?v='.config('app.version')) !!}
     {!! Theme::style('libs/gridjs/gridjs.min.css?v='.config('app.version')) !!}
     <link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" rel="stylesheet">
     {!! Theme::style('libs/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css?v='.config('app.version')) !!}
@@ -60,12 +58,9 @@
 @section('script')
     <script src="{{ Theme::url('libs/gridjs/gridjs.min.js') }}"></script>
     <script src="{{ Theme::url('libs/@simonwep/@simonwep.min.js') }}"></script>
-    <script src="{{ Theme::url('libs/flatpickr/flatpickr.min.js') }}"></script>
     <script src="{{ Theme::url('js/app.js')}}"></script>
     <script src="{{ Theme::url('libs/alertifyjs/alertifyjs.min.js') }}"></script>
     <script src="{{ Theme::url('libs/sweetalert2/sweetalert2.min.js') }}"></script>
-    <script src="{{ Theme::url('libs/fontawesome-iconpicker/dist/js/fontawesome-iconpicker.min.js') }}"></script>
-    <script src="{{Theme::url('libs/choices.js/choices.js.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"
             integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -151,10 +146,10 @@
             sort: true,
             server: {
                 @php
-                    $companies=company()->id?company()->id:array_values(companies()->where('type',1)->map(function ($company){
-                                                            return $company->id;
-                                                          })->toArray());
-                   $params=['include'=>'form,user,company','form_id'=>$form->id,'companies'=>$companies];
+                    $companies=company()->id?company()->id:array_values(companies()->map(function ($company){
+                        return $company->id;
+                    })->toArray());
+                    $params=['include'=>'form,user,company','form_id'=>$form->id,'companies'=>$companies];
                 @endphp
                 url: '{!!route('api.dynamicform.formresponse.index',$params)!!}',
                 headers: {
