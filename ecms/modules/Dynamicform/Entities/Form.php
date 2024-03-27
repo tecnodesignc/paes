@@ -11,7 +11,7 @@ class Form extends Model
 {
 
     protected $table = 'dynamicform__forms';
-    protected $fillable = ['name','caption','icon','color','options','active'];
+    protected $fillable = ['name','caption','icon','color','options','active', 'company_create'];
 
     /**
      * The attributes that should be cast.
