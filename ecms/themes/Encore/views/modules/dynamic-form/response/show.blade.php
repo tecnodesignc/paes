@@ -66,7 +66,7 @@
                                  <p>{{$form_response->data->info->vehicle->millage ?? null}}</p>
 
                                  <h5 class="font-size-15 mb-1">Fecha de registro:</h5>
-                                 <p>{{$form_response->created_at->format('Y-m-d') ?? null}}</p>
+                                 <p>{{$form_response->created_at ?? null}}</p>
                             </div>
                         </div>
                         <!-- end col -->

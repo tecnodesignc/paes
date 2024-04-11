@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    Formularios de Preoperativo
+    Formularios
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{Theme::url('libs/gridjs/gridjs.min.css')}}">

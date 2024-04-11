@@ -40,12 +40,60 @@ class ResponseController extends AdminBaseController
     /**
      * Show the form_response for editing the specified resource.
      *
-     * @param Field $form_response
+     * @param FormResponse $form_response
      * @return Application|Factory|View
      */
     public function show(Form $form, FormResponse $form_response): Application|Factory|View
     {
         return view('modules.dynamic-form.response.show', compact('form_response', 'form'));
+    }
+
+    public function formreport(FormResponse $form_response):Application|Factory|View
+    {
+        // dd(companies());
+        $params = json_decode(json_encode([
+            'filter' => [
+                // 'date' => [
+                //     'field' => 'created_at',
+                //     'from' => $from,
+                //     'to' => $to
+                // ],
+                'companies' => company()->id?company()->id:array_values(companies()->map(function ($company){
+                    return $company->id;
+                 })->toArray())
+
+            ], 'include' => ['form','user', 'company'], 'page' => 1, 'take' => 10000
+        ]));
+
+        $datos = $this->form_response->getItemsBy($params);
+
+        // Convertimos el modelo en una colleccion de datos
+        $forms_response=collect(json_decode(json_encode(FormResponseTransformer::collection($datos))));
+
+        $companies = $forms_response->groupBy('company_id')->map(function ($items) {
+            return [
+                'id' => $items->first()->company->id,
+                'name' => $items->first()->company->name,
+            ];
+        })->pluck('name', 'id');
+
+        $forms = $forms_response->groupBy('form_id')->map(function ($items) {
+            return [
+                'id' => $items->first()->form->id,
+                'name' => $items->first()->form->name,
+            ];
+        })->pluck('name', 'id');
+
+        $users = $forms_response->groupBy('user_id')->map(function ($items) {
+            return [
+                'id' => $items->first()->user->id,
+                'name' => $items->first()->user->fullname,
+            ];
+        })->pluck('name', 'id');
+
+        // dd($forms_response, $companies, $forms, $users);
+
+        return view('modules.dynamic-form.forms.formreport', compact('companies', 'forms'));
     }
 
     /**
@@ -98,6 +146,19 @@ class ResponseController extends AdminBaseController
             $response = ["errors" => $e->getMessage()];
             return response()->json($response, $status ?? 200);
         }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  FormResponse $form_response
+     * @return Response
+     */
+    public function destroy($form, FormResponse $form_response)
+    {
+        $this->form_response->destroy($form_response);
+
+        return response()->json(['message' => trans('core::core.messages.resource deleted', ['name' => trans('dynamicfield::fields.title.fields')])]);
     }
 
     /**

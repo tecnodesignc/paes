@@ -19,6 +19,13 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             'uses' => 'FormController@indexcolaboradoresform',
             'middleware' => 'can:dynamicform.formresponses.index'
         ]);
+
+        // $router->get('/report', [
+        //     'as' => 'dynamicform.form.formreport',
+        //     'uses' => 'ResponseController@formreport',
+        //     'middleware' => 'can:dynamicform.formresponses.index'
+        // ]);
+
         $router->get('/{form}/show', [
             'as' => 'dynamicform.form.show',
             'uses' => 'FormController@show',
@@ -49,7 +56,6 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             'uses' => 'FormController@destroy',
             'middleware' => 'can:dynamicform.forms.destroy'
         ]);
-
 
         $router->group(['prefix' =>'/{form}/field'], function (Router $router) {
             $router->get('/create', [
@@ -127,6 +133,14 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
                 'uses' => 'ResponseController@downloadpdf',
                 // 'middleware' => 'can:dynamicform.formresponses.edit'
             ]);
+
+            $router->delete('/{form_response}/borrar', [
+                'as' => 'dynamicform.formresponses.destroy',
+                'uses' => 'ResponseController@destroy',
+                // 'middleware' => 'can:dynamicform.formresponses.destroy'
+            ]);
+
         });
+
     });
 });

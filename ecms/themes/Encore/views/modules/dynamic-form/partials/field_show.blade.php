@@ -77,7 +77,7 @@
                     @if(isset($field->image))
                         <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
                             <div class="img-fluid">
-                                <img src="{{url($field->image)}}" alt="" class="img-fluid d-block">
+                                <img src="{{url($field->image)}}" alt=""  width="960px" height="940px" class="img-fluid d-block">
                             </div>
                         </a>
                     @endif
@@ -110,7 +110,7 @@
                     @if(isset($field->image))
                         <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
                             <div class="img-fluid">
-                                <img src="{{url($field->image)}}" alt="" class="img-fluid d-block">
+                                <img src="{{url($field->image)}}" alt="" width="960px" height="940px" class="img-fluid d-block">
                             </div>
                         </a>
                     @endif
@@ -142,7 +142,7 @@
                 <div class="col-lg-6 col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <canvas id="canvas-{{$field->id}}" width="240" height="240" style="display: none;"></canvas>
+                            <canvas id="canvas-{{$field->id}}" width="960px" height="940px" style="display: none;"></canvas>
                             <div id="gallery-{{$field->id}}"></div>
                         </div>
                     </div>
@@ -214,8 +214,8 @@
 
                                     </div>
                                     <div class="card-body">
-                                        <video id="video-{{$field->id}}" width="240" height="240" autoplay></video>
-                                        <canvas id="canvas-{{$field->id}}" width="240" height="240" style="display: none;"></canvas>
+                                        <video id="video-{{$field->id}}"  width="250px" height="250px" autoplay></video>
+                                        <canvas id="canvas-{{$field->id}}"  width="960px" height="940px" style="display: none;"></canvas>
                                         <div id="gallery-{{$field->id}}"></div>
                                     </div>
                                 </div>

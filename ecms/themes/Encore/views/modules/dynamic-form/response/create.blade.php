@@ -5,6 +5,7 @@
 @section('css')
     <link href="{{Theme::url('libs/alertifyjs/alertifyjs.min.css')}}" rel="stylesheet" type="text/css"/>
     {!! Theme::style('libs/glightbox/glightbox.min.css?v='.config('app.version')) !!}
+    {!! Theme::style('libs/sweetalert2/sweetalert2.min.css?v='.config('app.version')) !!}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @stop
 
@@ -84,6 +85,7 @@
 
 @endsection
 @section('script')
+    <script src="{{ Theme::url('libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ Theme::url('libs/glightbox/glightbox.min.js') }}"></script>
     <script src="{{ Theme::url('js/app.js') }}"></script>
     <script src="{{ Theme::url('libs/alertifyjs/alertifyjs.min.js') }}"></script>
@@ -273,7 +275,7 @@
                 const imageContainer = document.createElement('div');
                 imageContainer.classList.add('image-container');
                 imageContainer.innerHTML = `
-                    <img src="${imageData}" width="240" height="240" alt="Image ${imageIndex}">
+                    <img src="${imageData}" width="250" height="250" alt="Image ${imageIndex}">
                     <a onclick="removeImage(this, '${fieldId}')" class="btn btn-danger"><i class="fas fa-times-circle"></i></a>
                     `;
                 gallery.appendChild(imageContainer);
@@ -525,6 +527,7 @@
         var formImagesAnswers = {
                 "answers": []
             };
+
         // Sube el archivo al almacenamiento
         function uploadImageToServer(id, label, type, canvasId = 'signatureCanvas') {
             // e.preventDefault();
@@ -537,8 +540,10 @@
             const day = String(currentDate.getDate()).padStart(2, '0');
             const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Los meses son indexados desde 0
             const year = String(currentDate.getFullYear()).slice(-2); // Solo toma los últimos dos dígitos del año
+            const hours = String(currentDate.getHours()).padStart(2, '0');
+            const minutes = String(currentDate.getMinutes()).padStart(2, '0');
 
-            const formattedDate = `${day}-${month}-${year}`;
+            const formattedDate = `${day}${month}${year}${hours}${minutes}`;
 
             var signatureFile = dataURLtoFile(imageData, 'img_'+formattedDate+'_'+id+'.png'); // Convertir imageData a un archivo
 
@@ -640,7 +645,10 @@
                 // Mostrar una alerta al usuario
                 if (companyId === null) {
                     // e.preventDefault();
-                    alert("No tienes una empresa asignada.");
+                    Swal.fire({
+                                icon: "warning",
+                                title: 'No tienes una empresa asignada!'
+                            });
                     return;
                 }
 
@@ -651,28 +659,47 @@
                     data: formData,
                     company_id: companyId
                 };
-                if (confirm("¿Enviar respuestas?")) {
-                    var createUrl = "{{ route('api.dynamicform.formresponse.store') }}";
-                    axios.post(createUrl, datos, {
-                        headers: {
-                            'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    }).then(response => {
-                        // Verificar si la solicitud fue exitosa
-                        if (response.status === 200) {
-                            // Redirigir al usuario a otra página
-                            window.location.href = "{{ route('dynamicform.form.indexcolaboradoresform') }}";
-                        } else {
-                            // Manejar el caso en que la solicitud no fue exitosa
-                            // console.log(response.status);
-                            throw new Error('Error al cargar la imagen');
-                        }
-                    }).catch(error => {
-                        // Manejar errores
-                        console.log('Error al cargar la data ' + error);
-                    }); // Fin del axios
-                } //end if
+
+                Swal.fire({
+                    title: "¿Enviar respuestas?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Enviar",
+                    cancelButtonText: "Cancelar",
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        var createUrl = "{{ route('api.dynamicform.formresponse.store') }}";
+                        axios.post(createUrl, datos, {
+                            headers: {
+                                'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }).then(response => {
+                            // Verificar si la solicitud fue exitosa
+                            if (response.status === 200) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: 'Formulario registrado con exito, se enviaron tus respuestas!',
+                                    timer: 2000
+                                });
+
+                                // Redirigir al usuario a otra página
+                                window.location.href = "{{ route('dynamicform.form.indexcolaboradoresform') }}";
+                            } else {
+                                // Manejar el caso en que la solicitud no fue exitosa
+                                // console.log(response.status);
+                                throw new Error('Error al cargar la imagen');
+                            }
+                        }).catch(error => {
+                            // Manejar errores
+                            console.log('Error al cargar la data ' + error);
+                        }); // Fin del axios
+                    }
+                });
+
             });
         }); //fin del documentLoaded
 

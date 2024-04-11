@@ -59,7 +59,7 @@
                         <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
 
                         <a href="{{url($field->value)}}" class="thumb preview-thumb image-popup">
-                            <img src="{{url($field->value)}}" alt="" class="img" width="240px" height="240px">
+                            <img src="{{url($field->value)}}" alt="" class="img" width="280px" height="280px">
                         </a>
                     @endif
                 </div>
@@ -96,7 +96,7 @@
                     @if(isset($field->image))
                         <a href="{{url($field->image)}}" class="thumb preview-thumb image-popup">
                             <div class="img-fluid" >
-                                <img src="{{url($field->image)}}" alt="" class="img-fluid d-block" style="width: 210px; height: 70px;">
+                                <img src="{{url($field->image)}}" alt="" class="img-fluid d-block" style="width: 250px; height: 150px;">
                             </div>
                         </a>
                     @endif

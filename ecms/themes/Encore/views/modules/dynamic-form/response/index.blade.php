@@ -117,7 +117,7 @@
                         id: "created_at",
                         name: "Creado el",
                         width: '150px',
-                        formatter: (cell) => moment(cell).format('YYYY-MM-DD')
+                        order: true
                     },
                     {
                         id: "id",
@@ -127,7 +127,15 @@
                             enabled: false
                         },
                         formatter: (function (cell) {
-                            return gridjs.html('<div class="d-flex justify-content-center align-items-center gap-4"><a href="/preoperativo/form/{{$form->id}}/response/' + cell + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Respuestas" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a><a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger"><i class="mdi mdi-delete me-1 mdi-24px"></i></a></div>');
+                            actionHtml = '<div class="d-flex justify-content-center align-items-center gap-4"><a href="/preoperativo/form/{{$form->id}}/response/' + cell + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Respuestas" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a>';
+                            let hasAccessDestroy = {{$currentUser->hasAccess('dynamicform.formresponses.destroy') ? 'true' : 'false'}};
+
+                            if (hasAccessDestroy ) {
+                                actionHtml += '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" class="text-danger" onclick="deleteResponse(event, '+ cell +')" ><i class="mdi mdi-delete mdi-24px"></i></a>';
+                            }
+
+                            actionHtml += '</div>';
+                            return gridjs.html(actionHtml);
                         })
                     }
 
@@ -161,6 +169,51 @@
             }
         }).render(document.getElementById("table-response"));
 
+
+        function deleteResponse(event, field) {
+            event.preventDefault(); // Evita que el navegador siga el enlace
+            console.log(field);
+            Swal.fire({
+                title: "¿Estás seguro de que quieres eliminar este campo?",
+                text: "Esta acción no se puede revertir!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Eliminar!",
+                cancelButtonText: "Cancelar"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                     // Realizar la solicitud DELETE con Axios
+                    axios.delete(`/preoperativo/form/{{$form->id}}/response/${field}/borrar`, {
+                        headers: {
+                            'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        // Verificar si la solicitud fue exitosa
+                        if (response.status === 200) {
+                            Swal.fire({
+                                title: "Eliminado!",
+                                text: "Campo eliminado exitosamente.",
+                                icon: "success"
+                            });
+                            // Actualizamos la tabla después de la eliminación
+                            gridresponse.forceRender();
+                        } else {
+                            // Manejar el caso en que la solicitud no fue exitosa
+                            throw new Error('Error al eliminar el campo');
+                        }
+                    })
+                    .catch(error => {
+                        // Manejar errores
+                        console.error(error);
+                        Swal.fire('Error al eliminar el campo', error);
+                    });
+                }
+            });
+        }
     </script>
     <style>
         .fade:not(.show) {

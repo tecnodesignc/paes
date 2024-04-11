@@ -180,8 +180,7 @@
                     {
                         id: "created_at",
                         name: "registrado el",
-                        width: '200px',
-                        formatter: (cell) => moment(cell).format('YYYY-MM-DD HH:mm')
+                        width: '200px'
                     },
                     {
                         id: "form",
