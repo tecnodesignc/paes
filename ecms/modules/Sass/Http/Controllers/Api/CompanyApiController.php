@@ -196,4 +196,5 @@ class CompanyApiController extends BaseApiController
         return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
 
     }
+    
 }

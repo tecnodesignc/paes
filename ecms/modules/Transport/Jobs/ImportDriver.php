@@ -36,37 +36,38 @@ class ImportDriver implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         \DB::beginTransaction();
         try {
-            $row=$this->data;
-                $passengerOld = $this->driver->findByAttributes(['driver_license' => $row['driver_license']]);
-                if(isset($row['address']) && !empty($row['address'])){
-                    $address=explode(',',$row['address']);
-                    $address=['address'=>$address[0],'city'=>$address[1]??'','state'=>$address[2]??'','country'=>$address[3]??''];
-                }else{
-                    $address=['address'=>'','city'=>'','state'=>'','country'=>''];
-                }
-                $data = [
-                    "driver_license" => $row['driver_license'],
-                    "first_name" => ucwords(strtolower($row['first_name'])),
-                    "last_name" => ucwords(strtolower($row['last_name'])),
-                    "email" => strtolower($row['email']),
-                    "password" => $row['password']??$this->generatePassword(),
-                    "roles" => [4],
-                    "phone" => $row['phone'] ?? '00-00',
-                    "address" => $address ,
-                    'company_id'=>$row['company_id'],
-                    "is_activated" => $row['is_activated']
-                ];
-                if (isset($passengerOld) && !empty($passengerOld)) {
-                   if(!isset($row['password']) || empty($row['password'])) unset($data['password']);
-                    $this->passenger->update($passengerOld, $data);
-                } else {
-                    $this->passenger->create($data);
-                }
-                \DB::commit();
+            $row = $this->data;
+            $driverOld = $this->driver->findByAttributes(['driver_license' => $row['driver_license']]);
+            if (isset($row['address']) && !empty($row['address'])) {
+                $address = explode(',', $row['address']);
+                $address = ['address' => $address[0], 'city' => $address[1] ?? '', 'state' => $address[2] ?? '', 'country' => $address[3] ?? ''];
+            } else {
+                $address = ['address' => '', 'city' => '', 'state' => '', 'country' => ''];
+            }
+            $data = [
+                "driver_license" => $row['driver_license'],
+                "first_name" => ucwords(strtolower($row['first_name'])),
+                "last_name" => ucwords(strtolower($row['last_name'])),
+                "email" => strtolower($row['email']),
+                "password" => $row['password'] ?? $this->generatePassword(),
+                "roles" => [4],
+                "phone" => $row['phone'] ?? '00-00',
+                "address" => $address,
+                'company_id' => $row['company_id'],
+                "is_activated" => $row['is_activated']
+            ];
+            dd($data);
+            if (isset($driverOld) && !empty($driverOld)) {
+                if (!isset($row['password']) || empty($row['password'])) unset($data['password']);
+                $this->driver->update($driverOld, $data);
+            } else {
+                $this->driver->create($data);
+            }
+            \DB::commit();
         } catch (\Exception $e) {
             \DB::rollback();
             \Log::error($e);

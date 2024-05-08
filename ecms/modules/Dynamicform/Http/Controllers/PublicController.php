@@ -26,8 +26,6 @@ class PublicController extends AdminBaseController
         $this->form = $form;
     }
 
-
-
     /**
      * Display a listing of the resource.
      *
@@ -93,7 +91,7 @@ class PublicController extends AdminBaseController
         // -----todos los formularios activos total
         $forms_active_count=$forms->count();
 
-        return view('modules.dynamic-form.index', compact('forms_response_negatives', 'forms_active_count', 'forms_response_negative_count_day', 'conteoPorEmpresa', 'forms_response_count'));
+        return view('dynamicform::public.index', compact('forms_response_negatives', 'forms_active_count', 'forms_response_negative_count_day', 'conteoPorEmpresa', 'forms_response_count'));
     }
 
 

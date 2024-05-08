@@ -11,6 +11,9 @@ use Mockery\CountValidator\Exception;
 use Modules\Apigpswox\Http\Requests\CreateTokenRequest;
 use Modules\Apigpswox\Repositories\TokenRepository;
 use Modules\Apigpswox\Services\AuthService;
+use Modules\User\Contracts\Authentication;
+use Modules\User\Events\UserLoggedIn;
+use Modules\User\Transformers\UserLoginTransformer;
 
 class TokenApiController extends Controller
 {
@@ -19,11 +22,11 @@ class TokenApiController extends Controller
      */
     private TokenRepository $token;
     private $user;
-
+    protected $auth;
     public function __construct(TokenRepository $token)
     {
         $this->token = $token;
-        $this->user = Auth::user();
+        $this->auth = app(Authentication::class);
     }
 
 
@@ -42,19 +45,20 @@ class TokenApiController extends Controller
                 'password' => $request->input('password')
             ];
             $authService=app(AuthService::class);
-            $token = $authService->setToken($credentials);
+            $user = $authService->auth($credentials);
 
-            if ($token->status){
-                $response = ["data" => $token->user_api_hash];
+            if (isset($user) && !empty($user)){
+                event(new UserLoggedIn($user));
+                $response = ["data" =>new UserLoginTransformer($user->load('roles'))];
+
             }else{
-                throw new Exception('Uuario o contraseña incorrecta', '401');
+                throw new Exception('Usuario o contraseña incorrecta', '401');
             }
 
 
         } catch (Exception $e) {
-
             Log::Error($e);
-            $status = $this->getStatusError($e->getCode());
+            $status = $e->getCode();
             $response = ["errors" => $e->getMessage()];
 
         }

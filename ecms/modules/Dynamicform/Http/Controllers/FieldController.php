@@ -33,7 +33,7 @@ class FieldController extends AdminBaseController
     public function create(Form $form):Application|Factory|View
     {
         $lastOrder = Field::where('form_id', $form->id)->orderByDesc('order')->value('order');
-        return view('modules.dynamic-form.field.create',compact('form', 'lastOrder'));
+        return view('dynamicform::public.field.create',compact('form', 'lastOrder'));
     }
 
     /**
@@ -58,7 +58,7 @@ class FieldController extends AdminBaseController
      */
     public function edit(Form $form, Field $field)
     {
-        return view('modules.dynamic-form.field.edit', compact('field', 'form'));
+        return view('dynamicform::public.field.edit', compact('field', 'form'));
     }
 
     /**
@@ -73,20 +73,6 @@ class FieldController extends AdminBaseController
         $this->field->update($field, $request->all());
 
         return redirect()->route('dynamicform.form.edit', $field->form_id)->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicfield::fields.title.fields')]));
-    }
-
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  Field $field
-     * @return Response
-     */
-    public function destroy($form, Field $field)
-    {
-        $this->field->destroy($field);
-
-        return response()->json(['message' => trans('core::core.messages.resource deleted', ['name' => trans('dynamicfield::fields.title.fields')])]);
     }
 
     /**

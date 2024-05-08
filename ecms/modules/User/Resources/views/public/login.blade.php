@@ -120,7 +120,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="text-center text-muted p-4">
-                        <p>  {{date('Y')}} - Todos los derechos reservados <i class="mdi mdi-heart text-danger"></i> Eje Satelital</p>
+                        <p>  {{date('Y')}} - Todos los derechos reservados <i class="mdi mdi-access-point text-danger"></i> Eje Satelital</p>
                         </div>
                     </div>
                 </div>

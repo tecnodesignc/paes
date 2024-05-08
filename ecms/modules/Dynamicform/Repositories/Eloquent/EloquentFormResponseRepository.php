@@ -64,6 +64,11 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
                 $query->where('form_id', $filter->form_id);
             }
 
+            // Filter by user id
+            if(isset($filter->user_id)){
+                $query->where('user_id', $filter->user_id);
+            }
+
             //add filter by search
             if (isset($filter->search) && $filter->search) {
                 //find search in columns

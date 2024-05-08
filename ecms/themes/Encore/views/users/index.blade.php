@@ -241,9 +241,9 @@
 
             server: {
                 @php
-                    $params=['include'=>"companies",'roles'=>[1,4,5]];
+                    $params=['include'=>"companies",'roles'=>[1,2,3,5]];
                         if(!$currentUser->hasAccess('sass.companies.index') || company()->id){
-                             $params=['include'=>"companies",'companies'=>[company()->id],'roles'=>[1,4,5]];
+                             $params=['include'=>"companies",'companies'=>[company()->id],'roles'=>[1,3,5]];
                         }
                 @endphp
                 url: '{!!route('api.user.user.index',$params)!!}',

@@ -101,7 +101,8 @@
                                                 <input id="doors" name="doors" placeholder="Agrega Puertas"
                                                        type="number"
                                                        value="{{old('doors')}}"
-                                                       class="form-control">
+                                                       class="form-control"
+                                                       required>
                                                 {!! $errors->first('doors', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("capacity") ? ' was-validated' : '' }}">
@@ -112,7 +113,7 @@
                                                        class="form-control">
                                                 {!! $errors->first('capacity', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                            @if($currentUser->hasAccess('sass.companies.indexall')|| (companies() > 0 && empty(company()->id)))
+                                            @if($currentUser->hasAccess('sass.companies.indexall')|| (companies()->count() > 0 && empty(company()->id)))
                                                 <div class="mb-3 {{ $errors->has("company_id") ? ' was-validated' : '' }}">
                                                     <label class="form-label" for="company_id">Compañia</label>
                                                     <select class="form-control" data-trigger name="company_id"

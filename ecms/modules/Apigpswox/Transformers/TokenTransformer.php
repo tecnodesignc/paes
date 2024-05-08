@@ -23,7 +23,7 @@ class TokenTransformer extends JsonResource
             'id' => $this->when($this->id, $this->id),
             'created_at' => $this->when($this->created_at, $this->created_at),
             'update_at' => $this->when($this->created_at, $this->created_at),
-        ]
+        ];
 
         $filter = json_decode($request->filter);
 

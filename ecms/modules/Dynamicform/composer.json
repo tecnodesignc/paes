@@ -1,5 +1,5 @@
 {
-    "name": "tecnodesignc/dynamicform",
+    "name": "tecnodesignc/dynamicform-module",
     "description": "The Dynamicform module for EncoreCMS 2.0",
     "type": "encore-module",
     "license": "MIT",

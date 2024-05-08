@@ -40,7 +40,7 @@ class FormController extends AdminBaseController
     public function index():Application|Factory|View
     {
 
-        return view('modules.dynamic-form.forms.index');
+        return view('dynamicform::public.forms.index');
     }
 
         /**
@@ -59,8 +59,7 @@ class FormController extends AdminBaseController
         ]));
 
         $forms=$this->form->getItemsBy($params_form);
-
-        return view('modules.dynamic-form.forms.indexcolaboradoresform', compact('forms'));
+        return view('dynamicform::public.forms.indexcolaboradoresform', compact('forms'));
     }
 
        /**
@@ -82,7 +81,7 @@ class FormController extends AdminBaseController
 
         $datos = $this->field->getItemsBy($params);
         $datos = $datos->items();
-        return view('modules.dynamic-form.forms.show', compact('form','datos'));
+        return view('dynamicform::public.forms.show', compact('form','datos'));
     }
 
     /**
@@ -96,8 +95,7 @@ class FormController extends AdminBaseController
             return redirect()->back()->with("warning", "Selecciona una empresa");
         }
 
-
-        return view('modules.dynamic-form.forms.create');
+        return view('dynamicform::public.forms.create');
     }
 
     /**
@@ -131,7 +129,7 @@ class FormController extends AdminBaseController
         }
 
 
-        return view('modules.dynamic-form.forms.edit', compact('form'));
+        return view('dynamicform::public.forms.edit', compact('form'));
     }
 
     /**
@@ -147,19 +145,4 @@ class FormController extends AdminBaseController
         return redirect()->route('dynamicform.form.index')->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicform::forms.title.forms')]));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  Form $form
-     * @return Response
-     */
-    public function destroy(Form $form)
-    {
-        if (!$form) {
-            return response()->json(['message' => 'Registro no encontrado'], 404);
-        }
-        $form->active = $form->active == 0 ? 1 : 0;
-        $form->save();
-        return response()->json(['message' => 'Registro borrado exitosamente'], 200);
-    }
 }

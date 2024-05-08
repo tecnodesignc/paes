@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\belongsToMany;
 use Illuminate\Support\Facades\Crypt;
 use Laracasts\Presenter\PresentableTrait;
-use Modules\Dynamicform\Entities\Form;
 use Modules\Dynamicform\Entities\FormResponse;
 use Modules\Sass\Presenters\CompanyPresenter;
 use Modules\Transport\Entities\Driver;
@@ -32,7 +31,7 @@ class Company extends Model
     public function drivers():hasMany {
         return $this->hasMany(Driver::class);
     }
-    public function responseforms():hasMany {
+    public function forms():hasMany {
         return $this->hasMany(FormResponse::class);
     }
     public function vehicles():hasMany {
@@ -50,10 +49,6 @@ class Company extends Model
             get: fn($value)=>json_decode(Crypt::decryptString($value)),
             set: fn($value)=>  Crypt::encryptString(json_encode($value)),
         );
-    }
-
-    public function forms():belongsToMany {
-        return $this->belongsToMany(Form::class,'dynamicform__form_company');
     }
 
 

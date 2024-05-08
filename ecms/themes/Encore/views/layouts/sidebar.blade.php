@@ -59,7 +59,7 @@
                 @endif
                 {{-- Fin dashboard forms--}}
                 {{-- Formularios de colaboradores --}}
-                @if($currentUser->hasAccess('dynamicform.formresponses.index'))
+                @if($currentUser->hasAccess('dynamicform.formresponses.index') && $currentUser->driver)
                 <li>
                     <a href="{{ route('dynamicform.form.indexcolaboradoresform') }}">
                         <i class="mdi mdi-notebook icon nav-icon"></i>
@@ -78,6 +78,35 @@
                 </li>
                 @endif
                 {{-- Fin de componentes de Admin de formularios --}}
+                {{-- Admin de formularios --}}
+                @if($currentUser->hasAccess('dynamicform.forms.index'))
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i class="mdi mdi-file-chart icon nav-icon"></i>
+                        <span class="menu-item" data-key="t-business">Reportes</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        {{-- @if($currentUser->hasAccess('user.roles.index')) --}}
+                            <li class="menu-title" data-key="t-applications">Vehículos</li>
+                            <li>
+                                <a href="{{ route('dynamicform.form.reports_vehicles') }}"><i class="mdi mdi-file-chart icon nav-icon"></i>
+                                    <span class="menu-item text-truncate" data-key="t-business">Reportes</span>
+                                </a>
+                            </li>
+                            {{--
+                            <li class="menu-title" data-key="t-applications">Clientes</li>
+                            <li>
+                                <a href="{{ route('dynamicform.form.report_day') }}"><i class="mdi mdi-file-chart icon nav-icon"></i>
+                                    <span class="menu-item text-truncate" data-key="t-business">Reporte diario</span>
+                                </a>
+                            </li>
+                            --}}
+                        {{-- @endif --}}
+                    </ul>
+                </li>
+                @endif
+
+                {{-- Fin de componentes de Admin de formularios --}}
 
                 @if($currentUser->hasAccess('sass.companies.index'))
 
@@ -86,18 +115,6 @@
                         <li><a href="{{route('sass.company.index')}}">
                                 <i class="mdi mdi-account-group icon nav-icon"></i>
                                 <span class="menu-item" data-key="t-business">Empresas</span>
-                            </a>
-                        </li>
-                    @endif
-                @endif
-                @if($currentUser->hasAccess('maintenance.events.index'))
-
-                    <li class="menu-title" data-key="t-applications">Eventos</li>
-
-                    @if($currentUser->hasAccess('maintenance.events.index'))
-                        <li><a href="{{route('maintenance.event.index')}}">
-                                <i class="mdi mdi-account-group icon nav-icon"></i>
-                                <span class="menu-item" data-key="t-business">Eventos</span>
                             </a>
                         </li>
                     @endif

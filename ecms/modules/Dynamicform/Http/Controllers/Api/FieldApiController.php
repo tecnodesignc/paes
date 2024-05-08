@@ -162,19 +162,18 @@ class FieldApiController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param string $criteria
-     * @param Request $request
-     * @return JsonResponse
+     * @param  Field $field
+     * @return Response
      */
-    public function destroy(string $criteria, Request $request): JsonResponse
+    public function destroy($form, Field $field): JsonResponse
     {
         \DB::beginTransaction();
 
         try {
 
-            $params = $this->getParamsRequest($request);
+            // $params = $this->getParamsRequest($request);
 
-            $field = $this->field->getItem($params);
+            // $field = $this->field->getItem($params);
 
             if (!$field) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('dynamicform::fields.title.fields')]), 404);
 

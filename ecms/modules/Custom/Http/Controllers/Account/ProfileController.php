@@ -57,7 +57,9 @@ class ProfileController extends AdminBaseController
         $user=$this->auth->user();
         $tokens = $this->userToken->allForUser($user->id);
         $notifications = $this->notification->latestForUser($user->id);
-        return view('modules.user.public.account.profile.show',compact('user', 'tokens', 'notifications'));
+        $view='modules.user.public.account.profile.show';
+        if (isset($user->driver))$view='modules.dynamic-form.user.account.profile.show';
+        return view($view,compact('user', 'tokens', 'notifications'));
     }
 
     /**

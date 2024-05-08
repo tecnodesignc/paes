@@ -61,7 +61,6 @@ class DriverController extends AdminBaseController
     {
         $data=$request->all();
         $data['password']=$request->input('password')??$this->generatePassword();
-        dd($data);
         $data['roles']=[4];
         $data['is_activated']= $request->input('is_activated')??0;
         $this->driver->create($data);

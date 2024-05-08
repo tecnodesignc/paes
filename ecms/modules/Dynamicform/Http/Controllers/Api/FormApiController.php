@@ -199,6 +199,22 @@ class FormApiController extends Controller
 
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  Form $form
+     * @return JsonResponse
+     */
+    public function state(Form $form): JsonResponse
+    {
+        if (!$form) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+        $form->active = $form->active == 0 ? 1 : 0;
+        $form->save();
+        return response()->json(['message' => 'Registro borrado exitosamente'], 200);
+    }
+
     protected function pageTransformer($data): array
     {
         return [
