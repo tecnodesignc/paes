@@ -146,14 +146,14 @@
                                                 </select>
                                                 {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                            <div class="mb-3 {{ $errors->has("mileage") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="mileage">Kilometraje</label>
-                                                <input id="mileage" name="mileage"
+                                            <div class="mb-3 {{ $errors->has("millage") ? ' was-validated' : '' }}">
+                                                <label class="form-label" for="millage">Kilometraje</label>
+                                                <input id="millage" name="millage"
                                                        placeholder="Agrega Kilometraje"
                                                        type="number"
-                                                       value="{{old('mileage')}}"
+                                                       value="{{old('millage')}}"
                                                        class="form-control">
-                                                {!! $errors->first('mileage', '<div class="invalid-feedback">:message</div>') !!}
+                                                {!! $errors->first('millage', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("box_type") ? ' was-validated' : '' }}">
                                                 <label class="form-label" for="box_type">Tipo de Caja</label>

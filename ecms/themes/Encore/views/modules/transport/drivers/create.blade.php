@@ -100,13 +100,14 @@
                                                 <label for="companies" class="form-label font-size-13 text-muted">Empresas
                                                     Asignadas</label>
                                                 <select class="form-control" name="company_id"
-                                                        id="company_id"
-                                                        placeholder="Selecciones Compañía " >
-                                                    @foreach($companies as $company)
-                                                        <option
-                                                            value="{{$company->id}}" {{$company->id === old('company_id') ? 'selected' : ''}}>{{$company->name}}</option>
-                                                    @endforeach
+                                                    id="company_id" required placeholder="Selecciones Compañía " >
+                                                    @if((companies()->count() > 0 && isset(company()->id)))
+                                                        @foreach(companies() as $company)
+                                                            <option value="{{$company->id}}" {{$company->id == old('company_id') ? 'selected' : ''}} >{{$company->name}}</option>
+                                                        @endforeach
+                                                    @endif
                                                 </select>
+                                                {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-3 ">

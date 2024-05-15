@@ -52,10 +52,15 @@
                                                 </a>
                                         </div>
                                         <label class="form-label" for="userpassword">{{ trans('user::auth.password') }}</label>
-                                        <input type="password" name="password"
-                                               class="form-control  @error('password') is-invalid @enderror"
+                                        <div class="input-group">
+                                            <input type="password" name="password"
+                                               class="form-control @error('password') is-invalid @enderror"
                                                id="userpassword" placeholder="{{ trans('user::auth.password') }}"
                                                aria-label="Password" aria-describedby="password-addon">
+                                            <div class="input-group-append">
+                                                <button id="show_password" class="btn btn-primary btn-sm h-100" type="button" onclick="mostrarPassword()"> <span class="mdi mdi-eye-off icon"></span> </button>
+                                            </div>
+                                        </div>
                                         @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -171,4 +176,16 @@
             <a href="{{ route('register')}}" class="text-center">{{ trans('user::auth.register')}}</a>
         @endif
     </div>--}}
+    <script type="text/javascript">
+        function mostrarPassword() {
+            var cambio = document.getElementById("userpassword");
+            if (cambio.type === "password") {
+                cambio.type = "text";
+                $('.icon').removeClass('mdi mdi-eye-off').addClass('mdi mdi-eye');
+            } else {
+                cambio.type = "password";
+                $('.icon').removeClass('mdi mdi-eye').addClass('mdi mdi-eye-off');
+            }
+        }
+    </script>
 @stop

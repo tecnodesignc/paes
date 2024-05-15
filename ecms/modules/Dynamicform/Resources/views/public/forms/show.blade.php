@@ -19,6 +19,13 @@
     @endcomponent
     {{-- Cabecera donde irá el título y la empresa del formulario --}}
     <div class="row">
+
+        <div class="d-print-none mb-2">
+            <div class="float-end">
+                <button type="button" class="btn btn-secondary" onclick="goBack()">Volver Atrás</button>
+            </div>
+        </div>
+
         <div class="card border border-primary">
             <div class="card-body m-1">
                 <h1 class="text-primary text-center">{{$form->name}}</h1>
@@ -202,6 +209,12 @@
 
     </script>
 
+    <script type="text/javascript">
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    
     <style>
         #qrcode img {
             margin: auto;

@@ -34,30 +34,22 @@
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
+                @if($currentUser->hasAccess('dynamicform.forms.index'))
+                {{-- dashboard forms--}}
                 <li class="menu-title" data-key="t-menu">Menu</li>
-
                 <li>
-                    <a href="{{ url('/') }}">
+                    <a href="{{ route('dynamicform.dashboard') }}">
                         <i class="bx bx-tachometer icon nav-icon"></i>
                         <span class="menu-item" data-key="t-dashboards">{{ trans('dashboard::dashboard.name') }}</span>
                     </a>
                 </li>
-
+                @endif
+                {{-- Fin dashboard forms--}}
                 {{-- Inicio componentes de formularios --}}
                 @if($currentUser->hasAccess('dynamicform.forms.index') || $currentUser->hasAccess('dynamicform.formresponses.index') )
 
                 <li class="menu-title" data-key="t-menu">Formularios</li>
                 @endif
-                {{-- dashboard forms--}}
-                @if($currentUser->hasAccess('dynamicform.forms.index'))
-                <li>
-                    <a href="{{ route('dynamicform.dashboard') }}">
-                        <i class="mdi mdi-chart-bar icon nav-icon"></i>
-                        <span class="menu-item" data-key="t-dashboards">Dashboard</span>
-                    </a>
-                </li>
-                @endif
-                {{-- Fin dashboard forms--}}
                 {{-- Formularios de colaboradores --}}
                 @if($currentUser->hasAccess('dynamicform.formresponses.index') && $currentUser->driver)
                 <li>
@@ -86,22 +78,12 @@
                         <span class="menu-item" data-key="t-business">Reportes</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        {{-- @if($currentUser->hasAccess('user.roles.index')) --}}
-                            <li class="menu-title" data-key="t-applications">Vehículos</li>
-                            <li>
-                                <a href="{{ route('dynamicform.form.reports_vehicles') }}"><i class="mdi mdi-file-chart icon nav-icon"></i>
-                                    <span class="menu-item text-truncate" data-key="t-business">Reportes</span>
-                                </a>
-                            </li>
-                            {{--
-                            <li class="menu-title" data-key="t-applications">Clientes</li>
-                            <li>
-                                <a href="{{ route('dynamicform.form.report_day') }}"><i class="mdi mdi-file-chart icon nav-icon"></i>
-                                    <span class="menu-item text-truncate" data-key="t-business">Reporte diario</span>
-                                </a>
-                            </li>
-                            --}}
-                        {{-- @endif --}}
+                        <li class="menu-title" data-key="t-applications">Vehículos</li>
+                        <li>
+                            <a href="{{ route('dynamicform.form.reports_vehicles') }}"><i class="mdi mdi-file-chart icon nav-icon"></i>
+                                <span class="menu-item text-truncate" data-key="t-business">Reportes</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 @endif

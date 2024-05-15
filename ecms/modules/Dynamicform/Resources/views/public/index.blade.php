@@ -20,24 +20,37 @@
     @endcomponent
 
     {{-- componente card para la bienvenida del usuario --}}
-    <div class="row d-relative h-100">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="card bg-primary">
-                <div class="card-body text-center">
-                    <h3 class="text-white "> ¡Bienvenido de nuevo, {{ $currentUser->present()->fullname() }}!</h3>
-                    <p class="text-white-50 mt-1 text-size-100">Puedes ver el resumen de los formularios:
-                        <br>
-                        <strong class="text-white"> {{date('d M Y H:i:s')}}</strong>
-                    </p>
+    <div class="row ">
+        <div class="col-lg-3 col-md-3 col-sm-12">
+            <div class="card bg-primary d-relative h-100">
+                <div class="card-body">
+                    <div class="text-center py-3">
+                        <ul class="bg-bubbles ps-0">
+                            <li><i class="bx bx-grid-alt font-size-24"></i></li>
+                            <li><i class="bx bx-tachometer font-size-24"></i></li>
+                            <li><i class="bx bx-store font-size-24"></i></li>
+                            <li><i class="bx bx-cube font-size-24"></i></li>
+                            <li><i class="bx bx-cylinder font-size-24"></i></li>
+                            <li><i class="bx bx-command font-size-24"></i></li>
+                            <li><i class="bx bx-hourglass font-size-24"></i></li>
+                            <li><i class="bx bx-pie-chart-alt font-size-24"></i></li>
+                            <li><i class="bx bx-coffee font-size-24"></i></li>
+                            <li><i class="bx bx-polygon font-size-24"></i></li>
+                        </ul>
+                        <div class="main-wid position-relative">
+                            <h3 class="text-white "> ¡Bienvenido de nuevo, {{ $currentUser->present()->fullname() }}!</h3>
+                            <p class="text-white-50 mt-1 text-size-100">Puedes ver el resumen de los formularios:
+                                <br>
+                                <strong class="text-white"> {{date('d M Y H:i:s')}}</strong>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row mt-1">
-        {{-- Componente card que muestra un conteo de todos los formularios activos --}}
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="card">
+        <div class="col-lg-3 col-md-3 col-sm-12 ">
+            <div class="card d-relative h-100">
                 <div class="card-body">
                     <div class="avatar">
                         <span class="avatar-title bg-soft-success rounded">
@@ -49,9 +62,8 @@
                 </div>
             </div>
         </div>
-        {{-- Componente card que muestra un conteo de todos los formularios contestados hoy --}}
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="card">
+        <div class="col-lg-3 col-md-3 col-sm-12 ">
+            <div class="card d-relative h-100">
                 <div class="card-body">
                     <div class="avatar">
                         <span class="avatar-title bg-soft-primary rounded">
@@ -63,16 +75,15 @@
                 </div>
             </div>
         </div>
-        {{-- Componente card que muestra un conteo de los formularios contestados con hallazgos hoy --}}
-        <div class="col-lg-4 col-md-12 col-sm-12">
-            <div class="card">
+        <div class="col-lg-3 col-md-3 col-sm-12 ">
+            <div class="card d-relative h-100">
                 <div class="card-body"  style="max-height: 250px;">
                     <div class="avatar">
                                 <span class="avatar-title bg-soft-info rounded">
                                     <i class="mdi mdi-list-status text-primary font-size-24"></i>
                                 </span>
                     </div>
-                    <p class="text-muted mt-4 mb-0">Formularios contestados con hallazgos hoy</p>
+                    <p class="text-muted mt-4 mb-0">Respuestas con hallazgos hoy</p>
                     <h4 class="mt-1 mb-0">{{$forms_response_negative_count_day??0}}</h4>
                 </div>
             </div>
@@ -80,7 +91,7 @@
     </div>
 
     {{-- Card que hace un listado de los formularios contestados y cuenta de la cantidad de respuestas las cuales tuvieron al menos 1 negativa --}}
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
@@ -123,7 +134,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="table-response"></div>
+                    <div id="table-response" class="table table-striped table-centered align-middle table-nowrap mb-0"></div>
                 </div>
             </div>
         </div>

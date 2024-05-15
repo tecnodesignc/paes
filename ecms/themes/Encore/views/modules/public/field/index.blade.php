@@ -100,7 +100,7 @@
                         name: 'Estado',
                         formatter: (function (cell) {
 
-                            return gridjs.html(cell? '<span class="badge badge-pill badge-soft-success font-size-12">Actvio</span>' : '<span class="badge badge-pill badge-soft-danger font-size-12">Inactivo</span>');
+                            return gridjs.html(cell? '<span class="badge badge-pill badge-soft-success font-size-12">Activo</span>' : '<span class="badge badge-pill badge-soft-danger font-size-12">Inactivo</span>');
                         })
                     },
                         @if($currentUser->hasAccess('sass.companies.index') && empty(company()->id))
