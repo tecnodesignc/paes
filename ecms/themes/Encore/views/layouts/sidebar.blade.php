@@ -114,7 +114,7 @@
                 @if($currentUser->hasAccess('transport.drivers.index'))
                 <li>
                     <a href="{{route('transport.driver.index')}}">
-                        <i class="bx bxs-bus icon nav-icon"></i>
+                        <i class="mdi mdi-card-account-details-outline icon nav-icon"></i>
                         <span class="menu-item" data-key="t-chat">Conductor</span>
                     </a>
                 </li>
@@ -126,7 +126,7 @@
                             <span class="menu-item" data-key="t-ecommerce">Importar</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
-                            @if($currentUser->hasAccess('user.roles.index'))
+                            @if($currentUser->hasAccess('transport.drivers.index')|| $currentUser->hasAccess('user.roles.index'))
                                 <li><a href="{{route('transport.driver.import')}}" data-key="t-user">Conductores y Vehículos</a></li>
                             @endif
                             <!--                        <li><a href="ecommerce-orders" data-key="t-orders">Api KEYS</a></li>-->

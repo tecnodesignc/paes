@@ -5,11 +5,12 @@ namespace Modules\Dynamicform\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Sass\Entities\Company;
 
 class Form extends Model
 {
-
+    use SoftDeletes;
     protected $table = 'dynamicform__forms';
     protected $fillable = ['name','caption','icon','color','options','active', 'company_create'];
 

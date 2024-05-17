@@ -168,19 +168,15 @@ class FormApiController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function destroy(string $criteria, Request $request): JsonResponse
+    public function destroy($form): JsonResponse
     {
         \DB::beginTransaction();
 
         try {
 
-            $params = $this->getParamsRequest($request);
-
-            $form = $this->form->getItem($params);
-
             if (!$form) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('dynamicform::forms.title.forms')]), 404);
 
-            $this->form->destroy($form);
+            $form->destroy();
 
             $response = ["data" => trans('core::core.messages.resource deleted', ['name' => trans('dynamicform::forms.title.forms')])];
 

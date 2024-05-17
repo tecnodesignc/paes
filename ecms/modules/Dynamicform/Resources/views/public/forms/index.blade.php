@@ -150,13 +150,14 @@
                         sort: {
                             enabled: false
                         },
-                        width: '150px',
+                        width: '180px',
                         formatter: (cell, row) => {
                             let company={{company()->id??0}};
                             let actionsHtml = '<div class="d-flex justify-content-center align-items-center gap-4">';
                             actionsHtml += '<a href="/preoperativo/form/'+ row.cells[0].data + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Vista previa" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a>';
                             let hasAccessEdit = {{$currentUser->hasAccess('dynamicform.forms.edit') ? 'true' : 'false'}};
                             let hasAccessIndexAll = {{ $currentUser->hasAccess('dynamicform.forms.indexall') ? 'true' : 'false' }};
+                            let hasAccessDestroy = {{ $currentUser->hasAccess('dynamicform.forms.destroy') ? 'true' : 'false' }};
 
                             // Verificar si tiene acceso a indexall para mostrar todas las opciones
                             if (hasAccessIndexAll) {
@@ -164,13 +165,15 @@
                                     '<a href="/preoperativo/form/' + row.cells[0].data + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success btn-lg"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'
                                     + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" onclick="stateField(event, '+ row.cells[0].data +')" >' + (row.cells[4].data == '1' ? '<i class="mdi mdi-lock-open mdi-24px"></i>' : '<i class="mdi mdi-lock mdi-24px text-secondary"></i>') + '</a>';
                                 }
-
                             else{
                                 if (hasAccessEdit && company == row.cells[6].data){
                                     actionsHtml +=
                                     '<a href="/preoperativo/form/' + row.cells[0].data + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success btn-lg"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'
                                     + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" onclick="stateField(event, '+ row.cells[0].data +')" >' + (row.cells[4].data == '1' ? '<i class="mdi mdi-lock-open mdi-24px"></i>' : '<i class="mdi mdi-lock mdi-24px text-secondary"></i>') + '</a>';
                                 }
+                            }
+                            if (hasAccessDestroy && company == row.cells[6].data){
+                                actionsHtml += '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" class="text-danger" onclick="softDeleteForm(event, '+ row.cells[0].data +')" ><i class="mdi mdi-delete mdi-24px"></i></a>';
                             }
                             actionsHtml += '</div>';
                             return gridjs.html(actionsHtml);
@@ -261,6 +264,53 @@
                 }
             });
         }
+
+        function softDeleteForm(event, formId) {
+            event.preventDefault(); // Evita que el navegador siga el enlace
+            console.log(formId);
+            Swal.fire({
+                title: "¿Estás seguro de que quieres eliminar este formulario?",
+                text: "Esta acción no se puede revertir!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Eliminar!",
+                cancelButtonText: "Cancelar"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    // Generar la URL de la solicitud DELETE con el ID del formulario y la ID del campo
+                    var route = `{{ route('api.dynamicform.form.destroy', ['form' => ':formId']) }}`.replace(':formId', formId);
+                    axios.delete(route, {
+                        headers: {
+                            'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        // Verificar si la solicitud fue exitosa
+                        if (response.status === 200) {
+                            Swal.fire({
+                                title: "Eliminado!",
+                                text: "Registro eliminado exitosamente.",
+                                icon: "success"
+                            });
+                            // Actualizamos la tabla después de la eliminación
+                            mygrid.forceRender();
+                        } else {
+                            // Manejar el caso en que la solicitud no fue exitosa
+                            throw new Error('Error al eliminar el registro');
+                        }
+                    })
+                    .catch(error => {
+                        // Manejar errores
+                        console.error(error);
+                        Swal.fire('Error al eliminar el registro', error);
+                    });
+                }
+            });
+        }
+
     </script>
 
     <style>
