@@ -2,7 +2,7 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="50c61788-dd7b-4b69-9468-c1b3a7f54db7" name="paes-v2.ejesatelital.com">
+      <webServer id="50c61788-dd7b-4b69-9468-c1b3a7f54db7" name="forms">
         <fileTransfer rootFolder="/var/www/forms" accessType="SFTP" host="54.88.150.75" port="22" sshConfigId="b3edaca0-b6c0-4745-87da-469b38332481" sshConfig="bitnami@54.88.150.75:22 key" keyPair="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />

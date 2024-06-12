@@ -22,6 +22,7 @@
 
                         <div class="card">
                             <div class="card-body p-4">
+                                @include('partials.notifications')
                                 <div class="text-center mt-2">
                                     <h5 class="text-primary">Bienvenido!</h5>
                                     <p class="text-muted">{{ trans('user::auth.sign in welcome message') }}</p>

@@ -303,9 +303,11 @@
                         }
                     })
                     .catch(error => {
-                        // Manejar errores
-                        console.error(error);
-                        Swal.fire('Error al eliminar el registro', error);
+                        Swal.fire({
+                            title: "Ops...",
+                            text: 'No se puede borrar un formulario que tiene respuestas!',
+                            icon: "warning"
+                        });
                     });
                 }
             });

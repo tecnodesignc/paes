@@ -283,8 +283,8 @@ class FormResponseApiController extends Controller
     public function vehicles($companyId): JsonResponse
     {
         try {
-
-            $response=$this->vehicle->all()->where('company_id',$companyId)->pluck('plate','plate');
+            $companyIdsArray = explode(',', $companyId);
+            $response=$this->vehicle->all()->whereIn('company_id',$companyIdsArray)->pluck('plate','plate');
 
         } catch (Exception $e) {
 

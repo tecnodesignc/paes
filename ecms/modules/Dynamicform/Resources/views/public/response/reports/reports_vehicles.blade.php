@@ -239,22 +239,27 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<script type="application/javascript">
-    $(document).ready(function() {
+    <script type="application/javascript">
+        $(document).ready(function() {
 
-        $('#vehicleLabel').select2({
-            // theme: 'bootstrap4',
-            placeholder: {id:'-1', text:"--Seleccione--"},
-            allowClear: true,
-            width: 'resolve', // need to override the changed default
-            required: true
-        });
-        // Verificar si company()->id está definido
-        var companyId = {{ company()->id ? company()->id : $currentUser->driver->company->id }};
-            if (companyId !== null) {
+            $('#vehicleLabel').select2({
+                // theme: 'bootstrap4',
+                placeholder: {id:'-1', text:"--Seleccione--"},
+                allowClear: true,
+                width: 'resolve', // need to override the changed default
+                required: true
+            });
+            // Verificar si company()->id está definido
+            @php
+                $companies=company()->id?company()->id:array_values(companies()->map(function ($company){
+                    return $company->id;
+                })->toArray());
+            @endphp
+
+            // if (companyId !== null) {
                 // Llama a la API para obtener los datos
                 var url = "{{ route('api.dynamicform.formresponse.vehicles', ['companyId' => ':companyId']) }}";
-                url = url.replace(':companyId', companyId); // Reemplazar el marcador de posición con el companyId
+                url = url.replace(':companyId', {{json_encode($companies)}});
 
                 axios.get(url, {
                     headers: {
@@ -284,7 +289,10 @@
                     // Maneja los errores aquí
                     console.error('Error al obtener los datos:', error);
                 });
-            }
+            // }
+            // else {
+            //
+            // }
         })
     </script>
     <style>

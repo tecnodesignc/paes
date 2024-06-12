@@ -11,8 +11,6 @@ use Modules\Dynamicform\Http\Requests\CreateFormRequest;
 use Modules\Dynamicform\Http\Requests\UpdateFormRequest;
 use Modules\Dynamicform\Repositories\FormRepository;
 use Modules\Dynamicform\Transformers\FormTransformer;
-use Modules\Core\Http\Controllers\Api\BaseApiController;
-use Modules\User\Contracts\Authentication;
 
 class FormApiController extends Controller
 {
@@ -176,7 +174,7 @@ class FormApiController extends Controller
 
             if (!$form) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('dynamicform::forms.title.forms')]), 404);
 
-            $form->destroy();
+            $this->form->destroy($form);
 
             $response = ["data" => trans('core::core.messages.resource deleted', ['name' => trans('dynamicform::forms.title.forms')])];
 

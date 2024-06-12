@@ -206,13 +206,15 @@
                                 return   '<span class="badge badge-pill badge-soft-success font-size-12">'+item.name+'</span>'
                             })
                             return gridjs.html(bussisnes)
-                        })
+                        }),
+                        width: '300px',
                     },
                         @endif
                     {
                         id: "created_at",
                         name: "Creado el",
-                        formatter: (_, cell) => moment(cell).format('YYYY-MM-DD')
+                        formatter: (_, cell) => moment(cell).format('YYYY-MM-DD'),
+                        width: '250px'
                     },
                     {
                         id: "id",
