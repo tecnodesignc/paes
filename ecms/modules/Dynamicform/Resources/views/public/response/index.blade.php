@@ -149,6 +149,14 @@
                         })
                     },
                     {
+                        id: 'info',
+                        name: 'Placa',
+                        width: '150px',
+                        formatter: (function (cell) {
+                            return cell.vehicle.label;
+                        })
+                    },
+                    {
                         id: 'negative_num',
                         name: 'Hallazgos',
                         width: '150px',
@@ -169,7 +177,7 @@
                     {
                         id: "id",
                         name: "Acciones",
-                        width: '100px',
+                        width: '150px',
                         sort: {
                             enabled: false
                         },

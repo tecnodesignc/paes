@@ -179,6 +179,14 @@
                         width: '150px',
                     },
                     {
+                        id: 'info',
+                        name: 'Placa',
+                        width: '150px',
+                        formatter: (function (cell) {
+                            return cell.vehicle.label;
+                        })
+                    },
+                    {
                         id: 'company',
                         name: 'Empresa',
                         width: '300px',
