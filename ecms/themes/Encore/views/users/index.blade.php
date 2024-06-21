@@ -242,12 +242,20 @@
             },
 
             server: {
+
+
                 @php
-                    $params=['include'=>"companies",'roles'=>[1,2,3,5]];
-                        if(!$currentUser->hasAccess('sass.companies.index') || company()->id){
-                             $params=['include'=>"companies",'companies'=>[company()->id],'roles'=>[1,3,5]];
-                        }
+                    if($currentUser->hasAccess('sass.companies.indexall')){
+                        $companies=company()->id?company()->id:null;
+                    }else{
+                        $companies=company()->id?company()->id:array_values(companies()->map(function ($company){
+                            return $company->id;
+                        })->toArray());
+                    }
+                    $params=['include'=>'companies','companies'=>$companies,'roles'=>[1,2,3,5]];
                 @endphp
+
+
                 url: '{!!route('api.user.user.index',$params)!!}',
                 headers: {
                     Authorization: `Bearer {{$currentUser->getFirstApiKey()}}`,

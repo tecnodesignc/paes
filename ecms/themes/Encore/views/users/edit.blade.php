@@ -126,6 +126,7 @@
                                         return $company->id;
                                     })->toArray();
                                 @endphp
+
                                 @if($currentUser->hasAccess('sass.companies.indexall'))
                                     <div class="mb-3 {{ $errors->has("company_id") ? ' was-validated' : '' }}">
                                         <label class="form-label" for="company_id">Compañias asignadas</label>

@@ -61,11 +61,11 @@
                      <strong>{{company()->name}}</strong>
                 </button>
               <div class="dropdown-menu dropdown-menu-end">
-                  @if($currentUser->hasAccess('sass.companies.indexall'))
-                  <a href="{{ route('sass.company.set',['0']) }}" class="dropdown-item notify-item language" data-lang="eng">
-                      <span class="align-middle">Ver Todas</span>
-                  </a>
-                  @endif
+                  {{-- @if($currentUser->hasAccess('sass.companies.indexall')) --}}
+                    <a href="{{ route('sass.company.set',['0']) }}" class="dropdown-item notify-item language" data-lang="eng">
+                        <span class="align-middle">Ver Todas</span>
+                    </a>
+                  {{-- @endif --}}
                   @foreach(companies() as $company)
                       <!-- item-->
                       <a href="{{ route('sass.company.set',[$company->id]) }}" class="dropdown-item notify-item language" data-lang="eng">
