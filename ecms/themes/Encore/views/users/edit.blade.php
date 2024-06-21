@@ -126,7 +126,7 @@
                                         return $company->id;
                                     })->toArray();
                                 @endphp
-                                @if($currentUser->hasAccess('sass.companies.index'))
+                                @if($currentUser->hasAccess('sass.companies.indexall'))
                                     <div class="mb-3 {{ $errors->has("company_id") ? ' was-validated' : '' }}">
                                         <label class="form-label" for="company_id">Compañias asignadas</label>
                                         <select class="form-control companies" name="companies[]"
@@ -139,13 +139,20 @@
                                         {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
                                     </div>
                                 @else
-                                    <select class="form-control companies" name="companies[]"
-                                            placeholder="Seleccione Compañias" multiple style="display: none">
-                                        @foreach($companies as $company)
-                                            <option value="{{$company->id}}" {{in_array($company->id ,old('companies',$companiesOld)) ? 'selected' : ''}} >{{$company->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <div class="mb-3 {{ $errors->has("company_id") ? ' was-validated' : '' }}">
+                                        <label class="form-label" for="company_id">Compañias asignadas</label>
+                                        <select class="form-control companies" name="companies[]"
+                                                placeholder="Seleccione Compañias" multiple>
+                                                @if((companies()->count() > 0 && isset(company()->id)))
+                                                    @foreach(companies() as $company)
+                                                        <option value="{{$company->id}}" {{in_array($company->id ,old('companies',$companiesOld)) ? 'selected' : ''}} >{{$company->name}}</option>
+                                                    @endforeach
+                                                @endif
+                                        </select>
+                                        {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
+                                    </div>
                                 @endif
+
                                 <div class="row mb-3">
                                     <div class="col-md-3">
                                         <div class="checkbox{{ $errors->has('activated') ? ' has-error' : '' }}">
