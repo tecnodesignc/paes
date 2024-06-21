@@ -1,133 +1,95 @@
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="invoice-title">
-                    <h4 class="float-end font-size-15">Formulario {{$form_response->id}}</h4>
-                    <div class="mb-4">
-                        <img src="{{ Theme::url('images/logo.png') }}" alt="logo" height="28"/>
-                    </div>
-                    <div class="text-muted">
-                        <p class="mb-1">{{$form_response->company->name}}</p>
-                        <p class="mb-1"><i
-                                    class="mdi mdi-email-outline me-1"></i> {{$form_response->company->email}}</p>
-                        <p><i class="mdi mdi-phone-outline me-1"></i>{{$form_response->company->phone}}</p>
-                    </div>
-                </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Response {{$form->name ?? null}}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 
-                <hr class="my-4">
+<style>
+    body {
+        font-size: 12px; /* Reducir el tamaño de la letra en todo el documento */
+        margin: 0.3cm; /* Definir márgenes de la hoja */
+    }
+    h3 {
+        font-size: 16px; /* Reducir el tamaño de los encabezados h3 */
+    }
+    h6 {
+        font-size: 14px; /* Reducir el tamaño de los encabezados h6 */
+    }
+    p {
+        font-size: 12px; /* Reducir el tamaño del texto de los párrafos */
+    }
+    table {
+        font-size: 10px; /* Reducir el tamaño de la letra en las tablas */
+    }
+</style>
+</head>
+<body>
 
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="text-muted">
-                            <h5 class="font-size-16 mb-3">Colaborador:</h5>
-                            <h5 class="font-size-15 mb-2">{{$form_response->data->info->fullName}}</h5>
-                            <p class="mb-1">{{$form_response->data->info->identification}}</p>
-                            {{-- <p class="mb-1">PrestonMiller@armyspy.com</p>
-                             <p>001-234-5678</p>--}}
-                        </div>
+    <div class="row mb-0">
+        <table class="table table-sm table-borderless">
+            <tr>
+                <td width="75%">
+                    <img src="{{asset($form_response->company->logo)}}" alt="Logo de la empresa" style="width: 370px; height: 100px" >
+                </td>
+                <td width="25%">
+                    <div class="content-flex d-inline text-muted text-right">
+                        <h6 class="mb-0">{{$form_response->company->name}}</h6>
+                        <p class="mb-0">{{$form_response->company->identification ?? null}}</p>
+                        <p class="mb-0">{{$form_response->company->email ?? null}}</p>
+                        <p>{{$form_response->company->phone ?? null}}</p>
                     </div>
-                    <!-- end col -->
-                    <div class="col-sm-6">
-                        <div class="text-muted text-sm-end">
-                            <div>
-                                <h5 class="font-size-15 mb-1">Placa de Vehículo:</h5>
-                                <p>{{$form_response->data->info->vehicle->label}}</p>
-                            </div>
-                            <div class="mt-4">
-                                <h5 class="font-size-15 mb-1">Kilometraje del Vehiculo:</h5>
-                                <p>{{$form_response->data->info->vehicle->millage}}</p>
-                            </div>
-                            <div class="mt-4">
-                                <h5 class="font-size-15 mb-1">Fecha De registro:</h5>
-                                <p>{{$form_response->created_at->format('Y-m-d')}}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
-                </div>
-                <!-- end row -->
-
-                <div class="py-2">
-                    <h5 class="font-size-15">Resumen del Formulario</h5>
-
-                    <div class="table-responsive mb-5">
-                        <table class="table align-middle table-nowrap table-centered mb-0">
-                            <thead>
-                            <tr>
-                                <th class="fw-bold">Pregunta</th>
-                                <th class="fw-bold">Respuesta</th>
-                                <th class="fw-bold">Imagen</th>
-                                <th class="fw-bold">Comentario</th>
-                            </tr>
-                            </thead><!-- end thead -->
-                            <tbody>
-                            @foreach($form_response->data->answers as $answer)
-                                @include('dynamicform::public.partials.field',['fiel'=>$answer])
-                                <!-- end tr -->
-                            @endforeach
-                            </tbody><!-- end tbody -->
-                        </table><!-- end table -->
-                    </div><!-- end table responsive -->
-                    @foreach($form_response->data->answers as $answer)
-                        @if($answer->type === 8)
-                            <div class="popup-gallery">
-                                <h5 class="font-size-15">{{$answer->label}}</h5>
-                                <div class="row">
-                                    @php
-                                        $images=explode(',',$answer->value)
-                                    @endphp
-                                    @if(count($images)>1)
-                                        @foreach($images as $img)
-                                            <div class="col-xl-2 col-md-4 col-6">
-                                                <div class="mt-4">
-                                                    <a href="{{url($img)}}"
-                                                       class="thumb preview-thumb image-popup">
-                                                        <div class="img-fluid">
-                                                            <img src="{{url($img)}}" alt=""
-                                                                 class="img-fluid d-block" width="150px">
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @else
-                                        <div class="col-xl-2 col-md-4 col-6">
-                                            <div class="mt-4">
-                                                <a href="{{url($answer->value)}}"
-                                                   class="thumb preview-thumb image-popup">
-                                                    <div class="img-fluid">
-                                                        <img src="{{url($answer->value)}}" alt=""
-                                                             class="img-fluid d-block">
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                        @endif
-                        @if($answer->type === 9)
-                            <div class="popup-gallery mt-4">
-                                <h5 class="font-size-15">{{$answer->label}}</h5>
-                                <div class="row">
-                                    <div class="col-xl-2 col-md-4 col-6">
-                                        <div class="mt-4">
-                                            <a href="{{url($answer->value)}}"
-                                               class="thumb preview-thumb image-popup">
-                                                <div class="img-fluid">
-                                                    <img src="{{url($answer->value)}}" alt=""
-                                                         class="img-fluid d-block">
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    @endforeach
-                </div>
-            </div>
-        </div>
+                </td>
+            </tr>
+        </table>
     </div>
-</div>
+
+
+    <div class="row">
+        <h3 class="text-center">{{$form->name}}</h3>
+        <table class="table table-sm table-borderless">
+            <tr>
+                <td width="33%">
+                    <h6 class="mb-0">Colaborador: </h6>
+                    <p>{{$form_response->data->info->fullName ?? null}}</p>
+                    <h6 class="mb-0"># Documento: </h6>
+                    <p>{{$form_response->data->info->identification ?? null}}</p>
+                </td>
+                <td width="33%">
+                    <h6 class="mb-0">Placa:</h6>
+                    <p>{{$form_response->data->info->vehicle->label ?? null}}</p>
+                    <h6 class="mb-0">Fecha de registro:</h6>
+                    <p>{{$form_response->created_at ?? null}}</p>
+                </td>
+                <td width="33%">
+                    <h6 class="mb-0">Kilometraje:</h6>
+                    <p>{{$form_response->data->info->vehicle->millage ?? 0}}</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="row">
+        <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col" width="4%">#</th>
+                <th scope="col" width="33%">Item</th>
+                <th scope="col" width="20%">Respuesta</th>
+                <th scope="col" width="10%">Imagen</th>
+                <th scope="col" width="33%">Observación</th>
+              </tr>
+            </thead>
+            <tbody>
+                @foreach($form_response->data->answers as $dato)
+                    @include('dynamicform::public.partials.field_pdf', ['field' => $dato, 'index' => $loop->iteration])
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+</body>
+</html>

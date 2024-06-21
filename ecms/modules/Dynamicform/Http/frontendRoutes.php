@@ -140,7 +140,7 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             $router->get('/{form_response}/pdf', [
                 'as' => 'dynamicform.formresponses.downloadpdf',
                 'uses' => 'ResponseController@downloadpdf',
-                 'middleware' => 'can:dynamicform.formresponses.edit'
+                 'middleware' => 'can:dynamicform.formresponses.index'
             ]);
 
         });

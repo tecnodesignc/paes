@@ -200,6 +200,7 @@
                         },
                         formatter: (function (cell) {
                             actionHtml = '<div class="d-flex justify-content-center align-items-center gap-4"><a href="/preoperativo/form/{{$form->id}}/response/' + cell + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Respuestas" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a>';
+                            actionHtml += '<a href="/preoperativo/form/{{$form->id}}/response/' + cell + '/pdf" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver pdf" class="text-danger"><i class="mdi mdi-file-pdf-box me-1 mdi-24px"></i></a>';
                             actionHtml += '</div>';
                             return gridjs.html(actionHtml);
                         })

@@ -3,6 +3,7 @@
 namespace modules\Dynamicform\Http\Controllers;
 
 use Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -118,7 +119,8 @@ class ResponseController extends AdminBaseController
      */
     public function downloadpdf(Form $form, FormResponse $form_response)
     {
-
+        $pdf = Pdf::loadView('dynamicform::public.response.pdf', compact('form_response', 'form'));
+        return $pdf->stream('formresponse.pdf');    // return view('dynamicform::public.response.pdf', compact('form_response', 'form'));
     }
 
     public function reports_vehicles():Application|Factory|View
