@@ -144,7 +144,7 @@
                                         <label class="form-label" for="company_id">Compañias asignadas</label>
                                         <select class="form-control companies" name="companies[]"
                                                 placeholder="Seleccione Compañias" multiple>
-                                                @if((companies()->count() > 0 && isset(company()->id)))
+                                                @if((companies()->count() > 1 && empty(company()->id)))
                                                     @foreach(companies() as $company)
                                                         <option value="{{$company->id}}" {{in_array($company->id ,old('companies',$companiesOld)) ? 'selected' : ''}} >{{$company->name}}</option>
                                                     @endforeach
