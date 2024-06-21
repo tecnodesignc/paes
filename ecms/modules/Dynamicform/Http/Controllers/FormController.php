@@ -92,7 +92,7 @@ class FormController extends AdminBaseController
     public function create():Application|Factory|View|RedirectResponse
     {
         if (!session()->has('company')) {
-            return redirect()->back()->with("warning", "Selecciona una empresa");
+            return redirect()->route('dynamicform.form.index')->with("warning", "Selecciona una empresa");
         }
 
         return view('dynamicform::public.forms.create');
@@ -125,7 +125,7 @@ class FormController extends AdminBaseController
     public function edit(Form $form) :Factory|View|RedirectResponse
     {
         if (!session()->has('company')) {
-            return redirect()->back()->with("warning", "Selecciona una empresa");
+            return redirect()->route('dynamicform.form.index')->with("warning", "Selecciona una empresa");
         }
 
 
