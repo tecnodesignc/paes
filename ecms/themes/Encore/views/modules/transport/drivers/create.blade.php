@@ -96,19 +96,24 @@
                                                        class="form-control">
                                                 {!! $errors->first('phone', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                            <div class="mb-3">
-                                                <label for="companies" class="form-label font-size-13 text-muted">Empresas
-                                                    Asignadas</label>
-                                                <select class="form-control" name="company_id"
-                                                    id="company_id" required placeholder="Selecciones Compañía " >
-                                                    @if((companies()->count() > 0 && isset(company()->id)))
+
+                                            @if($currentUser->hasAccess('sass.companies.indexall') || (companies()->count() > 1 && empty(company()->id)))
+                                                <div class="mb-3 {{ $errors->has("company_id") ? ' was-validated' : '' }}">
+                                                    <label class="form-label" for="company_id">Compañia</label>
+                                                    <select class="form-control" data-trigger name="company_id"
+                                                            id="company_id">
+                                                        <option value="">Seleccione Compañia</option>
                                                         @foreach(companies() as $company)
                                                             <option value="{{$company->id}}" {{$company->id == old('company_id') ? 'selected' : ''}} >{{$company->name}}</option>
                                                         @endforeach
-                                                    @endif
-                                                </select>
-                                                {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
-                                            </div>
+                                                    </select>
+                                                    {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
+                                                </div>
+                                            @else
+                                                <input type="hidden" name="company_id" id="company_id"
+                                                    value="{{company()->id}}">
+                                            @endif
+
                                             <div class="row mb-3">
                                                 <div class="col-md-3 ">
                                                     <div
