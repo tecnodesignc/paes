@@ -144,11 +144,9 @@
                                         <label class="form-label" for="company_id">Compañias asignadas</label>
                                         <select class="form-control companies" name="companies[]"
                                                 placeholder="Seleccione Compañias" multiple>
-                                                @if((companies()->count() > 1 && empty(company()->id)))
-                                                    @foreach(companies() as $company)
-                                                        <option value="{{$company->id}}" {{in_array($company->id ,old('companies',$companiesOld)) ? 'selected' : ''}} >{{$company->name}}</option>
-                                                    @endforeach
-                                                @endif
+                                                @foreach(companies() as $company)
+                                                    <option value="{{$company->id}}" {{in_array($company->id ,old('companies',$companiesOld)) ? 'selected' : ''}} >{{$company->name}}</option>
+                                                @endforeach
                                         </select>
                                         {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
                                     </div>
@@ -190,6 +188,7 @@
 
                                                 @endforeach
                                             </select>
+                                            {!! $errors->first('roles', '<div class="invalid-feedback">:message</div>') !!}
                                         </div>
                                     </div>
                                 </div>

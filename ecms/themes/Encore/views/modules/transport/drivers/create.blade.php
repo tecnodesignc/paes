@@ -104,7 +104,7 @@
                                                             id="company_id">
                                                         <option value="">Seleccione Compañia</option>
                                                         @foreach(companies() as $company)
-                                                            <option value="{{$company->id}}" {{$company->id == old('company_id') ? 'selected' : ''}} >{{$company->name}}</option>
+                                                            <option value="{{$company->id}}" {{$company->id == old('company_id', company()->id ?? null) ? 'selected' : ''}} >{{$company->name}}</option>
                                                         @endforeach
                                                     </select>
                                                     {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}

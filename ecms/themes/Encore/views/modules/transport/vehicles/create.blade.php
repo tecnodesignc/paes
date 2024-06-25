@@ -113,14 +113,14 @@
                                                        class="form-control">
                                                 {!! $errors->first('capacity', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                            @if($currentUser->hasAccess('sass.companies.indexall')|| (companies()->count() > 1 && !empty(company()->id)))
+                                            @if($currentUser->hasAccess('sass.companies.indexall')|| (companies()->count() > 1 && empty(company()->id)))
                                                 <div class="mb-3 {{ $errors->has("company_id") ? ' was-validated' : '' }}">
                                                     <label class="form-label" for="company_id">Compañia</label>
                                                     <select class="form-control" data-trigger name="company_id"
                                                             id="company_id">
                                                         <option value="">Seleccione Compañia</option>
                                                         @foreach(companies() as $company)
-                                                            <option value="{{$company->id}}" {{$company->id == old('company_id') ? 'selected' : ''}} >{{$company->name}}</option>
+                                                            <option value="{{$company->id}}" {{$company->id == old('company_id', company()->id ?? null) ? 'selected' : ''}} >{{$company->name}}</option>
                                                         @endforeach
                                                     </select>
                                                     {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}

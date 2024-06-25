@@ -41,7 +41,6 @@
     <!--end breadcrumb-->
 
 --}}
-
     <div class="card">
         <div class="card-header">
             <div class="row">
@@ -148,7 +147,7 @@
                                                 @endforeach
                                             @endif
                                         </select>
-                                        {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
+                                        {!! $errors->first('company_id', '<div class="invalid-feedback">:message</div>') !!}
                                     </div>
 
                             </div>
@@ -159,7 +158,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>{{ trans('user::users.tabs.roles') }}</label>
-                                            <select class="form-control roles" multiple  data-trigger name="roles[]" id="roles">
+                                            <select class="form-control roles" multiple  data-trigger name="roles[]" id="roles" required>
                                                 @foreach ($roles as $role)
                                                     @if(!$currentUser->hasAccess('sass.companies.index') && ($role->id==1 || $role->id==5 ))
                                                         @php continue @endphp
@@ -167,6 +166,7 @@
                                                         <option value="{{ $role->id }}" {{in_array($role->id ,old('roles',[])) ? 'selected' : ''}}>{{ $role->name }}</option>
                                                 @endforeach
                                             </select>
+                                            {!! $errors->first('roles', '<div class="invalid-feedback">:message</div>') !!}
                                         </div>
                                     </div>
                                 </div>

@@ -105,19 +105,15 @@
                                                         <select class="form-control" name="company_id"
                                                             id="companies"
                                                             placeholder="Selecciones Compañias " >
-
                                                             @foreach($companies as $company)
-                                                                <option
-                                                                    value="{{$company->id}}" {{old('company_id',$driver->company_id)==$company->id ? 'selected' : ''}} >{{$company->name}}</option>
+                                                                <option value="{{$company->id}}" {{old('company_id',$driver->company_id)==$company->id ? 'selected' : ''}} >{{$company->name}}</option>
                                                             @endforeach
                                                         </select>
                                                     @else
-                                                        <select class="form-control" name="company_id" id="company_id" required placeholder="Selecciones Compañía " >
-                                                            @if((companies()->count() > 0 && empty(company()->id)))
-                                                                @foreach(companies() as $company)
-                                                                    <option value="{{$company->id}}" {{old('company_id',$driver->company_id)==$company->id ? 'selected' : ''}} >{{$company->name}}</option>
-                                                                @endforeach
-                                                            @endif
+                                                        <select class="form-control" name="company_id" id="company_id" required placeholder="Seleccione Compañía " >
+                                                            @foreach(companies() as $company)
+                                                                <option value="{{$company->id}}" {{old('company_id',$driver->company_id)==$company->id ? 'selected' : ''}} >{{$company->name}}</option>
+                                                            @endforeach
                                                         </select>
                                                     @endif
                                                 {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}

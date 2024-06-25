@@ -75,6 +75,21 @@
                                 <label class="form-label" for="website">Sitio Web</label>
                                 {!! Form::text('website', old('website'), ['class' => 'form-control', 'placeholder' => 'Agrega Sitio Web']) !!}
                             </div>
+
+                            @if($currentUser->hasAccess('sass.companies.indexall') || companies()->count() > 1)
+                                <div class="mb-3 {{ $errors->has("parent") ? ' was-validated' : '' }}">
+                                    <label class="form-label" for="parent">Compañia padre</label>
+                                    <select class="form-control" name="parent"
+                                            id="parent">
+                                        <option value="">Seleccione la compañia padre</option>
+                                        @foreach(companies() as $parent)
+                                            <option value="{{$parent->id}}"  {{  old('parent', $company->parent ) == $parent->id ? 'selected' : ''}} >{{$parent->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    {!! $errors->first('parent', '<div class="invalid-feedback">:message</div>') !!}
+                                </div>
+                            @endif
+
                             <div class="mb-3">
                                 @if(!empty($company->logo))
                                     <div class="row mb-3">
@@ -87,7 +102,7 @@
                                     <div class="dropzone" id="mainImage">
                                         <input type="hidden" id="medias_single"
                                             name="logo"
-                                            value="">
+                                            value="{{$company->logo}}">
                                         <div class="fallback">
                                             <input name="file" type="file">
                                         </div>

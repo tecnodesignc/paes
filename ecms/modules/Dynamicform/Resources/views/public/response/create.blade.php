@@ -105,7 +105,7 @@
             });
 
             // Verificar si company()->id está definido
-            var companyId = {{ $currentUser->driver->company->id  ? $currentUser->driver->company->id  : null }};
+            var companyId = {{ $currentUser->driver->company->parent ? $currentUser->driver->company->parent : $currentUser->driver->company->id}};
             if (companyId !== null) {
                 // Llama a la API para obtener los datos
                 var url = "{{ route('api.dynamicform.formresponse.vehicles', ['companyId' => ':companyId']) }}";

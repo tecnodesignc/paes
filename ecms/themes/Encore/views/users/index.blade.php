@@ -23,6 +23,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
+                @include('partials.notifications')
                 <div class="card-body">
                     <div class="position-relative">
                         <div class="modal-button mt-2">
@@ -246,9 +247,9 @@
 
                 @php
                     if($currentUser->hasAccess('sass.companies.indexall')){
-                        $companies=company()->id?company()->id:null;
+                        $companies=company()->id?[company()->id]:null;
                     }else{
-                        $companies=company()->id?company()->id:array_values(companies()->map(function ($company){
+                        $companies=company()->id?[company()->id]:array_values(companies()->map(function ($company){
                             return $company->id;
                         })->toArray());
                     }
