@@ -119,7 +119,8 @@
 
                                             <div class="checkbox {{ $errors->has('required') ? 'was-validated' : '' }}">
                                                 <label for="required">
-                                                    <input id="required" name="required" type="checkbox" class="form-check-input" {{ $field->required?'checked':"" }} value="1">
+                                                    <input type="hidden" name="required" value="0">
+                                                    <input id="required" name="required" type="checkbox" class="form-check-input" {{ $field->required ? 'checked' : '' }} value="1">
                                                     Campo requerido?
                                                     {!! $errors->first('required', '<div class="invalid-feedback">:message</div>') !!}
                                                 </label>

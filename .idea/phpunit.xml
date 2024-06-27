@@ -4,23 +4,23 @@
     <option name="directories">
       <list>
         <option value="$PROJECT_DIR$/ecms/modules/Dynamicform_old/tests" />
+        <option value="$PROJECT_DIR$/ecms/modules/Custom/tests" />
         <option value="$PROJECT_DIR$/ecms/modules/Dynamicform/tests" />
-        <option value="$PROJECT_DIR$/ecms/modules/Setting/Tests" />
         <option value="$PROJECT_DIR$/ecms/modules/Workshop/Tests" />
-        <option value="$PROJECT_DIR$/ecms/modules/Media/Tests" />
-        <option value="$PROJECT_DIR$/ecms/modules/Sass/tests" />
-        <option value="$PROJECT_DIR$/ecms/modules/User/Tests" />
-        <option value="$PROJECT_DIR$/ecms/modules/Menu/Tests" />
-        <option value="$PROJECT_DIR$/ecms/modules/Transport/tests" />
-        <option value="$PROJECT_DIR$/ecms/modules/Core/Tests" />
         <option value="$PROJECT_DIR$/ecms/modules/Page/Tests" />
         <option value="$PROJECT_DIR$/ecms/modules/Maintenance/tests" />
         <option value="$PROJECT_DIR$/ecms/modules/Translation/Tests" />
+        <option value="$PROJECT_DIR$/ecms/modules/Tag/Tests" />
+        <option value="$PROJECT_DIR$/ecms/modules/Menu/Tests" />
+        <option value="$PROJECT_DIR$/ecms/modules/Transport/tests" />
+        <option value="$PROJECT_DIR$/ecms/modules/Setting/Tests" />
+        <option value="$PROJECT_DIR$/ecms/modules/Core/Tests" />
+        <option value="$PROJECT_DIR$/ecms/modules/Sass/tests" />
+        <option value="$PROJECT_DIR$/ecms/modules/User/Tests" />
+        <option value="$PROJECT_DIR$/ecms/modules/Media/Tests" />
         <option value="$PROJECT_DIR$/ecms/tests" />
         <option value="$PROJECT_DIR$/ecms/modules/Apigpswox/tests" />
-        <option value="$PROJECT_DIR$/ecms/modules/Custom/tests" />
         <option value="$PROJECT_DIR$/ecms/modules/Notification/Tests" />
-        <option value="$PROJECT_DIR$/ecms/modules/Tag/Tests" />
       </list>
     </option>
   </component>

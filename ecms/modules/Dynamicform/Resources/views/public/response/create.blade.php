@@ -89,7 +89,6 @@
     <script src="{{ Theme::url('libs/alertifyjs/alertifyjs.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script> --}}
 
     <script type="application/javascript">
         $(document).ready(function() {
@@ -618,7 +617,15 @@
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelector("button[type='submit']").addEventListener("click", function(event) {
                 event.preventDefault();
+
+                var form = document.querySelector("#dynamic-form");
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
                 var formData = collectFormData();
+                
                 //recorremos el formulario de respuestas de campo imagenes y firmas
                 formImagesAnswers.answers.forEach(function(imageAnswer) {
                     //validamos el id de la respuesta de la imagen existe contra los datos del form

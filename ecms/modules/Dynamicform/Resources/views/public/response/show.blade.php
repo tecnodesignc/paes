@@ -101,10 +101,12 @@
 
                     <div class="d-print-none mt-3">
                         <div class="float-end">
-                            <a href="javascript:window.print()" class="btn btn-success me-1">
+                            <a href="javascript:window.print()" class="btn btn-success me-1" title="Imprimir pantalla">
                                 <i class="fa fa-print"></i>
                             </a>
-                            {{-- <a href="{{route('dynamicform.formresponses.downloadpdf', [$form_response,$form_response->id])}}" class="btn btn-primary w-md">Descargar</a> --}}
+                            <a href="{{route('dynamicform.formresponses.downloadpdf', [$form_response->form_id,$form_response->id])}}" class="btn btn-danger" title="Descargar PDF" class="text-danger">
+                                <i class="far fa-file-pdf"></i>
+                            </a>
                         </div>
                     </div>
 

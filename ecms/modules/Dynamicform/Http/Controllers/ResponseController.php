@@ -167,7 +167,7 @@ class ResponseController extends AdminBaseController
         // Convertimos el modelo en una colleccion de datos
         $forms_response=collect(json_decode(json_encode(FormResponseTransformer::collection($datos))));
 
-        $responses_per_day = $forms_response->where('info.vehicle.label', $request->input('vehicle'))->first();
+        $responses_per_day = $forms_response->where('info.vehicle.label', $request->input('vehicle'));
 
         if(!$responses_per_day){
             return redirect()->back()->with("warning", "No tiene reporte de ese dia");
@@ -176,24 +176,31 @@ class ResponseController extends AdminBaseController
         # CREAMOS UN LIBRO DE TRABAJO
         $documento = new Spreadsheet();
         $documento
-        ->getProperties()
-        ->setCreator("Eje Satelital SAS")
-        ->setLastModifiedBy('Eje Satelital SAS') // última vez modificado por
-        ->setTitle('Report')
-        ->setSubject('Report Eje Satelital SAS')
-        ->setDescription('Report generated through the forms platform')
-        ->setCategory("Report in excel");
+            ->getProperties()
+            ->setCreator("Eje Satelital SAS")
+            ->setLastModifiedBy('Eje Satelital SAS') // última vez modificado por
+            ->setTitle('Report')
+            ->setSubject('Report Eje Satelital SAS')
+            ->setDescription('Report generated through the forms platform')
+            ->setCategory("Report in excel");
 
-        $documento->getActiveSheet(0)->setTitle('Report'); // NOMBRE DE LA LA HOJA
+        foreach ($responses_per_day as $index => $responses_today) {
+            if ($index == 0) {
+                // La primera hoja es la hoja activa por defecto
+                $reportdaysheet = $documento->getActiveSheet();
+                $reportdaysheet->setTitle('Report ' . $responses_today->form->name);
+            } else {
+                // Crear nuevas hojas para los siguientes conjuntos de datos
+                $reportdaysheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($documento, 'Report ' . $responses_today->form->name);
+                $documento->addSheet($reportdaysheet);
+            }
 
-          #ACCEDEMOS A LA HOJA DE TRABAJO LIQUIDACIÓN
-        $reportdaysheet = $documento->getActiveSheet(0);
-        //hoja de calculo de materiales
-        $this->reportdaysheet($reportdaysheet, $responses_per_day);
+            // Llenar la hoja de trabajo con datos
+            $this->reportdaysheet($reportdaysheet, $responses_today);
+        }
 
-        // Los siguientes encabezados son necesarios para que el navegador entienda que no le estamos mandando
-        //NOMBRE DEL REPORTE
-        $nombre_reporte = "Reporte " .$responses_per_day->form->name. date('Y-m-d') . ".xlsx";
+        // NOMBRE DEL REPORTE
+        $nombre_reporte = "Reporte_Diario_" . date('Y-m-d') . ".xlsx";
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $nombre_reporte . '"');
         header('Cache-Control: max-age=0');
@@ -201,6 +208,7 @@ class ResponseController extends AdminBaseController
         $writer = IOFactory::createWriter($documento, 'Xlsx');
         $writer->save('php://output');
         exit;
+
     }
 
     public function reportdaysheet($sheet, $data)
@@ -410,16 +418,16 @@ class ResponseController extends AdminBaseController
         // Convertimos el modelo en una colleccion de datos
         $forms_response=collect(json_decode(json_encode(FormResponseTransformer::collection($datos))));
 
-        $responses_per_day = $forms_response->where('info.vehicle.label', $request->input('vehicle'));
+        $responses_per_month = $forms_response->where('info.vehicle.label', $request->input('vehicle'));
 
-        if(!$responses_per_day || count($responses_per_day)==0){
+        if(!$responses_per_month || count($responses_per_month)==0){
             return redirect()->back()->with("warning", "No tiene reporte para esta placa o mes");
         }
 
         $labels = []; // $labels contiene todos los labels sin repetirse
         $responses = [];
         $sum_negative_num = 0;
-        foreach ($responses_per_day as $item) {
+        foreach ($responses_per_month as $item) {
             $sum_negative_num += $item->negative_num;
             $created_at = substr($item->created_at, 8, 2); // Obtener solo el día de la fecha
 
@@ -464,11 +472,11 @@ class ResponseController extends AdminBaseController
         $reportmonthsheet = $documento->getActiveSheet(0);
 
         //hoja de calculo de materiales
-        $this->reportmonthsheet($reportmonthsheet, $responses_per_day, $labels,$responses, $sum_negative_num);
+        $this->reportmonthsheet($reportmonthsheet, $responses_per_month, $labels,$responses, $sum_negative_num);
 
         // Los siguientes encabezados son necesarios para que el navegador entienda que no le estamos mandando
         //NOMBRE DEL REPORTE
-        $nombre_reporte = "Reporte-" .$responses_per_day->first()->form->name. date('Y-m-d') . ".xlsx";
+        $nombre_reporte = "Reporte-" .$responses_per_month->first()->form->name. date('Y-m-d') . ".xlsx";
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $nombre_reporte . '"');
         header('Cache-Control: max-age=0');
@@ -578,15 +586,12 @@ class ResponseController extends AdminBaseController
         $sheet->getStyle('B2:B3')->applyFromArray($centrar_texto);
         $sheet->getStyle('B5:D8')->applyFromArray($centrar_texto_left);
 
-        $sheet->setCellValue('B3', $data->first()->company->name ?? null.PHP_EOL.$data->first()->company->nit ?? null);
-
-        $sheet->setCellValue('B5','Indentificación: '. $data->first()->info->identification??null);
-        $sheet->setCellValue('B6','Nombre: '. $data->first()->info->fullName??null);
+        $sheet->setCellValue('B3', $data->first()->company->name ?? null);
 
         $sheet->setCellValue('J5','Placa: '. $data->first()->info->vehicle->label??null);
-        $sheet->setCellValue('J6','Kilometraje: '. $data->first()->info->vehicle->millage??null);
 
-        $sheet->setCellValue('Q5','Fecha registro: '.$data->first()->created_at??null);
+        $sheet->setCellValue('Q5','NIT: '. $data->first()->company->identification??null);
+        $sheet->setCellValue('Q6','Mes exportado: '. date('F-Y', strtotime($data->first()->created_at))??null);
         $sheet->setCellValue('Q8','Cantidad de hallazgos: '.$sum_negative_num??0);
 
         // Inicializar el contador de fila
@@ -681,22 +686,26 @@ class ResponseController extends AdminBaseController
         $responses_per_day=collect(json_decode(json_encode(FormResponseTransformer::collection($datos))));
 
         $plateDays = []; // Array para almacenar los días en que aparece cada placa
-        // $sum_negative_num = 0;
+
         foreach ($responses_per_day as $item) {
-            // $sum_negative_num += $item->negative_num;
             $plate = $item->info->vehicle->label;
             $day = substr($item->created_at, 8, 2);
+            $negativeNum = $item->negative_num;
 
             // Verificar si la placa ya está registrada
             if (!isset($plateDays[$plate])) {
                 $plateDays[$plate] = [];
             }
 
-            // Registrar el día si no está presente para esta placa
-            if (!in_array($day, $plateDays[$plate])) {
-                $plateDays[$plate][$day] = $item->negative_num;
+            // Verificar si el día ya está registrado para esta placa
+            if (!isset($plateDays[$plate][$day])) {
+                $plateDays[$plate][$day] = 0;
             }
+
+            // Sumar el negative_num al día correspondiente de esta placa
+            $plateDays[$plate][$day] += $negativeNum;
         }
+
 
         if(!$responses_per_day || count($responses_per_day)==0){
             return redirect()->back()->with("warning", "No tiene reporte para este formulario o mes");
@@ -837,15 +846,12 @@ class ResponseController extends AdminBaseController
         $sheet->getStyle('B5:D8')->applyFromArray($centrar_texto_left);
         $sheet->getStyle('B9:AG9')->applyFromArray($centrar_texto);
 
-        $sheet->setCellValue('B3', $data->first()->company->name ?? null.PHP_EOL.$data->first()->company->nit ?? null);
-
-        $sheet->setCellValue('B5','Indentificación: '. $data->first()->info->identification??null);
-        $sheet->setCellValue('B6','Nombre: '. $data->first()->info->fullName??null);
+        $sheet->setCellValue('B3', $data->first()->company->name ?? null);
 
         $sheet->setCellValue('J5','Placa: '. $data->first()->info->vehicle->label??null);
-        $sheet->setCellValue('J6','Kilometraje: '. $data->first()->info->vehicle->millage??null);
 
-        $sheet->setCellValue('Q5','Fecha registro: '.$data->first()->created_at??null);
+        $sheet->setCellValue('Q5','NIT: '. $data->first()->company->identification??null);
+        $sheet->setCellValue('Q6','Mes exportado: '. date('F-Y', strtotime($data->first()->created_at))??null);
 
         // Inicializar el contador de columna
         $col = 'C';
@@ -864,6 +870,7 @@ class ResponseController extends AdminBaseController
         $row = 10;
 
         foreach ($plateDays as $placa => $dias) {
+
             $sheet->setCellValue("B" . $row, $placa);
             $sheet->getStyle("B$row:AG$row")->applyFromArray($styleArrayBorde);
             // Iterar sobre las columnas para escribir el negative_num en las celdas correspondientes a los días

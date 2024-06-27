@@ -22,7 +22,9 @@ class CompanyTransformer extends JsonResource
             'id' => $this->when($this->id, $this->id),
             'name'=> $this->when($this->name, $this->name),
             'logo'=>$this->present()->gravatar(),
-            'settings'=>[]
+            'settings'=>[],
+            'identification'=> $this->when($this->identification, $this->identification),
+
         ];
 
         if ($this->setting){

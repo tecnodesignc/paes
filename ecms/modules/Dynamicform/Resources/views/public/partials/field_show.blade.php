@@ -6,7 +6,7 @@
             <div class="row mt-3">
                 <div class="col-lg-12 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
-                    <input type="text" name="btntext-{{$field->id}}" id="btntext-{{$field->id}}" class="form-control dynamic-field"  data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}">
+                    <input type="text" name="btntext-{{$field->id}}" id="btntext-{{$field->id}}" class="form-control dynamic-field"  data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" {{$field->required == 1 ? 'required' : ''}}>
                 </div>
             </div>
             @break
@@ -59,7 +59,7 @@
                 <div class="col-lg-7 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
 
-                    <select class="form-select dynamic-field" name="btnselect-{{$field->id}}" id="btnselect-{{$field->id}}" style="width: 100%;" data-field-type="6" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-finding="{{$field->finding}}">
+                    <select class="form-select dynamic-field" name="btnselect-{{$field->id}}" id="btnselect-{{$field->id}}" style="width: 100%;" data-field-type="6" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-finding="{{$field->finding}}" {{$field->required == 1 ? 'required' : ''}}>
                         @if(empty($field->selectable[0]))
                             <option disabled>No hay opciones disponibles</option>
                         @else
@@ -93,7 +93,7 @@
             <div class="row mt-3">
                 <div class="col-lg-7 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
-                    <select class="form-select-multiple dynamic-field" name="btnselect-multiple-{{$field->id}}[]" id="btnselect-multiple-{{$field->id}}" style="width: 100%; height: 150px;" multiple="multiple" data-field-type="7" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-finding="{{$field->finding}}">
+                    <select class="form-select-multiple dynamic-field" name="btnselect-multiple-{{$field->id}}[]" id="btnselect-multiple-{{$field->id}}" style="width: 100%; height: 150px;" multiple="multiple" data-field-type="7" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-finding="{{$field->finding}}" {{$field->required == 1 ? 'required' : ''}}>
                         @if(empty($field->selectable[0]))
                             <option disabled>No hay opciones disponibles</option>
                         @else
@@ -156,16 +156,18 @@
                 <div class="col-lg-12 col-md-12">
                     <div>
                         <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
-                        <canvas  id="signatureCanvas-{{$field->id}}" style="background-color: azure" width="300px" height="200px" class="border border-secondary signatureCanvas"></canvas>
-
+                        <canvas id="signatureCanvas-{{$field->id}}" style="background-color: azure" width="300px" height="200px" class="border border-secondary signatureCanvas"></canvas>
                     </div>
                     <div class="d-flex gap-4">
-                        <button type="button" class="btn btn-secondary" onclick="uploadImageToServer({{ intval($field->id) }}, '{{$field->label}}', {{$field->type}}, 'signatureCanvas-{{$field->id}}')">Guardar</button>
+                        <button type="button" class="btn btn-primary" onclick="uploadImageToServer({{ intval($field->id) }}, '{{$field->label}}', {{$field->type}}, 'signatureCanvas-{{$field->id}}')">Guardar</button>
                         <button type="button" class="btn btn-danger" onclick="clearCanvas({{ intval($field->id) }})">Cancelar</button>
                     </div>
                 </div>
             </div>
+            <input type="hidden" id="signatureCanvas-{{$field->id}}" name="signatureCanvas-{{$field->id}}" value="" {{$field->required == 1 ? 'required' : ''}}>
             @break
+
+
 
         {{-- Input tipo Opciones --}}
         @case(5)
@@ -181,7 +183,7 @@
                                     $options = explode(',', $options);
                                 @endphp
                                 @foreach($options as $option)
-                                    <input type="radio" class="btn-check dynamic-field" id="option_{{ $field->id }}_{{ $option }}" name="option_{{ $field->id }}" value="{{ $option }}" data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-finding="{{$field->finding}}" >
+                                    <input type="radio" class="btn-check dynamic-field" id="option_{{ $field->id }}_{{ $option }}" name="option_{{ $field->id }}" value="{{ $option }}" data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" data-field-finding="{{$field->finding}}" {{$field->required == 1 ? 'required' : ''}}>
                                     <label for="option_{{ $field->id }}_{{ $option }}" class="btn btn-outline-dark mb-0">{{ $option }}</label>
                                 @endforeach
                             @endforeach
@@ -258,7 +260,7 @@
             <div class="row mt-3">
                 <div class="col-lg-12 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
-                    <input type="date" name="btndate-{{$field->id}}" id="btndate-{{$field->id}}" class="form-control dynamic-field"  data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" value="{{date('Y-m-d')??null}}">
+                    <input type="date" name="btndate-{{$field->id}}" id="btndate-{{$field->id}}" class="form-control dynamic-field"  data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" value="{{date('Y-m-d')??null}}" {{$field->required == 1 ? 'required' : ''}}>
                 </div>
             </div>
             @break
@@ -268,7 +270,7 @@
         <div class="row mt-3">
             <div class="col-lg-12 col-md-12">
                 <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
-                <input type="time" name="btntime-{{$field->id}}" id="btntime-{{$field->id}}" class="form-control dynamic-field"  data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" value="{{ date('H:i') ?? null }}">
+                <input type="time" name="btntime-{{$field->id}}" id="btntime-{{$field->id}}" class="form-control dynamic-field"  data-field-type="{{$field->type}}" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" value="{{ date('H:i') ?? null }}" {{$field->required == 1 ? 'required' : ''}}>
             </div>
         </div>
         @break

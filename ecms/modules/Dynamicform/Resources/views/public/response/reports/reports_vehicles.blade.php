@@ -57,7 +57,7 @@
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label for="">Formularios</label>
-                                        <select name="forms" id="formularios" class="form-control">
+                                        <select name="forms" id="formularios" class="form-control" required>
                                             @if(empty($forms))
                                                 <option disabled>No hay opciones disponibles</option>
                                             @else
@@ -72,11 +72,11 @@
                                     <div class="row mt-2">
                                         <div class="form-group col-6">
                                             <label class="text-truncate">Vehículo:</label>
-                                            <select class="vehicleLabel" id="vehicleLabelDay" name="vehicle"></select>
+                                            <select class="vehicleLabel" id="vehicleLabelDay" name="vehicle" required></select>
                                         </div>
                                         <div class="form-group col-6">
                                             <label for="">Dia</label>
-                                            <input type="date" class="date form-control" name="dateStart">
+                                            <input type="date" class="date form-control" name="dateStart" required value="{{date('Y-m-d')??null}}">
                                         </div>
                                     </div>
 
