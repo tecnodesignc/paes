@@ -24,6 +24,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
+                    @include('partials.notifications')
                     <div class="position-relative">
                         <div class="modal-button mt-2">
                             <a href="{{route('transport.driver.create')}}"
@@ -137,20 +138,34 @@
                     {
                         id: 'company',
                         name: 'Empresas asignadas',
-                        width: '200px',
+                        width: '450px',
                         formatter: (function (cell) {
                             return gridjs.html('<span class="badge badge-pill badge-soft-success font-size-12">'+cell.name+'</span>')
                         })
                     },
                     {
                         id: "id",
-                        name: "Action",
+                        name: "Acciones",
                         sort: {
                             enabled: false
                         },
-                        formatter: (function (cell) {
-                            return gridjs.html('<div class="d-flex gap-3"><a href="/transport/drivers/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="text-success"><i class="mdi mdi-eye-outline font-size-18"></i></a><a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a></div>');
-                        })
+                        width: '180px',
+                        formatter: (cell, row) => {
+                            let company={{company()->id??0}};
+                            let actionsHtml = '<div class="d-flex justify-content-center align-items-center gap-4">';
+                            let hasAccessEdit = {{$currentUser->hasAccess('dynamicform.forms.edit') ? 'true' : 'false'}};
+                            // let hasAccessDestroy = {{ $currentUser->hasAccess('dynamicform.forms.destroy') ? 'true' : 'false' }};
+
+                            if (hasAccessEdit){
+                                actionsHtml += '<a href="/transport/drivers/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="text-success"><i class="mdi mdi-eye-outline mdi-24px"></i></a>'
+                               }
+
+                            // if (hasAccessDestroy){
+                            //     actionsHtml += '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" class="text-danger" onclick="softDeleteDriver(event, '+ row.cells[0].data +')" ><i class="mdi mdi-delete mdi-24px"></i></a>';
+                            // }
+                            actionsHtml += '</div>';
+                            return gridjs.html(actionsHtml);
+                        },
                     }
 
                 ],
@@ -220,165 +235,212 @@
 
         }
 
-        {{--     function geocodeLatLng(lat, lng, id) {
-                loading.show()
-                const geocoder = new google.maps.Geocoder();
-                const latlng = {
-                    lat: parseFloat(lat),
-                    lng: parseFloat(lng),
-                };
+        // function softDeleteDriver(event, id) {
+        //     event.preventDefault(); // Evita que el navegador siga el enlace
+        //     Swal.fire({
+        //         title: "¿Estás seguro de que quieres eliminar este registro?",
+        //         text: "Esta acción no se puede revertir!",
+        //         icon: "warning",
+        //         showCancelButton: true,
+        //         confirmButtonColor: "#3085d6",
+        //         cancelButtonColor: "#d33",
+        //         confirmButtonText: "Eliminar!",
+        //         cancelButtonText: "Cancelar"
+        //         }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             // Generar la URL de la solicitud DELETE con el ID del formulario y la ID del campo
+        //             var route = `{{ route('api.transport.driver.destroy', ['driver' => ':id']) }}`.replace(':id', id);
+        //             axios.delete(route, {
+        //                 headers: {
+        //                     'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+        //                     'Content-Type': 'application/json'
+        //                 }
+        //             })
+        //             .then(response => {
+        //                 // Verificar si la solicitud fue exitosa
+        //                 if (response.status === 200) {
+        //                     Swal.fire({
+        //                         title: "Eliminado!",
+        //                         text: "Registro eliminado exitosamente.",
+        //                         icon: "success"
+        //                     });
+        //                     // Actualizamos la tabla después de la eliminación
+        //                     mygrid.forceRender();
+        //                 } else {
+        //                     // Manejar el caso en que la solicitud no fue exitosa
+        //                     throw new Error('Error al eliminar el registro');
+        //                 }
+        //             })
+        //             .catch(error => {
+        //                 Swal.fire({
+        //                     title: "Ops...",
+        //                     text: 'No se puede borrar un conductor que ya tiene respuestas!',
+        //                     icon: "warning"
+        //                 });
+        //             });
+        //         }
+        //     });
+        // }
 
-                geocoder
-                    .geocode({location: latlng})
-                    .then((response) => {
-                        if (response.results[0]) {
-                            document.getElementById('address' + id).innerHTML = "<span>" + response.results[0].formatted_address + "</span>"
-                        } else {
-                            window.alert("No results found");
-                        }
-                        loading.hidden()
-                    })
-                    .catch(function (e) {
-                        console.log("Geocoder failed due to: " + e)
-                        alertify.error('Algo Salio Mal'                      loading.hidden();
-                    });
-            }
+        // {{--     function geocodeLatLng(lat, lng, id) {
+        //         loading.show()
+        //         const geocoder = new google.maps.Geocoder();
+        //         const latlng = {
+        //             lat: parseFloat(lat),
+        //             lng: parseFloat(lng),
+        //         };
 
-            {{--    function updateOrder(order_id, status) {
-                let token = "{{$currentUser->getFirstApiKey() }}";
-                loading.show()
-                axios.put('{{route('api.orders.order.store')}}/' + order_id, {
-                    status: status,
-                }, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': '{{csrf_token()}}',
-                    }
-                }).then(function (response) {
-                    mygrid.updateConfig({
-                        server: {
-                            url: '{{route('api.orders.order.index')}}',
-                            headers: {
-                                Authorization: `Bearer {{$currentUser->getFirstApiKey()}}`,
-                                'Content-Type': 'application/json'
-                            },
-                            then: data => data.data,
-                            total: data => data.meta.page.total
-                        }
-                    }).forceRender();
-                    loading.hidden();
-                }).catch(function (error) {
-                    console.log(error);
-                    alertify.error('Algo Salio Mal');
-                    loading.hidden();
-                });
-            }
+        //         geocoder
+        //             .geocode({location: latlng})
+        //             .then((response) => {
+        //                 if (response.results[0]) {
+        //                     document.getElementById('address' + id).innerHTML = "<span>" + response.results[0].formatted_address + "</span>"
+        //                 } else {
+        //                     window.alert("No results found");
+        //                 }
+        //                 loading.hidden()
+        //             })
+        //             .catch(function (e) {
+        //                 console.log("Geocoder failed due to: " + e)
+        //                 alertify.error('Algo Salio Mal'                      loading.hidden();
+        //             });
+        //     }
 
-            function openModal(order_id) {
-                let token = "{{$currentUser->getFirstApiKey() }}";
-                const image = '';
-                loading.show()
-                axios.get('{{route('api.orders.order.index')}}/' + order_id, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{csrf_token()}}',
-                    }
-                }).then(function (response) {
-                    loading.hidden()
-                    $('#shipping_guide').text(response.data.data.shipping_guide);
-                    $('#device').text(response.data.data.device.name);
-                    $('#order-status').text(response.data.data.status);
-                    $('#logistics').text(response.data.data.logistics);
-                    $('#pickup_name').text(response.data.data.pickup.name);
-                    $('#pickup_contact').text(response.data.data.pickup.contact);
-                    $('#pickup_notes').text(response.data.data.pickup_notes);
-                    $('#shipping_name').text(response.data.data.shipping.name);
-                    $('#shipping_contact').text(response.data.data.shipping.contact);
-                    $('#shipping_notes').text(response.data.data.shipping_notes);
-                    $('#addOrderModal').modal('show')
-                    let modalorderid = document.getElementById("modal-order-id").value = order_id;
-                    let image = '';
-                    let myDropzone = new Dropzone("#order_image", {
-                        url: "{{route('api.orders.order.uploadImage')}}",
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'X-CSRF-TOKEN': '{{csrf_token()}}',
-                        },
-                        method: 'post',
-                        autoUpload:true,
-                        uploadMultiple: false,
-                        paramName: 'file',
-                        params: {'order_id': order_id},
-                        acceptedFiles: "image/*",
-                        maxFiles: 1,
-                    })
-                    myDropzone.on("success", function (file, response) {
-                        console.log(response)
-                        alertify.success('Imagen Guardada');
-                        image = response.data.image;
-                    });
-                    const canvas = document.getElementById("signature");
-                    const signaturePad = new SignaturePad(canvas);
-                    $('#clear-signature').on('click', function () {
-                        signaturePad.clear();
-                    });
+    //         {{--    function updateOrder(order_id, status) {
+    //             let token = "{{$currentUser->getFirstApiKey() }}";
+    //             loading.show()
+    //             axios.put('{{route('api.orders.order.store')}}/' + order_id, {
+    //                 status: status,
+    //             }, {
+    //                 headers: {
+    //                     'Authorization': `Bearer ${token}`,
+    //                     'X-Requested-With': 'XMLHttpRequest',
+    //                     'X-CSRF-TOKEN': '{{csrf_token()}}',
+    //                 }
+    //             }).then(function (response) {
+    //                 mygrid.updateConfig({
+    //                     server: {
+    //                         url: '{{route('api.orders.order.index')}}',
+    //                         headers: {
+    //                             Authorization: `Bearer {{$currentUser->getFirstApiKey()}}`,
+    //                             'Content-Type': 'application/json'
+    //                         },
+    //                         then: data => data.data,
+    //                         total: data => data.meta.page.total
+    //                     }
+    //                 }).forceRender();
+    //                 loading.hidden();
+    //             }).catch(function (error) {
+    //                 console.log(error);
+    //                 alertify.error('Algo Salio Mal');
+    //                 loading.hidden();
+    //             });
+    //         }
 
-                    $('#cancel-modal-order').on('click', function () {
-                        myDropzone.removeAllFiles();
-                    });
+    //         function openModal(order_id) {
+    //             let token = "{{$currentUser->getFirstApiKey() }}";
+    //             const image = '';
+    //             loading.show()
+    //             axios.get('{{route('api.orders.order.index')}}/' + order_id, {
+    //                 headers: {
+    //                     'Authorization': `Bearer ${token}`,
+    //                     'Content-Type': 'application/json',
+    //                     'X-CSRF-TOKEN': '{{csrf_token()}}',
+    //                 }
+    //             }).then(function (response) {
+    //                 loading.hidden()
+    //                 $('#shipping_guide').text(response.data.data.shipping_guide);
+    //                 $('#device').text(response.data.data.device.name);
+    //                 $('#order-status').text(response.data.data.status);
+    //                 $('#logistics').text(response.data.data.logistics);
+    //                 $('#pickup_name').text(response.data.data.pickup.name);
+    //                 $('#pickup_contact').text(response.data.data.pickup.contact);
+    //                 $('#pickup_notes').text(response.data.data.pickup_notes);
+    //                 $('#shipping_name').text(response.data.data.shipping.name);
+    //                 $('#shipping_contact').text(response.data.data.shipping.contact);
+    //                 $('#shipping_notes').text(response.data.data.shipping_notes);
+    //                 $('#addOrderModal').modal('show')
+    //                 let modalorderid = document.getElementById("modal-order-id").value = order_id;
+    //                 let image = '';
+    //                 let myDropzone = new Dropzone("#order_image", {
+    //                     url: "{{route('api.orders.order.uploadImage')}}",
+    //                     headers: {
+    //                         'Authorization': `Bearer ${token}`,
+    //                         'X-CSRF-TOKEN': '{{csrf_token()}}',
+    //                     },
+    //                     method: 'post',
+    //                     autoUpload:true,
+    //                     uploadMultiple: false,
+    //                     paramName: 'file',
+    //                     params: {'order_id': order_id},
+    //                     acceptedFiles: "image/*",
+    //                     maxFiles: 1,
+    //                 })
+    //                 myDropzone.on("success", function (file, response) {
+    //                     console.log(response)
+    //                     alertify.success('Imagen Guardada');
+    //                     image = response.data.image;
+    //                 });
+    //                 const canvas = document.getElementById("signature");
+    //                 const signaturePad = new SignaturePad(canvas);
+    //                 $('#clear-signature').on('click', function () {
+    //                     signaturePad.clear();
+    //                 });
 
-                    $('#send-modal-order').on('click', function () {
-                        if (!signaturePad.isEmpty()) {
-                            let token = "{{$currentUser->getFirstApiKey() }}";
-                            let signature = signaturePad.toDataURL('image/png')
-                            loading.show()
-                            console.log()
-                            axios.put('{{route('api.orders.order.store')}}/' + order_id, {
-                                delivery_confirmation: signaturePad.toDataURL('image/png'),
-                                image: image,
-                                status: 2,
-                                shipping_notes:$('#shipping_notes').val()
-                            }, {
-                                headers: {
-                                    'Authorization': `Bearer ${token}`,
-                                    'X-Requested-With': 'XMLHttpRequest',
-                                    'X-CSRF-TOKEN': '{{csrf_token()}}',
-                                }
-                            }).then(function (response) {
-                                mygrid.updateConfig({
-                                    server: {
-                                        url: '{{route('api.orders.order.index')}}',
-                                        headers: {
-                                            Authorization: `Bearer {{$currentUser->getFirstApiKey()}}`,
-                                            'Content-Type': 'application/json'
-                                        },
-                                        then: data => data.data,
-                                        total: data => data.meta.page.total
-                                    }
-                                }).forceRender();
-                                loading.hidden();
-                            }).catch(function (error) {
-                                console.log(error);
-                                alertify.error('Algo Salio Mal');
-                            });
-                            myDropzone.removeAllFiles();
-                            signaturePad.clear();
-                            alertify.success('Orden Actualizada');
-                            $('#addOrderModal').modal('hide')
-                        } else {
-                            alertify.error('Documento no firmado');
-                        }
-                    });
+    //                 $('#cancel-modal-order').on('click', function () {
+    //                     myDropzone.removeAllFiles();
+    //                 });
 
-                }).catch(function (error) {
-                    console.log(error);
-                    alertify.error('Algo Salio Mal');
-                });
+    //                 $('#send-modal-order').on('click', function () {
+    //                     if (!signaturePad.isEmpty()) {
+    //                         let token = "{{$currentUser->getFirstApiKey() }}";
+    //                         let signature = signaturePad.toDataURL('image/png')
+    //                         loading.show()
+    //                         console.log()
+    //                         axios.put('{{route('api.orders.order.store')}}/' + order_id, {
+    //                             delivery_confirmation: signaturePad.toDataURL('image/png'),
+    //                             image: image,
+    //                             status: 2,
+    //                             shipping_notes:$('#shipping_notes').val()
+    //                         }, {
+    //                             headers: {
+    //                                 'Authorization': `Bearer ${token}`,
+    //                                 'X-Requested-With': 'XMLHttpRequest',
+    //                                 'X-CSRF-TOKEN': '{{csrf_token()}}',
+    //                             }
+    //                         }).then(function (response) {
+    //                             mygrid.updateConfig({
+    //                                 server: {
+    //                                     url: '{{route('api.orders.order.index')}}',
+    //                                     headers: {
+    //                                         Authorization: `Bearer {{$currentUser->getFirstApiKey()}}`,
+    //                                         'Content-Type': 'application/json'
+    //                                     },
+    //                                     then: data => data.data,
+    //                                     total: data => data.meta.page.total
+    //                                 }
+    //                             }).forceRender();
+    //                             loading.hidden();
+    //                         }).catch(function (error) {
+    //                             console.log(error);
+    //                             alertify.error('Algo Salio Mal');
+    //                         });
+    //                         myDropzone.removeAllFiles();
+    //                         signaturePad.clear();
+    //                         alertify.success('Orden Actualizada');
+    //                         $('#addOrderModal').modal('hide')
+    //                     } else {
+    //                         alertify.error('Documento no firmado');
+    //                     }
+    //                 });
 
-            }
-    --}}
+    //             }).catch(function (error) {
+    //                 console.log(error);
+    //                 alertify.error('Algo Salio Mal');
+    //             });
+
+    //         }
+    // --}}
     </script>
 
     <style>

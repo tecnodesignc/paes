@@ -81,9 +81,9 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end pt-0">
                     <a class="dropdown-item" href="{{route('account.profile.view')}}"><i class='bx bx-user-circle text-muted font-size-18 align-middle me-1'></i> <span class="align-middle">Mi cuenta </span></a>
-                    <a class="dropdown-item" href="{{url('#')}}"><i class='bx bx-buoy text-muted font-size-18 align-middle me-1'></i> <span class="align-middle">Soporte</span></a>
+                    {{-- <a class="dropdown-item" href="{{url('#')}}"><i class='bx bx-buoy text-muted font-size-18 align-middle me-1'></i> <span class="align-middle">Soporte</span></a> --}}
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item d-flex align-items-center" href="#"><i class='bx bx-cog text-muted font-size-18 align-middle me-1'></i> <span class="align-middle me-3">Configuración</span></a>
+                    {{-- <a class="dropdown-item d-flex align-items-center" href="#"><i class='bx bx-cog text-muted font-size-18 align-middle me-1'></i> <span class="align-middle me-3">Configuración</span></a> --}}
                     <a class="dropdown-item" href="{{route('account.profile.view')}}#notification"><i class='bx bx-lock text-muted font-size-18 align-middle me-1'></i> <span class="align-middle">Notificaciones</span></a>
                     <a class="dropdown-item"  href="{{ route('logout') }}"><i class="bx bx-power-off font-size-16 align-middle me-1"></i> <span key="t-logout">{{ trans('core::core.general.sign out') }}</span></a>
                 </div>

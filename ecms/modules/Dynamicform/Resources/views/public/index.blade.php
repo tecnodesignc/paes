@@ -102,13 +102,13 @@
 
                 <div class="card-body px-0">
                     <div class="table-responsive">
-                        <table class="table table-striped">
+                        <table class="table table-hover">
                             <tbody>
                                 @foreach ($conteoPorEmpresa as $conteoId => $conteo)
-                                    <tr class="items-center text-center">
-                                        <td width="50%">{{ $conteo['name'] ?? null}}</td>
-                                        <td width="50%">{{ $conteo['cantidad'] ?? null}}</td>
-                                    </tr>
+                                <tr class="items-center text-center" onclick="window.location.href='/preoperativo/form/{{ $conteo['form_id'] }}/response'" title="Click para ver las respuestas" >
+                                    <td width="50%">{{ $conteo['name'] ?? null }}</td>
+                                    <td width="50%">{{ $conteo['cantidad'] ?? null }}</td>
+                                </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -191,7 +191,7 @@
                     {
                         id: 'company',
                         name: 'Empresa',
-                        width: '200px',
+                        width: '350px',
                         formatter: (function (cell) {
                             return cell.name;
                         })
@@ -204,7 +204,7 @@
                     {
                         id: "form",
                         name: "Formulario",
-                        width: '250px',
+                        width: '350px',
                         formatter: (function (cell) {
                             return cell.name;
                         })

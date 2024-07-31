@@ -86,7 +86,7 @@
                                                     })->toArray();
                                                 @endphp
                                                 <label for="companies" class="form-label font-size-13 text-muted">Empresas Asignadas</label>
-                                                @if ($companiesOld)
+                                                {{-- @if ($companiesOld) --}}
                                                     <select required name="companies[]" id="companies" class="form-control companies" multiple="multiple" >
                                                         @foreach(companies() as $company)
                                                             <option value="{{$company->id}}" {{in_array($company->id ,old('companies',$companiesOld)) ? 'selected' : ''}} >
@@ -94,14 +94,25 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                @else
-                                                    <input type="text" value="No cuenta con ninguna empresa asignada" class="form-control" disabled>
-                                                @endif
+                                                {{-- @else
+                                                    <input type="text" value="No cuenta con ninguna empresa asignada" class="form-control" disabled> --}}
+                                                {{-- @endif --}}
 
                                                 {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
 
-                                            <input id="company_create" name="company_create" type="hidden" value="{{session('company')}}" class="form-control" required>
+                                            @if($currentUser->hasAccess('sass.companies.indexall') || (companies()->count() > 1 && (session('company') == $form->company_create)))
+                                                <div class="mb-3 {{ $errors->has("company_create") ? ' was-validated' : '' }}">
+                                                    <label class="form-label" for="company_create">Empresa Admin</label>
+                                                    <select class="form-control company_create" data-trigger name="company_create"
+                                                            id="company_create" required>
+                                                        @foreach(companies() as $company)
+                                                            <option value="{{$company->id}}" {{$company->id == old('company_create', $form->company_create ?? null) ? 'selected' : ''}} >{{$company->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -324,6 +335,10 @@
                     placeholder: "--Seleccione--",
                     width: '100%'
                 });
+                $('.company_create').select2({
+                    width: '100%'
+                });
+
             })
         })();
     </script>

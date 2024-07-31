@@ -23,6 +23,7 @@
         <div class="col-lg-12">
             <div id="addproduct-accordion" class="custom-accordion">
                 <div class="card">
+                    @include('partials.notifications')
                     <a href="#addproduct-productinfo-collapse" class="text-dark" data-bs-toggle="collapse"
                        aria-expanded="true" aria-controls="addproduct-productinfo-collapse">
                         <div class="p-4">
@@ -55,29 +56,33 @@
                                 <div class="col-lg-8">
                                     <div class="card">
                                         <div class="card-body">
-                                            <div class="mb-3 {{ $errors->has("plate") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="plate">Placa</label>
+                                            <div class="mb-3 {{ $errors->has('plate') ? ' was-validated' : '' }}">
+                                                <label class="form-label" for="plate">Placa *</label>
                                                 <input id="plate" name="plate"
                                                        placeholder="Agrega Placa"
                                                        type="text"
-                                                       value="{{old('plate')}}"
-                                                       class="form-control">
+                                                       value="{{ old('plate') }}"
+                                                       class="form-control"
+                                                       required>
                                                 {!! $errors->first('plate', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
-                                            <div class="mb-3 {{ $errors->has("brand") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="brand">Marca</label>
-                                                <input id="brand" name="brand" placeholder="Agrega Marca"
+                                            <div class="mb-3 {{ $errors->has('brand') ? ' was-validated' : '' }}">
+                                                <label class="form-label" for="brand">Marca *</label>
+                                                <input id="brand" name="brand"
+                                                       placeholder="Agrega Marca"
                                                        type="text"
-                                                       value="{{old('brand')}}"
-                                                       class="form-control">
+                                                       value="{{ old('brand') }}"
+                                                       class="form-control"
+                                                       required>
                                                 {!! $errors->first('brand', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("model") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="model">Modelo</label>
+                                                <label class="form-label" for="model">Modelo *</label>
                                                 <input id="model" name="model" placeholder="Agrega Modelo"
                                                        type="text"
                                                        value="{{old('model')}}"
-                                                       class="form-control">
+                                                       class="form-control"
+                                                       required>
                                                 {!! $errors->first('model', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("class") ? ' was-validated' : '' }}">
@@ -89,7 +94,7 @@
                                                 {!! $errors->first('class', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("reference") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="reference">Referencia</label>
+                                                <label class="form-label" for="reference" title="Ingrese el ID del GPS instalado">Referencia</label>
                                                 <input id="reference" name="reference" placeholder="Agrega Referencia"
                                                        type="text"
                                                        value="{{old('reference')}}"
@@ -97,11 +102,12 @@
                                                 {!! $errors->first('reference', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("doors") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="doors">Numero de Puertas</label>
+                                                <label class="form-label" for="doors">Numero de Puertas *</label>
                                                 <input id="doors" name="doors" placeholder="Agrega Puertas"
                                                        type="number"
                                                        value="{{old('doors')}}"
                                                        class="form-control"
+                                                       min="0"
                                                        required>
                                                 {!! $errors->first('doors', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
@@ -115,9 +121,9 @@
                                             </div>
                                             @if($currentUser->hasAccess('sass.companies.indexall')|| (companies()->count() > 1 && empty(company()->id)))
                                                 <div class="mb-3 {{ $errors->has("company_id") ? ' was-validated' : '' }}">
-                                                    <label class="form-label" for="company_id">Compañia</label>
+                                                    <label class="form-label" for="company_id">Compañia *</label>
                                                     <select class="form-control" data-trigger name="company_id"
-                                                            id="company_id">
+                                                            id="company_id" required>
                                                         <option value="">Seleccione Compañia</option>
                                                         @foreach(companies() as $company)
                                                             <option value="{{$company->id}}" {{$company->id == old('company_id', company()->id ?? null) ? 'selected' : ''}} >{{$company->name}}</option>
@@ -152,6 +158,7 @@
                                                        placeholder="Agrega Kilometraje"
                                                        type="number"
                                                        value="{{old('millage')}}"
+                                                       min="0"
                                                        class="form-control">
                                                 {!! $errors->first('millage', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>

@@ -20,10 +20,13 @@
         @endslot
     @endcomponent
     {!! Form::open(['route' => ['transport.driver.import'], 'method' => 'post', 'files'=>true , 'class'=>'needs-validation']) !!}
+
+
     <div class="row">
         <div class="col-lg-12">
             <div id="addproduct-accordion" class="custom-accordion">
                 <div class="card">
+                    @include('partials.notifications')
                     <a href="#addproduct-productinfo-collapse" class="text-dark" data-bs-toggle="collapse"
                        aria-expanded="true" aria-controls="addproduct-productinfo-collapse">
                         <div class="p-4">

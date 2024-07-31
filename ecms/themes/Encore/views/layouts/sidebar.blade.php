@@ -107,7 +107,7 @@
                 <li>
                     <a href="{{route('transport.vehicles.index')}}">
                         <i class="bx bx-car icon nav-icon"></i>
-                        <span class="menu-item" data-key="t-chat">Vehiculos</span>
+                        <span class="menu-item" data-key="t-chat">Vehículos</span>
                     </a>
                 </li>
                 @endif
@@ -115,7 +115,7 @@
                 <li>
                     <a href="{{route('transport.driver.index')}}">
                         <i class="mdi mdi-card-account-details-outline icon nav-icon"></i>
-                        <span class="menu-item" data-key="t-chat">Conductor</span>
+                        <span class="menu-item" data-key="t-chat">Colaboradores</span>
                     </a>
                 </li>
                 @endif
@@ -127,7 +127,7 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             @if($currentUser->hasAccess('transport.drivers.index')|| $currentUser->hasAccess('user.roles.index'))
-                                <li><a href="{{route('transport.driver.import')}}" data-key="t-user">Conductores y Vehículos</a></li>
+                                <li><a href="{{route('transport.driver.import')}}" data-key="t-user">Colaboradores y Vehículos</a></li>
                             @endif
                             <!--                        <li><a href="ecommerce-orders" data-key="t-orders">Api KEYS</a></li>-->
                         </ul>

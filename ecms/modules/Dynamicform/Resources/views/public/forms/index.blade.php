@@ -30,14 +30,16 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="position-relative">
-                        <div class="modal-button mt-2">
-                            <a href="{{route('dynamicform.form.create')}}"
-                               class="btn btn-success waves-effect waves-light mb-2 me-2"><i
-                                        class="mdi mdi-plus me-1"></i> Nuevo Formulario
-                            </a>
+                    @if($currentUser->hasAccess('dynamicform.forms.create'))
+                        <div class="position-relative">
+                            <div class="modal-button mt-2">
+                                <a href="{{route('dynamicform.form.create')}}"
+                                class="btn btn-success waves-effect waves-light mb-2 me-2"><i
+                                            class="mdi mdi-plus me-1"></i> Nuevo Formulario
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                     <div id="table-form"></div>
                 </div>
             </div>
@@ -88,7 +90,7 @@
                     {
                         id: 'name',
                         name: 'Titulo',
-                        width: '400px',
+                        width: '350px',
 
                     },
                     {
@@ -121,11 +123,26 @@
                             return gridjs.html(cell == '1' ? '<span class="badge badge-pill badge-soft-success font-size-12">Habilitado</span>' : '<span class="badge badge-pill badge-soft-danger font-size-12">No Habilitado</span>');
                         })
                     },
+                    {
+                        id: "created_at",
+                        name: "Creado el",
+                        width: '150px',
+                        formatter:(cell)=> moment(cell).format( 'YYYY-MM-DD')
+                    },
+                    {
+                        id: "companyCreate",
+                        name: "Empresa admin",
+                        width: '300px',
+                        formatter: function (cell) {
+                            const name = cell && cell.name ? cell.name : '';
+                            return gridjs.html('<span class="badge badge-pill badge-soft-success font-size-12">'+ name +'</span>');
+                        }
+                    },
                         @if($currentUser->hasAccess('sass.companies.index') && empty(company()->id))
                     {
                         id: 'companies',
                         name: 'Empresas asignadas',
-                        width: '200px',
+                        width: '400px',
                         formatter: (function (cell) {
                             const bussisnes = cell.map((item)=>{
                                 return   '<span class="badge badge-pill badge-soft-success font-size-12">'+item.name+'</span>'
@@ -135,22 +152,12 @@
                     },
                         @endif
                     {
-                        id: "created_at",
-                        name: "Creado el",
-                        width: '150px',
-                        formatter:(cell)=> moment(cell).format( 'YYYY-MM-DD')
-                    },
-                    {
-                        id: "company_create",
-                        hidden: true
-                    },
-                    {
                         id: "id",
                         name: "Acciones",
                         sort: {
                             enabled: false
                         },
-                        width: '180px',
+                        width: '200px',
                         formatter: (cell, row) => {
                             let company={{company()->id??0}};
                             let actionsHtml = '<div class="d-flex justify-content-center align-items-center gap-4">';
@@ -164,15 +171,15 @@
                                 actionsHtml +=
                                     '<a href="/preoperativo/form/' + row.cells[0].data + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success btn-lg"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'
                                     + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" onclick="stateField(event, '+ row.cells[0].data +')" >' + (row.cells[4].data == '1' ? '<i class="mdi mdi-lock-open mdi-24px"></i>' : '<i class="mdi mdi-lock mdi-24px text-secondary"></i>') + '</a>';
-                                }
+                                 }
                             else{
-                                if (hasAccessEdit && company == row.cells[6].data){
+                                if (hasAccessEdit && company == row.cells[6].data.id){
                                     actionsHtml +=
                                     '<a href="/preoperativo/form/' + row.cells[0].data + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success btn-lg"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>'
-                                    + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" onclick="stateField(event, '+ row.cells[0].data +')" >' + (row.cells[4].data == '1' ? '<i class="mdi mdi-lock-open mdi-24px"></i>' : '<i class="mdi mdi-lock mdi-24px text-secondary"></i>') + '</a>';
+                                    + '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Deshabilitar o habilitar formulario" onclick="stateField(event, '+ row.cells[0].data +')" >' + (row.cells[4].data == '1' ? '<i class="mdi mdi-lock-open mdi-24px"></i>' : '<i class="mdi mdi-lock mdi-24px text-secondary"></i>') + '</a>';
                                 }
                             }
-                            if (hasAccessDestroy && company == row.cells[6].data){
+                            if (hasAccessIndexAll || (hasAccessDestroy && company == row.cells[6].data.id)){
                                 actionsHtml += '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" class="text-danger" onclick="softDeleteForm(event, '+ row.cells[0].data +')" ><i class="mdi mdi-delete mdi-24px"></i></a>';
                             }
                             actionsHtml += '</div>';
@@ -196,7 +203,7 @@
                             return $company->id;
                         })->toArray());
                     }
-                    $params=['include'=>'companies','companies'=>$companies];
+                    $params=['include'=>'companies,company','companies'=>$companies];
                 @endphp
                 url: '{!!route('api.dynamicform.form.index',$params)!!}',
                 headers: {
@@ -267,7 +274,6 @@
 
         function softDeleteForm(event, formId) {
             event.preventDefault(); // Evita que el navegador siga el enlace
-            console.log(formId);
             Swal.fire({
                 title: "¿Estás seguro de que quieres eliminar este formulario?",
                 text: "Esta acción no se puede revertir!",

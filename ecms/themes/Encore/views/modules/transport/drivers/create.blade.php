@@ -5,7 +5,6 @@
 
 @section('css')
     <link href="{{Theme::url('libs/choices.js/choices.js.min.css') }}" rel="stylesheet" type="text/css"/>
-
 @endsection
 
 @section('content')
@@ -22,6 +21,7 @@
         <div class="col-lg-12">
             <div id="addproduct-accordion" class="custom-accordion">
                 <div class="card">
+                    @include('partials.notifications')
                     <a href="#addproduct-productinfo-collapse" class="text-dark" data-bs-toggle="collapse"
                        aria-expanded="true" aria-controls="addproduct-productinfo-collapse">
                         <div class="p-4">
@@ -56,20 +56,21 @@
                                         <div class="card-body">
                                             <div
                                                 class="mb-3 {{ $errors->has("driver_license") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="guia">Licencia de Conducción </label>
+                                                <label class="form-label" for="guia">Licencia de Conducción *</label>
                                                 <input id="driver_license" name="driver_license"
                                                        placeholder="Agrega Licencia de Conducción"
-                                                       type="text"
+                                                       type="number"
                                                        value="{{old('driver_license')}}"
-                                                       class="form-control">
+                                                       class="form-control"
+                                                       required>
                                                 {!! $errors->first('driver_license', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("first_name") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="guia">Nombre</label>
+                                                <label class="form-label" for="guia">Nombre *</label>
                                                 <input id="first_name" name="first_name" placeholder="Agrega Nombre"
                                                        type="text"
                                                        value="{{old('first_name')}}"
-                                                       class="form-control">
+                                                       class="form-control" required>
                                                 {!! $errors->first('first_name', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("last_name") ? ' was-validated' : '' }}">
@@ -81,11 +82,11 @@
                                                 {!! $errors->first('last_name', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("email") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="guia">Correo Electrónico</label>
+                                                <label class="form-label" for="guia">Correo Electrónico *</label>
                                                 <input id="email" name="email" placeholder="Agrega Correo Electrónico"
                                                        value="{{old('email')}}"
                                                        type="text"
-                                                       class="form-control">
+                                                       class="form-control" required>
                                                 {!! $errors->first('email', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
 
@@ -99,15 +100,15 @@
 
                                             @if($currentUser->hasAccess('sass.companies.indexall') || (companies()->count() > 1 && empty(company()->id)))
                                                 <div class="mb-3 {{ $errors->has("company_id") ? ' was-validated' : '' }}">
-                                                    <label class="form-label" for="company_id">Compañia</label>
+                                                    <label class="form-label" for="company_id">Compañia *</label>
                                                     <select class="form-control" data-trigger name="company_id"
-                                                            id="company_id">
+                                                            id="company_id" required>
                                                         <option value="">Seleccione Compañia</option>
                                                         @foreach(companies() as $company)
                                                             <option value="{{$company->id}}" {{$company->id == old('company_id', company()->id ?? null) ? 'selected' : ''}} >{{$company->name}}</option>
                                                         @endforeach
                                                     </select>
-                                                    {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
+                                                    {!! $errors->first('company_id', '<div class="invalid-feedback">:message</div>') !!}
                                                 </div>
                                             @else
                                                 <input type="hidden" name="company_id" id="company_id"
@@ -124,7 +125,7 @@
                                                                    type="checkbox"
                                                                    class="form-check-input"
                                                                    {{ old('is_activated') }}
-                                                                   value="1"/>
+                                                                   value="1" checked/>
                                                             {{ trans('user::users.form.is activated') }}
                                                             {!! $errors->first('activated', '<div class="invalid-feedback">:message</div>') !!}
                                                         </label>
@@ -139,7 +140,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group{{ $errors->has('password') ? ' is-invalid' : '' }}">
                                                 {!! Form::label('password', trans('user::users.form.password')) !!}
-                                                {!! Form::password('password', ['class' => 'form-control']) !!}
+                                                {!! Form::password('password', ['class' => 'form-control', 'required' => 'required']) !!}
                                                 {!! $errors->first('password', '<span class="invalid-feedback">:message</span>') !!}
                                             </div>
                                         </div>

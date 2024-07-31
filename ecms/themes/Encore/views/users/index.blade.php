@@ -198,7 +198,7 @@
                             return cell;
                         })
                     },
-                        @if($currentUser->hasAccess('sass.companies.index') && empty(company()->id))
+                        @if($currentUser->hasAccess('sass.companies.index') || empty(company()->id))
                     {
                         id: 'companies',
                         name: 'Empresas asignadas',
@@ -243,8 +243,6 @@
             },
 
             server: {
-
-
                 @php
                     if($currentUser->hasAccess('sass.companies.indexall')){
                         $companies=company()->id?[company()->id]:null;
@@ -254,6 +252,7 @@
                         })->toArray());
                     }
                     $params=['include'=>'companies','companies'=>$companies,'roles'=>[1,2,3,5]];
+
                 @endphp
 
 

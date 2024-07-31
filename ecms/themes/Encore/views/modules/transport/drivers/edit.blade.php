@@ -23,6 +23,7 @@
         <div class="col-lg-12">
             <div id="addproduct-accordion" class="custom-accordion">
                 <div class="card">
+                    @include('partials.notifications')
                     <a href="#addproduct-productinfo-collapse" class="text-dark" data-bs-toggle="collapse"
                        aria-expanded="true" aria-controls="addproduct-productinfo-collapse">
                         <div class="p-4">
@@ -57,20 +58,20 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="mb-3 {{ $errors->has("driver_license") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="guia">Licencia de Conducción </label>
+                                                <label class="form-label" for="guia">Licencia de Conducción * </label>
                                                 <input id="driver_license" name="driver_license"
                                                        placeholder="Agrega Licencia de Conducción"
                                                        type="text"
                                                        value="{{old('driver_license',$driver->driver_license)}}"
-                                                       class="form-control">
+                                                       class="form-control" required>
                                                 {!! $errors->first('driver_license', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("first_name") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="guia">Nombre</label>
+                                                <label class="form-label" for="guia">Nombre *</label>
                                                 <input id="first_name" name="first_name" placeholder="Agrega Nombre"
                                                        type="text"
                                                        value="{{old('first_name',$driver->user->first_name)}}"
-                                                       class="form-control">
+                                                       class="form-control" required>
                                                 {!! $errors->first('first_name', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("last_name") ? ' was-validated' : '' }}">
@@ -82,11 +83,11 @@
                                                 {!! $errors->first('last_name', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
                                             <div class="mb-3 {{ $errors->has("email") ? ' was-validated' : '' }}">
-                                                <label class="form-label" for="guia">Correo Electrónico</label>
+                                                <label class="form-label" for="guia">Correo Electrónico *</label>
                                                 <input id="email" name="email" placeholder="Agrega Correo Electrónico"
                                                        value="{{old('email',$driver->user->email)}}"
                                                        type="text"
-                                                       class="form-control">
+                                                       class="form-control" required>
                                                 {!! $errors->first('email', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
 
@@ -99,12 +100,12 @@
                                             </div>
                                             <div class="mb-3 {{ $errors->has("company_id") ? ' was-validated' : '' }}">
                                                 <label for="companies" class="form-label font-size-13 text-muted">Empresa
-                                                    Asignada</label>
+                                                    Asignada *</label>
 
                                                     @if($currentUser->hasAccess('sass.companies.indexall'))
                                                         <select class="form-control" name="company_id"
                                                             id="companies"
-                                                            placeholder="Selecciones Compañias " >
+                                                            placeholder="Seleccione Compañia" >
                                                             @foreach($companies as $company)
                                                                 <option value="{{$company->id}}" {{old('company_id',$driver->company_id)==$company->id ? 'selected' : ''}} >{{$company->name}}</option>
                                                             @endforeach

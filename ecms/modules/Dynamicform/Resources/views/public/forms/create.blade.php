@@ -79,7 +79,7 @@
                                                 {!! $errors->first('caption', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
 
-                                            <div class="mb-3 {{ $errors->has("companies") ? ' was-validated' : '' }}" style="{{$currentUser->hasAccess('sass.companies.indexall') || (companies()->count() > 0 && !empty(company()->id))?"display:block":"display:none"}}">
+                                            <div class="mb-3 {{ $errors->has("companies") ? ' was-validated' : '' }}" style="{{$currentUser->hasAccess('sass.companies.indexall') || (companies()->count() > 0)?"display:block":"display:none"}}">
                                                 <label for="companies" class="form-label font-size-13 text-muted">Empresas Asignadas</label>
                                                 <select required name="companies[]" id="companies" class="form-control companies" multiple="multiple" >
                                                     {{-- por defecto se seleccionará la empresa que tiene en la variable de sesión, verifica si esa empresa está presente en la variable de sesión y, en ese caso, agregar el atributo selected al elemento <option> --}}
@@ -92,7 +92,16 @@
                                                 {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
                                             </div>
 
-                                            <input id="company_create" name="company_create" type="hidden" value="{{session('company')}}" class="form-control">
+                                            <div class="mb-3 {{ $errors->has("company_create") ? ' was-validated' : '' }}">
+                                                <label class="form-label" for="company_create">Empresa Admin</label>
+                                                <select class="form-control company_create" data-trigger name="company_create"
+                                                        id="company_create" required>
+                                                    @foreach(companies() as $company)
+                                                        <option value="{{$company->id}}" {{$company->id == old('company_create', $form->company_create ?? null) ? 'selected' : ''}} >{{$company->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                                {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -211,6 +220,9 @@
                 });
                 $('.companies').select2({
                     placeholder: "--Seleccione--",
+                    width: '100%'
+                });
+                $('.company_create').select2({
                     width: '100%'
                 });
             })

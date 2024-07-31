@@ -5,6 +5,7 @@ namespace Modules\Dynamicform\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 // use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Sass\Entities\Company;
 
@@ -33,6 +34,10 @@ class Form extends Model
     public function companies():belongsToMany
     {
         return $this->belongsToMany(Company::class,'dynamicform__form_company');
+    }
+    public function company():belongsTo
+    {
+        return $this->belongsTo(Company::class,'company_create');
     }
 
 }

@@ -73,7 +73,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="website">Sitio Web</label>
-                                {!! Form::text('website', old('website'), ['class' => 'form-control', 'placeholder' => 'Agrega Sitio Web']) !!}
+                                {!! Form::text('website',  old('website',$company->website), ['class' => 'form-control', 'placeholder' => 'Agrega Sitio Web']) !!}
                             </div>
 
                             @if($currentUser->hasAccess('sass.companies.indexall') || companies()->count() > 1)

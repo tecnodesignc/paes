@@ -14,19 +14,23 @@ class DriversSheetImport implements ToCollection,  WithChunkReading, ShouldQueue
 
     public function collection(Collection $rows)
     {
+        $rows->forget(0);
         $driver = app(DriverRepository::class);
         try {
+            \DB::beginTransaction();
             foreach ($rows as $row) {
                 if (!$row[0] || $row[0] === 'first_name'|| $row[0] === 'driver_license') {
                     continue;
                 }
                 $driverOld = $driver->findByAttributes(['driver_license' => $row[0]]);
-                if(isset($row[6]) && !empty($row[6])){
-                    $address=explode(',',$row[6]);
-                    $address=['address'=>$address[0],'city'=>$address[1]??'','state'=>$address[2]??'','country'=>$address[3]??''];
-                }else{
-                    $address=['address'=>'','city'=>'','state'=>'','country'=>''];
-                }
+
+//                if(isset($row[6]) && !empty($row[6])){
+//                    $address=explode(',',$row[6]);
+//                    $address=['address'=>$address[0],'city'=>$address[1]??'','state'=>$address[2]??'','country'=>$address[3]??''];
+//                }else{
+//                    $address=['address'=>'','city'=>'','state'=>'','country'=>''];
+//                }
+
                 $data = [
                     "driver_license" => $row[0],
                     "first_name" => ucwords(strtolower($row[1])),
@@ -34,10 +38,10 @@ class DriversSheetImport implements ToCollection,  WithChunkReading, ShouldQueue
                     "email" => strtolower($row[3]),
                     "password" => $row[4] ?? $this->generatePassword(),
                     "roles" => [4],
-                    "phone" => $row[5] ?? '00-00',
-                    "address" => $address??'',
-                    'company_id' => $row[7],
-                    "is_activated" => $row[8]
+                    "phone" => $row[5] ?? '',
+//                    "address" => $address??'',
+                    'company_id' => session()->get('company'),
+                    "is_activated" => 1
                 ];
                 if (isset($driverOld) && !empty($driverOld)) {
                     if (!isset($row['password']) || empty($row['password'])) unset($data['password']);

@@ -63,6 +63,7 @@ class PublicController extends AdminBaseController
         $conteoPorEmpresa = $forms_response_negative->groupBy('company_id')
         ->map(function ($items) {
             return [
+                'form_id' => $items->first()->form->id,
                 'name' => $items->first()->form->name,
                 'cantidad' => $items->count(),
             ];
