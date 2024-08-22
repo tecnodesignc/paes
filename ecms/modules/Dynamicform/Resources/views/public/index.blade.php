@@ -96,24 +96,34 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex flex-wrap align-items-center">
-                        <h5 class="card-title mb-0">Cantidad formularios contestados hoy con hallazgos</h5>
+                        <h5 class="card-title mb-0">Análisis de formularios contestados hoy</h5>
                     </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover text-center">
+                        <thead>
+                            <tr class="text-primary">
+                                <th>Formularios</th>
+                                <th>Suma de hallazgos</th>
+                                <th>Conteo formularios con hallazgos</th>
+                                <th>Conteo formularios sin hallazgos</th>
+                                <th>Total formularios contestados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($countByCompany as $countId => $count)
+                            <tr onclick="window.location.href='/preoperativo/form/{{ $count['form_id'] }}/response'" title="Click para ver las respuestas" >
+                                <td width="25%">{{ $count['name'] ?? null }}</td>
+                                <td width="15%">{{ $count['findings_sum'] ?? null }}</td>
+                                <td width="20%">{{ $count['finding_negative'] ?? null }}</td>
+                                <td width="20%">{{ $count['finding_positive'] ?? null }}</td>
+                                <td width="20%">{{ $count['total_count'] ?? null }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
 
-                <div class="card-body px-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <tbody>
-                                @foreach ($conteoPorEmpresa as $conteoId => $conteo)
-                                <tr class="items-center text-center" onclick="window.location.href='/preoperativo/form/{{ $conteo['form_id'] }}/response'" title="Click para ver las respuestas" >
-                                    <td width="50%">{{ $conteo['name'] ?? null }}</td>
-                                    <td width="50%">{{ $conteo['cantidad'] ?? null }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
