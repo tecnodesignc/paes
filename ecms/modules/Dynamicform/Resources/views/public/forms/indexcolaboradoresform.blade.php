@@ -20,103 +20,110 @@
         @endslot
     @endcomponent
 
-    <div class="row justify-content-center">
-        {{-- <div class="col-md-6 col-sm-12 justify-content-center align-items-center"> --}}
-        <div id="addproduct-accordion" class="custom-accordion">
-            <div class="card border border-primary">
-                <a href="#addproduct-productinfo-collapse" class="text-dark" data-bs-toggle="collapse" aria-expanded="true"
-                    aria-controls="addproduct-productinfo-collapse">
-                    <div class="p-4">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="avatar-sm">
-                                    <div class="avatar-title rounded-circle bg-soft-primary text-primary">
-                                        <i class="mdi mdi-notebook"></i>
+        <div class="row justify-content-center">
+            {{-- <div class="col-md-6 col-sm-12 justify-content-center align-items-center"> --}}
+            <div id="addproduct-accordion" class="custom-accordion">
+                <div class="card border border-primary">
+                    <a href="#addproduct-productinfo-collapse" class="text-dark" data-bs-toggle="collapse" aria-expanded="true"
+                        aria-controls="addproduct-productinfo-collapse">
+                        <div class="p-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar-sm">
+                                        <div class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                            <i class="mdi mdi-notebook"></i>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="flex-grow-1 overflow-hidden">
-                                <h2 class="">Ver respuestas anteriores</h2>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <i class="mdi mdi-chevron-up accor-down-icon"></i>
+                                <div class="flex-grow-1 overflow-hidden">
+                                    <h2 class="">Ver respuestas anteriores</h2>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <i class="mdi mdi-chevron-up accor-down-icon"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-                <div id="addproduct-productinfo-collapse" class="collapse" data-bs-parent="#addproduct-accordion">
-                    <div class="card-body">
+                    </a>
+                    <div id="addproduct-productinfo-collapse" class="collapse" data-bs-parent="#addproduct-accordion">
+                        <div class="card-body">
 
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="position-relative">
-                                            <div class="modal-button">
-                                                <div class="row align-items-start">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="position-relative">
+                                                <div class="modal-button">
+                                                    <div class="row align-items-start">
 
-                                                    <div class="col-sm-auto">
-                                                        <div class="d-flex">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control"
-                                                                    id="datepicker-range">
-                                                                <span class="input-group-text"><i
-                                                                        class="bx bx-calendar-event"></i></span>
-                                                            </div>
-                                                            <div class="dropdown">
-                                                                <a class="btn btn-link text-body shadow-none dropdown-toggle"
-                                                                    href="#" role="button" data-bs-toggle="dropdown"
-                                                                    aria-expanded="false">
-                                                                    <i class="bx bx-dots-horizontal-rounded"></i>
-                                                                </a>
+                                                        <div class="col-sm-auto">
+                                                            <div class="d-flex">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control"
+                                                                        id="datepicker-range">
+                                                                    <span class="input-group-text"><i
+                                                                            class="bx bx-calendar-event"></i></span>
+                                                                </div>
+                                                                <div class="dropdown">
+                                                                    <a class="btn btn-link text-body shadow-none dropdown-toggle"
+                                                                        href="#" role="button" data-bs-toggle="dropdown"
+                                                                        aria-expanded="false">
+                                                                        <i class="bx bx-dots-horizontal-rounded"></i>
+                                                                    </a>
 
-                                                                <ul class="dropdown-menu dropdown-menu-end">
-                                                                    <li>
-                                                                        <button id="today"
-                                                                            class="dropdown-item">Hoy</button>
-                                                                    </li>
-                                                                    <li>
-                                                                        <button id="yesterday"
-                                                                            class="dropdown-item">Ayer</button>
-                                                                    </li>
-                                                                    <li>
-                                                                        <button id="thirtyday" class="dropdown-item">30
-                                                                            dias</button>
-                                                                    </li>
-                                                                </ul>
+                                                                    <ul class="dropdown-menu dropdown-menu-end">
+                                                                        <li>
+                                                                            <button id="today"
+                                                                                class="dropdown-item">Hoy</button>
+                                                                        </li>
+                                                                        <li>
+                                                                            <button id="yesterday"
+                                                                                class="dropdown-item">Ayer</button>
+                                                                        </li>
+                                                                        <li>
+                                                                            <button id="thirtyday" class="dropdown-item">30
+                                                                                dias</button>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <!-- end row -->
                                                 </div>
-                                                <!-- end row -->
                                             </div>
-                                        </div>
 
-                                        <div id="table-response"></div>
+                                            <div id="table-response"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
             </div>
+            {{-- </div> --}}
         </div>
-        {{-- </div> --}}
-    </div>
 
-    <div class="row">
-        @foreach ($forms as $form)
-            <a href="{{ route('dynamicform.formresponses.create', $form->id) }}" class="col-lg-4 col-sm-12">
-                <div class="card text-center" style="color: {{ $form->color }}">
-                    <div class="card-body d-flex justify-content-start align-items-center">
-                        <i class="{{ $form->icon }} me-5 display-6"></i>
-                        <p class="text-truncate display-7">{{ $form->name }}</p>
-                    </div>
-                </div>
-            </a>
-        @endforeach
-    </div>
+        <div class="row">
+            @if($forms->count() >= 1)
+                @foreach ($forms as $form)
+                    <a href="{{ route('dynamicform.formresponses.create', $form->id) }}" class="col-lg-4 col-sm-12">
+                        <div class="card text-center" style="color: {{ $form->color }}">
+                            <div class="card-body d-flex justify-content-start align-items-center">
+                                <i class="{{ $form->icon }} me-5 display-6"></i>
+                                <p class="text-truncate display-7">{{ $form->name }}</p>
+                            </div>
+                        </div>
+                    </a>
+                @endforeach
+            @else
+                <h1>¡Advertencia!</h1>
+                <h3>Tu compañía aún no tiene formularios asignados.</h3>
+            @endif
+        </div>
+
+
 
 @endsection
 @section('script')
@@ -207,10 +214,13 @@
                             enabled: false
                         },
                         formatter: (function (cell) {
-                            actionHtml = '<div class="d-flex justify-content-center align-items-center gap-4"><a href="/preoperativo/form/{{$form->id}}/response/' + cell + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Respuestas" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a>';
-                            actionHtml += '<a href="/preoperativo/form/{{$form->id}}/response/' + cell + '/pdf" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver pdf" class="text-danger"><i class="mdi mdi-file-pdf-box me-1 mdi-24px"></i></a>';
-                            actionHtml += '</div>';
-                            return gridjs.html(actionHtml);
+                            @if(isset($form))
+                                actionHtml = '<div class="d-flex justify-content-center align-items-center gap-4"><a href="/preoperativo/form/{{$form->id}}/response/' + cell + '/show" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Respuestas" class="text-info"><i class="mdi mdi-eye-outline me-1 mdi-24px"></i></a>';
+                                actionHtml += '<a href="/preoperativo/form/{{$form->id}}/response/' + cell + '/pdf" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver pdf" class="text-danger"><i class="mdi mdi-file-pdf-box me-1 mdi-24px"></i></a>';
+                                actionHtml += '</div>';
+                                return gridjs.html(actionHtml);
+                            @endif
+
                         })
                     }
                 ],
