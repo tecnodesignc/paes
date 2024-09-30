@@ -45,7 +45,9 @@
                 <div class="row mt-3">
                     <div class="col-lg-6 col-sm-6">
                         <h5 class="text-truncate font-size-18 mb-1">Vehículo:</h5>
-                        <select class="vehicleLabel" id="vehicleLabel"></select>
+                        <select class="vehicleLabel" id="vehicleLabel" required>
+                            <option value="" selected disabled>--Seleccione--</option>
+                        </select>
                     </div>
                     <div class="col-lg-6 col-sm-6">
                         <h5 class="text-truncate font-size-18 mb-1">Kilometraje:</h5>
@@ -625,7 +627,7 @@
                 }
 
                 var formData = collectFormData();
-                
+
                 //recorremos el formulario de respuestas de campo imagenes y firmas
                 formImagesAnswers.answers.forEach(function(imageAnswer) {
                     //validamos el id de la respuesta de la imagen existe contra los datos del form

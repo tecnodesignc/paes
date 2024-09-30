@@ -4,6 +4,7 @@ namespace modules\Dynamicform\Http\Controllers;
 
 use Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -332,8 +333,15 @@ class ResponseController extends AdminBaseController
                     $sheet->getCell("C$i")->getHyperlink()->setTooltip('Visualizar la imagen en el navegador');
                     $sheet->getStyle("C$i")->getFont()->getColor()->applyFromArray(['rgb' => '056add']);
                 } else {
+                    if (isset($dato->value) && is_array($dato->value)) {
+                        // Si es un array, tomamos el primer valor (o puedes ajustarlo para concatenar los valores si es necesario)
+                        $responseValue = implode(', ', $dato->value); // Combinar los valores en un string
+                    } else {
+                        $responseValue = $dato->value ?? '';
+                    }
+
                     // Otros tipos de datos
-                    $sheet->setCellValue("C$i", $dato->value ?? null);
+                    $sheet->setCellValue("C$i", $responseValue);
                 }
 
                 // Aplicamos estilos para otros tipos de datos
@@ -442,6 +450,7 @@ class ResponseController extends AdminBaseController
                 $responses[$created_at][ $answer->field_id] = [
                     'value' => $answer->value ?? null,
                     'type' => $answer->type, // Agregar el campo 'type'
+                    'finding' => $answer->finding ?? null,
                 ];
 
                 // Agregar el label al arreglo de labels si no existe
@@ -498,16 +507,6 @@ class ResponseController extends AdminBaseController
             ),
         );
 
-        // Establecer el ancho de las columnas desde C hasta AG
-        $columnas = range('C', 'AG');
-        foreach ($columnas as $col) {
-            $sheet->getColumnDimension($col)->setWidth(3.42);
-        }
-
-        //Tamaño de columnas
-        $sheet->getColumnDimension('A')->setWidth(2.42);
-        $sheet->getColumnDimension('B')->setWidth(45.42);
-
         //Tamaño de las filas
         $sheet->getRowDimension(2)->setRowHeight(50.42);
         $sheet->getRowDimension(3)->setRowHeight(26.42);
@@ -515,6 +514,15 @@ class ResponseController extends AdminBaseController
         $sheet->getRowDimension(5)->setRowHeight(17.42);
         $sheet->getRowDimension(6)->setRowHeight(17.42);
         $sheet->getRowDimension(7)->setRowHeight(10.42);
+
+        foreach (range(3, 33) as $col) {
+            $sheet->getColumnDimensionByColumn($col)->setAutoSize(false);
+            $sheet->getColumnDimensionByColumn($col)->setWidth(7);
+        }
+
+        //Tamaño de columnas
+        $sheet->getColumnDimension('A')->setWidth(2.42);
+        $sheet->getColumnDimension('B')->setWidth(42);
 
         if($data->first()->company->logo!=null){
             $path = public_path($data->first()->company->logo);
@@ -624,11 +632,25 @@ class ResponseController extends AdminBaseController
                 foreach ($responses as $day => $answer) {
                     // Verificar si el día tiene valores y corresponde al índice del response
                     if (isset($answer[$field_id])) {
-                       // Obtener el valor para este campo y día
-                        $value = ($answer[$field_id]['type'] == 8 || $answer[$field_id]['type'] == 9) ? $baseUrl . $answer[$field_id]['value'] : $answer[$field_id]['value'] ?? null;
+
+                        // Verificar si el valor es un array o un string
+                        if (is_array($answer[$field_id]['value'])) {
+                            // Si es un array, tomamos el primer valor (o puedes ajustarlo para concatenar los valores si es necesario)
+                            $responseValue = implode(', ', $answer[$field_id]['value']); // Combinar los valores en un string
+                        } else {
+                            // Si es un string, usarlo directamente
+                            $responseValue = $answer[$field_id]['value'] ?? '';
+                        }
+                        // Obtener el valor para este campo y día
+                        $value = ($answer[$field_id]['type'] == 8 || $answer[$field_id]['type'] == 9) ? $baseUrl . $responseValue : $responseValue;
+
+                        if ($answer[$field_id]['finding'] != null)
+                        {
+                            $sheet->getStyleByColumnAndRow($day + 2, $row)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('FF0000'); // Fondo rojo
+                            $sheet->getStyleByColumnAndRow($day + 2, $row)->getFont()->getColor()->setARGB('FFFFFF'); // Texto blanco
+                        }
                         // Escribir la respuesta en la celda correspondiente según el día (índice) del response
                         $sheet->setCellValueByColumnAndRow($day + 2, $row, $value);
-
                         // Verificar si el valor es una URL (tipo 8 o 9)
                         if ($answer[$field_id]['type'] == 8 || $answer[$field_id]['type'] == 9) {
                             // Obtener el texto del botón y la URL completa
@@ -886,6 +908,294 @@ class ResponseController extends AdminBaseController
         //retornamos los datos y estilos
         return $sheet;
     }
+    public function download_report_month_general(Request $request)
+    {
+        if (!session()->has('company')) {
+            return redirect()->back()->with("warning", "Selecciona una empresa");
+        }
 
+        // Ejemplo de uso de los datos
+        $params = json_decode(json_encode([
+            'filter' => [
+                'date' => [
+                    'field' => 'created_at',
+                    'from' => date('Y-m-01', strtotime($request->input('dateMonth'))),
+                    'to' => date('Y-m-t', strtotime($request->input('dateMonth')))
+                ],
+                'form_id' => $request->input('forms'),
+                'companies' => session()->get('company')
+            ], 'include' => ['form','user', 'company'], 'page' => 1, 'take' => 10000
+        ]));
+
+        $datos = $this->form_response->getItemsBy($params);
+
+        $forms_response=collect(json_decode(json_encode(FormResponseTransformer::collection($datos))));
+
+        if(!$forms_response || count($forms_response)==0){
+            return redirect()->back()->with("warning", "No tiene reporte para esta placa o mes");
+        }
+
+        $data = $forms_response->groupBy('info.vehicle.label')
+            ->map(function ($items) {
+                $labels = $items->flatMap(function ($item) {
+                    return collect($item->answers)->map(function ($answer) {
+                        return [
+                            'type' => $answer->type,
+                            'label' => $answer->label,
+                            'field_id' => $answer->field_id
+                        ];
+                    });
+                });
+            return [
+                'groupbyday' => $items->groupBy(function($item) {
+                    return Carbon::parse($item->created_at)->day;
+                }),
+
+                'findings_sum' => $items->sum('negative_num'),
+
+                'labels' => $labels->unique()
+            ];
+        });
+
+        # CREAMOS UN LIBRO DE TRABAJO
+        $documento = new Spreadsheet();
+        $documento
+            ->getProperties()
+            ->setCreator("Eje Satelital SAS")
+            ->setLastModifiedBy('Eje Satelital SAS') // última vez modificado por
+            ->setTitle('Report')
+            ->setSubject('Report Eje Satelital SAS')
+            ->setDescription('Report generated through the forms platform')
+            ->setCategory("Report in excel");
+
+         $first = true;
+        foreach ($data as $index => $response) {
+            $sheetTitle = ($index != null && $index != '')? $index : 'Sin placa';
+            // Si es el primer índice, usa la hoja activa
+             if ($first) {
+                 $reportdaysheet = $documento->getActiveSheet(); // Hoja activa por defecto
+                 $reportdaysheet->setTitle($sheetTitle); // Título de la hoja activa
+                  $first = false;
+             } else {
+                 // Crear nuevas hojas para los siguientes conjuntos de datos
+                $reportdaysheet = new \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet($documento, $sheetTitle);
+                $documento->addSheet($reportdaysheet);
+
+             }
+
+             // Llenar la hoja de trabajo con datos
+             $this->reportmonthgeneralsheet($reportdaysheet, $response);
+        }
+
+        // NOMBRE DEL REPORTE
+        $nombre_reporte = "Reporte_mensual_general_" . date('Y-m-d') . ".xlsx";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $nombre_reporte . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer = IOFactory::createWriter($documento, 'Xlsx');
+        $writer->save('php://output');
+        exit;
+    }
+    public function reportmonthgeneralsheet($sheet, $data)
+    {
+        // Estilo de borde
+        $styleArrayBorde = array(
+            'borders' => array(
+                'allBorders' => array(
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => array('argb' => '000000'),
+                ),
+            ),
+        );
+
+        //Tamaño de las filas
+        $sheet->getRowDimension(2)->setRowHeight(50.42);
+        $sheet->getRowDimension(3)->setRowHeight(26.42);
+        $sheet->getRowDimension(4)->setRowHeight(26.42);
+        $sheet->getRowDimension(5)->setRowHeight(17.42);
+        $sheet->getRowDimension(6)->setRowHeight(17.42);
+        $sheet->getRowDimension(7)->setRowHeight(10.42);
+
+        foreach (range(3, 33) as $col) {
+            $sheet->getColumnDimensionByColumn($col)->setAutoSize(false);
+            $sheet->getColumnDimensionByColumn($col)->setWidth(7);
+        }
+
+        //Tamaño de columnas
+        $sheet->getColumnDimension('A')->setWidth(2.42);
+        $sheet->getColumnDimension('B')->setWidth(42);
+
+        if($data['groupbyday']->first()[0]->company->logo != null){
+            $path = public_path($data['groupbyday']->first()[0]->company->logo);
+        }
+        else
+        {
+            $path = public_path('/assets/company/1/logo2.jpeg');
+        }
+
+        //IMAGEN DEL DOCUMENTO
+        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+        $drawing->setName('logo');
+        $drawing->setDescription('logo');
+        $drawing->setPath($path);
+        $drawing->setCoordinates('X3');
+        $drawing->setOffsetX(10);
+        $drawing->setOffsetY(5);
+        $drawing->setResizeProportional(false);
+        $drawing->setWidthAndHeight(400, 130); //set width, height
+        $drawing->setWorksheet($sheet);
+
+        //Aplico los estilo de color de letra y fondo para el titulo y los subtitulos
+        $sheet->getStyle("B2:AG2")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('CCCCCC');
+
+        //Negrilla al titulo y su titulo
+        $sheet->getStyle('B2:AG8')->getFont()->setBold(true);
+
+        //Unión de las celdas
+        $sheet->mergeCells('B2:AG2')->setCellValue('B2',$data['groupbyday']->first()[0]->form->name);
+        $sheet->mergeCells('B3:W4');
+        $sheet->mergeCells('Q5:W5');
+        $sheet->mergeCells('Q6:W6');
+        $sheet->mergeCells('Q8:W8');
+        $sheet->mergeCells('J5:P5');
+        $sheet->mergeCells('J6:P6');
+        // $sheet->mergeCells('J7:P7');
+        $sheet->mergeCells('J8:P8');
+        $sheet->mergeCells('B5:I5');
+        $sheet->mergeCells('B6:I6');
+        $sheet->mergeCells('B7:W7');
+        $sheet->mergeCells('B8:I8');
+        $sheet->mergeCells('X3:AG8');
+
+        // #Aplico los estilos del borde
+        $sheet->getStyle("B2:AG8")->applyFromArray($styleArrayBorde);
+
+        // Establecer el tamaño de fuente
+        $sheet->getStyle('B2')->getFont()->setSize(22);
+        $sheet->getStyle('B3')->getFont()->setSize(16);
+        $sheet->getStyle('B5:Q8')->getFont()->setSize(12);
+
+        //Alineo el titulo al centro
+        $centrar_texto = array(
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ),
+        );
+
+        //Alineo el titulo al centro izquierda
+        $centrar_texto_left = array(
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ),
+        );
+
+        //Alineo los titulos
+        $sheet->getStyle('B2:B3')->applyFromArray($centrar_texto);
+        $sheet->getStyle('B5:D8')->applyFromArray($centrar_texto_left);
+
+        $sheet->setCellValue('B3', $data['groupbyday']->first()[0]->company->name ?? null);
+
+        $sheet->setCellValue('J5','Placa: '. $data['groupbyday']->first()[0]->info->vehicle->label??null);
+
+        $sheet->setCellValue('Q5','NIT: '. $data['groupbyday']->first()[0]->company->identification??null);
+        $sheet->setCellValue('Q6','Mes exportado: '. date('F-Y', strtotime($data['groupbyday']->first()[0]->created_at))??null);
+        $sheet->setCellValue('Q8','Cantidad de hallazgos: '.$data['findings_sum'] ?? 0);
+
+        $row = 9;
+        $baseUrl = config('app.url');
+
+        // Escribir los labels en la columna B a partir de la celda B10
+        foreach ($data['labels'] as $index => $value) {
+            $sheet->setCellValue("B$row", $value['label']);
+            $sheet->getStyle("B$row:AG$row")->applyFromArray($styleArrayBorde);
+
+            if ($value["type"] == 12) {
+                // Inicializamos la columna como 2 (correspondiente a la columna B)
+                $col = 2;
+                // Bucle para agregar números del 1 al 31 en las columnas siguientes a partir de la columna B
+                for ($j = 1; $j <= 31; $j++) {
+                    $col++;
+                    $sheet->setCellValueByColumnAndRow($col, $row, $j); // Escribir números del 1 al 31
+                    $sheet->getStyleByColumnAndRow($col, $row)->getFont()->setSize(12);
+                    $sheet->getStyleByColumnAndRow($col, $row)->getFont()->setBold(true);
+                    $sheet->getStyleByColumnAndRow($col, $row)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('CCCCCC');
+                    $sheet->getColumnDimensionByColumn($col)->setWidth(6.42); // Establecer ancho de columna
+                }
+                $sheet->getStyle("B$row")->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('CCCCCC');
+                $sheet->getStyle("B$row")->getFont()->setBold(true);
+                $sheet->getStyle("B$row")->getFont()->setSize(12);
+            } else {
+                // Logica para llenar las columnas según el día y los títulos
+
+                // Inicializar la columna C en adelante (col = 3 para la columna C)
+                $col = 3;
+
+                // Recorrer los días en 'groupbyday'
+                foreach ($data['groupbyday'] as $day => $responses) {
+                    foreach ($responses as $response) {
+                        // Verificar si la respuesta corresponde al label actual
+                        if ($response->answers) {
+                            foreach ($response->answers as $answer) {
+                                if ($answer->label == $value['label']) {
+                                    // Verificar si el valor es un array o un string
+                                    if (is_array($answer->value)) {
+                                        // Si es un array, tomamos el primer valor (o puedes ajustarlo para concatenar los valores si es necesario)
+                                        $responseValue = implode(', ', $answer->value); // Combinar los valores en un string
+                                    } else {
+                                        // Si es un string, usarlo directamente
+                                        $responseValue = $answer->value ?? '';
+                                    }
+
+                                    // Escribir la respuesta en la columna correspondiente al día
+                                    $response = ($answer->type == 8 || $answer->type == 9) ? $baseUrl . $responseValue : $responseValue; //almacenamos el valor
+
+                                    if (isset($answer->finding)) {
+                                        $sheet->getStyleByColumnAndRow($day + 2, $row)
+                                            ->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                                            ->getStartColor()->setRGB('FF0000'); // Fondo rojo
+                                        $sheet->getStyleByColumnAndRow($day + 2, $row)
+                                            ->getFont()->getColor()->setARGB('FFFFFF'); // Texto blanco
+                                    }
+
+                                    // Escribir la respuesta en la celda correspondiente según el día (índice) del response
+                                    $sheet->setCellValueByColumnAndRow($day + 2, $row, $response);
+
+                                    // Verificar si el valor es una URL (tipo 8 o 9)
+                                    if ($answer->type == 8 || $answer->type == 9) {
+                                        // Obtener el texto del botón y la URL completa
+                                        $buttonValue = 'Ver Imagen';
+
+                                        // Escribir el texto del botón en la celda
+                                        $sheet->setCellValueByColumnAndRow($day + 2, $row, $buttonValue);
+
+                                        // Obtener la celda y configurar el hipervínculo
+                                        $cell = $sheet->getCellByColumnAndRow($day + 2, $row);
+                                        $cell->getHyperlink()->setUrl($response);
+                                        $cell->getHyperlink()->setTooltip('Visualizar la imagen en el navegador');
+
+                                        // Aplicar estilos al texto del botón para indicar que es un hipervínculo
+                                        $sheet->getStyleByColumnAndRow($day + 2, $row)->getFont()->getColor()->setARGB('056add');
+                                        $sheet->getStyleByColumnAndRow($day + 2, $row)->getFont()->setUnderline(true);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $col++; // Avanzar a la siguiente columna
+                }
+
+            }
+
+            // Avanzar a la siguiente fila para el siguiente label
+            $row++;
+        }
+
+        // Retornar el sheet con los datos y estilos aplicados
+        return $sheet;
+
+    }
 
 }

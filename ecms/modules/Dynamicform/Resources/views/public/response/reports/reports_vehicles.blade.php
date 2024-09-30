@@ -165,7 +165,6 @@
         </div>
     </div>
 
-
     {{-- Reporte General --}}
     <div class="row justify-content-center">
         <div class="col-md-6 col-sm-12 justify-content-center align-items-center">
@@ -213,6 +212,72 @@
                                     <div class="form-group mt-2">
                                         <label for="dateGeneral">Selecciona un mes y año:</label>
                                         <input type="month" id="dateGeneral" name="dateGeneral" class="form-control" required>
+                                    </div>
+
+                                    <div class="form-group mt-4">
+                                        <div class="d-flex gap-4 justify-content-end">
+                                            <button class="btn btn-success" type="submit">Descargar</button>
+                                            <button class="btn btn-danger" type="reset">Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Reporte mensual --}}
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-sm-12 justify-content-center align-items-center">
+            <div id="reportmonthgeneral-accordion" class="custom-accordion">
+                <div class="card border border-primary">
+                    <a href="#reportmonthgeneral-productinfo-collapse" class="text-dark" data-bs-toggle="collapse"
+                       aria-expanded="true" aria-controls="reportmonthgeneral-productinfo-collapse">
+                        <div class="p-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar-sm">
+                                        <div class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                            04
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 overflow-hidden">
+                                    <h2 class="">Reporte mensual total vehículos</h2>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <div id="reportmonthgeneral-productinfo-collapse" class="collapse"
+                         data-bs-parent="#reportmonthgeneral-accordion">
+                        <div class="card-body">
+                            {!! Form::open(['route' => ['dynamicform.form.download_report_month_general'], 'method' => 'POST', 'class'=>'needs-validation']) !!}
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="">Formularios</label>
+                                        <select name="forms" id="formularios" class="form-control" required>
+                                            @if(empty($forms))
+                                                <option disabled>No hay opciones disponibles</option>
+                                            @else
+                                                <option value="">--Seleccione--</option>
+                                                    @foreach($forms as $id => $name)
+                                                        <option value="{{ $id }}">{{ $name }}</option>
+                                                    @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+
+                                    <div class="row mt-2">
+                                        <div class="form-group">
+                                            <label for="dateMonth">Selecciona un mes y año:</label>
+                                            <input type="month" id="dateMonth" name="dateMonth" class="form-control" required>
+                                        </div>
                                     </div>
 
                                     <div class="form-group mt-4">

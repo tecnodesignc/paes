@@ -41,7 +41,7 @@ class DriversSheetImport implements ToCollection,  WithChunkReading, ShouldQueue
                     "phone" => $row[5] ?? '',
 //                    "address" => $address??'',
                     'company_id' => session()->get('company'),
-                    "is_activated" => 1
+                    "is_activated" => $row[6] ?? 1
                 ];
                 if (isset($driverOld) && !empty($driverOld)) {
                     if (!isset($row['password']) || empty($row['password'])) unset($data['password']);

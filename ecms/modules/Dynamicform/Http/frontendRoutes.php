@@ -38,6 +38,12 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             'middleware' => 'can:dynamicform.formresponses.index'
         ]);
 
+        $router->post('/download_report_by_month_general', [
+            'as' => 'dynamicform.form.download_report_month_general',
+            'uses' => 'ResponseController@download_report_month_general',
+            'middleware' => 'can:dynamicform.formresponses.index'
+        ]);
+
         $router->post('/download_report_by_general', [
             'as' => 'dynamicform.form.download_report_general',
             'uses' => 'ResponseController@download_report_general',

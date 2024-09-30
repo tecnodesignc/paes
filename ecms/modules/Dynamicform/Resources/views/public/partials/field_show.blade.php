@@ -28,7 +28,7 @@
             <div class="row mt-3">
                 <div class="col-lg-12 col-md-12">
                     <h5 class="font-size-18 mb-1">{{$field->label}}</h5>
-                    <input type="number" name="btnnumber-{{$field->id}}" id="btnnumber-{{$field->id}}" class="form-control dynamic-field" data-field-type="2" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" {{$field->required == 1 ? 'required' : ''}}>
+                    <input type="number" step="any" name="btnnumber-{{$field->id}}" id="btnnumber-{{$field->id}}" class="form-control dynamic-field" data-field-type="2" data-field-id="{{$field->id}}" data-field-label="{{$field->label}}" {{$field->required == 1 ? 'required' : ''}}>
                 </div>
             </div>
             @break
