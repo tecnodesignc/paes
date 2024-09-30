@@ -36,7 +36,7 @@ class VehiclesApiController extends Controller
 
             $includes=explode(',',$request->input('include'));
 
-            $parameters=json_decode(json_encode(['filter'=>['search'=>$request->input('search'),'company_id'=>$request->input('company_id')],'include'=>$includes,'page'=>$request->input('page'),'take'=>$request->input('limit')]));
+            $parameters=json_decode(json_encode(['filter'=>['search'=>$request->input('search'),'company'=>$request->input('company_id')],'include'=>$includes,'page'=>$request->input('page'),'take'=>$request->input('limit')]));
 
             $vehicles = $this->vehicles->getItemsBy($parameters);
 

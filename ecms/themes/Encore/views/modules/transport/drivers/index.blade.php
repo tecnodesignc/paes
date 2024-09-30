@@ -153,8 +153,8 @@
                         formatter: (cell, row) => {
                             let company={{company()->id??0}};
                             let actionsHtml = '<div class="d-flex justify-content-center align-items-center gap-4">';
-                            let hasAccessEdit = {{$currentUser->hasAccess('dynamicform.forms.edit') ? 'true' : 'false'}};
-                            // let hasAccessDestroy = {{ $currentUser->hasAccess('dynamicform.forms.destroy') ? 'true' : 'false' }};
+                            let hasAccessEdit = {{$currentUser->hasAccess('transport.drivers.edit') ? 'true' : 'false'}};
+                            // let hasAccessDestroy = {{ $currentUser->hasAccess('transport.driver.destroy') ? 'true' : 'false' }};
 
                             if (hasAccessEdit){
                                 actionsHtml += '<a href="/transport/drivers/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="text-success"><i class="mdi mdi-eye-outline mdi-24px"></i></a>'
