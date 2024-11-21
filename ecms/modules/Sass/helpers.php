@@ -10,12 +10,8 @@ if (function_exists('company') === false) {
 
         if (request()->session()->exists('company')){
             $company= $companies->find(request()->session()->get('company'));
-        }elseif ($currentUser->hasAccess('sass.companies.indexall')){
-            $company=json_decode(json_encode(['name'=>'Seleccione una Empresa','id'=>null]));
         }else{
-            $company=$currentUser->companies()->first();
-            if ($company)
-            request()->session()->put('company',$company->id);
+            $company=json_decode(json_encode(['name'=>'Seleccione una empresa','id'=>null]));
         }
 
         return $company;

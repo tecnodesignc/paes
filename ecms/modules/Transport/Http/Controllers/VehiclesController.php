@@ -70,7 +70,9 @@ class VehiclesController extends AdminBaseController
      */
     public function store(CreateVehiclesRequest $request): mixed
     {
-
+        if (empty($request->company_id) && !session()->has('company')) {
+            return redirect()->back()->with("warning", "Selecciona una empresa");
+        }
         $data=$request->all();
 
         $this->vehicle->create($data);
@@ -102,6 +104,9 @@ class VehiclesController extends AdminBaseController
      */
     public function update(Vehicles $vehicle, UpdateVehiclesRequest $request)
     {
+        if (empty($request->company_id) && !session()->has('company')) {
+            return redirect()->back()->with("warning", "Selecciona una empresa");
+        }
         $this->vehicle->update($vehicle, $request->all());
 
         return redirect()->route('transport.vehicles.index')

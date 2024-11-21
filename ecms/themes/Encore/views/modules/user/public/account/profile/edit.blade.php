@@ -1,4 +1,8 @@
-@extends('layouts.master')
+@if(isset($currentUser->driver->id))
+    @extends('modules.dynamic-form.layouts.master')
+@else
+    @extends('layouts.master')
+@endif
 @section('title')
     {{ trans('user::auth.profile') }} | @parent
 @stop

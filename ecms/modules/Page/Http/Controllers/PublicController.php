@@ -36,9 +36,13 @@ class PublicController extends BasePublicController
      */
     public function uri($slug): View|RedirectResponse
     {
+
         if(!$this->auth->user()->hasAccess('core.sidebar.group') && $this->auth->user()->hasAccess('dynamicform.formresponses.index')){
             return  redirect()->route('dynamicform.form.indexcolaboradoresform');
+        }else{
+         return  redirect()->route('dynamicform.dashboard');
         }
+
         $page = $this->findPageForSlug($slug);
 
         $this->throw404IfNotFound($page);

@@ -22,6 +22,7 @@
 
                         <div class="card">
                             <div class="card-body p-4">
+                                @include('partials.notifications')
                                 <div class="text-center mt-2">
                                     <h5 class="text-primary">Bienvenido!</h5>
                                     <p class="text-muted">{{ trans('user::auth.sign in welcome message') }}</p>
@@ -52,10 +53,15 @@
                                                 </a>
                                         </div>
                                         <label class="form-label" for="userpassword">{{ trans('user::auth.password') }}</label>
-                                        <input type="password" name="password"
-                                               class="form-control  @error('password') is-invalid @enderror"
+                                        <div class="input-group">
+                                            <input type="password" name="password"
+                                               class="form-control @error('password') is-invalid @enderror"
                                                id="userpassword" placeholder="{{ trans('user::auth.password') }}"
                                                aria-label="Password" aria-describedby="password-addon">
+                                            <div class="input-group-append">
+                                                <button id="show_password" class="btn btn-primary btn-sm h-100" type="button" onclick="mostrarPassword()"> <span class="mdi mdi-eye-off icon"></span> </button>
+                                            </div>
+                                        </div>
                                         @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -120,7 +126,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="text-center text-muted p-4">
-                        <p>  {{date('Y')}} - Todos los derechos reservados <i class="mdi mdi-heart text-danger"></i> Eje Satelital</p>
+                        <p>  {{date('Y')}} - Todos los derechos reservados <i class="mdi mdi-access-point text-danger"></i> Eje Satelital</p>
                         </div>
                     </div>
                 </div>
@@ -171,4 +177,16 @@
             <a href="{{ route('register')}}" class="text-center">{{ trans('user::auth.register')}}</a>
         @endif
     </div>--}}
+    <script type="text/javascript">
+        function mostrarPassword() {
+            var cambio = document.getElementById("userpassword");
+            if (cambio.type === "password") {
+                cambio.type = "text";
+                $('.icon').removeClass('mdi mdi-eye-off').addClass('mdi mdi-eye');
+            } else {
+                cambio.type = "password";
+                $('.icon').removeClass('mdi mdi-eye').addClass('mdi mdi-eye-off');
+            }
+        }
+    </script>
 @stop

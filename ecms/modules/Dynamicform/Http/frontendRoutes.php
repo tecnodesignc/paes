@@ -19,6 +19,37 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             'uses' => 'FormController@indexcolaboradoresform',
             'middleware' => 'can:dynamicform.formresponses.index'
         ]);
+
+        $router->get('/reports_vehicles', [
+            'as' => 'dynamicform.form.reports_vehicles',
+            'uses' => 'ResponseController@reports_vehicles',
+            'middleware' => 'can:dynamicform.formresponses.index'
+        ]);
+
+        $router->post('/download_report_by_day', [
+            'as' => 'dynamicform.form.download_report_day',
+            'uses' => 'ResponseController@download_report_day',
+            'middleware' => 'can:dynamicform.formresponses.index'
+        ]);
+
+        $router->post('/download_report_by_month', [
+            'as' => 'dynamicform.form.download_report_month',
+            'uses' => 'ResponseController@download_report_month',
+            'middleware' => 'can:dynamicform.formresponses.index'
+        ]);
+
+        $router->post('/download_report_by_month_general', [
+            'as' => 'dynamicform.form.download_report_month_general',
+            'uses' => 'ResponseController@download_report_month_general',
+            'middleware' => 'can:dynamicform.formresponses.index'
+        ]);
+
+        $router->post('/download_report_by_general', [
+            'as' => 'dynamicform.form.download_report_general',
+            'uses' => 'ResponseController@download_report_general',
+            'middleware' => 'can:dynamicform.formresponses.index'
+        ]);
+
         $router->get('/{form}/show', [
             'as' => 'dynamicform.form.show',
             'uses' => 'FormController@show',
@@ -44,12 +75,6 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             'uses' => 'FormController@update',
             'middleware' => 'can:dynamicform.forms.edit'
         ]);
-        $router->put('/{form}/borrar', [
-            'as' => 'dynamicform.form.destroy',
-            'uses' => 'FormController@destroy',
-            'middleware' => 'can:dynamicform.forms.destroy'
-        ]);
-
 
         $router->group(['prefix' =>'/{form}/field'], function (Router $router) {
             $router->get('/create', [
@@ -72,17 +97,19 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
                 'uses' => 'FieldController@update',
                 'middleware' => 'can:dynamicform.fields.edit'
             ]);
-            $router->delete('/{field}/borrar', [
-                'as' => 'dynamicform.field.destroy',
-                'uses' => 'FieldController@destroy',
-                'middleware' => 'can:dynamicform.fields.destroy'
-            ]);
+
             // METODO PUT SI ES OK RENDERIZAR LA TABLA
             $router->put('/{field}/orden/{orden}', [
                 'as' => 'dynamicform.field.orden',
                 'uses' => 'FieldController@orden',
                 'middleware' => 'can:dynamicform.fields.edit'
             ]);
+            $router->post('/import', [
+                'as' => 'dynamicform.field.import',
+                'uses' => 'FieldController@import',
+                'middleware' => 'can:dynamicform.fields.edit'
+            ]);
+
         });
 
         // Rutas de las respuesta de los formularios
@@ -101,7 +128,7 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             $router->get('/{form_response}/show', [
                 'as' => 'dynamicform.formresponses.show',
                 'uses' => 'ResponseController@show',
-                'middleware' => 'can:dynamicform.formresponses.edit'
+                'middleware' => 'can:dynamicform.formresponses.index'
             ]);
 
             $router->get('/create', [
@@ -119,8 +146,10 @@ $router->group(['prefix' =>'/preoperativo','middleware' => 'auth.admin'], functi
             $router->get('/{form_response}/pdf', [
                 'as' => 'dynamicform.formresponses.downloadpdf',
                 'uses' => 'ResponseController@downloadpdf',
-                // 'middleware' => 'can:dynamicform.formresponses.edit'
+                 'middleware' => 'can:dynamicform.formresponses.index'
             ]);
+
         });
+
     });
 });

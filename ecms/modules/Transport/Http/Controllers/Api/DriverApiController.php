@@ -158,7 +158,6 @@ class DriverApiController extends Controller
 
         try {
 
-
             $this->driver->destroy($driver);
 
             $response = ["data" => trans('core::core.messages.resource deleted', ['name' => trans('transport::driver.title.driver')])];

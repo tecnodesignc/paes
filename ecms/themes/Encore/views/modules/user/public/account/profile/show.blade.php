@@ -217,7 +217,20 @@
                                 </textarea>
                             </div>
                         </div>
-
+                        <div class="row mb-4">
+                            <label for="horizontal-email-input" class="col-sm-3 col-form-label">Contraseña</label>
+                            <div class="col-sm-9">
+                                <input type="password" name="password"
+                                       class="form-control" id="horizontal-email-input">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label for="horizontal-email-input" class="col-sm-3 col-form-label">Confirmación de contraseña</label>
+                            <div class="col-sm-9">
+                                <input type="password" name="password_confirmation"
+                                       class="form-control" id="horizontal-email-input">
+                            </div>
+                        </div>
                             <div class="row mb-4">
                                 <label for="avatar" class="col-sm-3">Imagen de Perfil</label>
                                 <div class="col-sm-9">

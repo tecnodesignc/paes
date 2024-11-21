@@ -58,12 +58,18 @@ class FormResponseApiController extends Controller
             $includes = explode(',', $request->input('include'));
 
             $params = json_decode(json_encode(['filter' =>
-             [
+            [
+                'date' => [
+                    'field' => 'created_at',
+                    'from' => json_decode($request->input('date'))->from,
+                    'to' => json_decode($request->input('date'))->to
+                ],
                 'search' => $request->input('search'),
                 'companies' => $request->input('companies'),
-                'form_id' => $request->input('form_id')
+                'form_id' => $request->input('form_id'),
+                'user_id' => $request->input('user_id')
             ],
-             'include' => $includes, 'page' => $request->input('page'), 'take' => $request->input('limit')]));
+            'include' => $includes, 'page' => $request->input('page'), 'take' => $request->input('limit')]));
 
             $formresponses = $this->formresponse->getItemsBy($params);
 
@@ -238,15 +244,15 @@ class FormResponseApiController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function destroy(string $criteria, Request $request): JsonResponse
+    public function destroy(FormResponse $formresponse): JsonResponse
     {
         \DB::beginTransaction();
 
         try {
 
-            $params = $this->getParamsRequest($request);
+            // $params = $this->getParamsRequest($request);
 
-            $formresponse = $this->formresponse->getItem($params);
+            // $formresponse = $this->formresponse->getItem($params);
 
             if (!$formresponse) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('dynamicform::formresponses.title.formresponses')]), 404);
 
@@ -277,8 +283,8 @@ class FormResponseApiController extends Controller
     public function vehicles($companyId): JsonResponse
     {
         try {
-
-            $response=$this->vehicle->all()->where('company_id',$companyId)->pluck('plate','plate');
+            $companyIdsArray = explode(',', $companyId);
+            $response=$this->vehicle->all()->whereIn('company_id',$companyIdsArray)->pluck('plate','plate');
 
         } catch (Exception $e) {
 

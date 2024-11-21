@@ -7,6 +7,7 @@
     <link href="{{ Theme::url('libs/choices.js/choices.js.min.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{Theme::url('/libs/@simonwep/@simonwep.min.css') }}"/>
     <link rel="stylesheet" href="{{Theme::url('libs/flatpickr/flatpickr.min.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @stop
 
 @section('content')
@@ -40,7 +41,6 @@
     <!--end breadcrumb-->
 
 --}}
-
     <div class="card">
         <div class="card-header">
             <div class="row">
@@ -131,23 +131,23 @@
                                 @php
                                     $companiesOld=$currentUser->companies;
                                 @endphp
-
                                     <div class="mb-3 {{ $errors->has("company_id") ? ' was-validated' : '' }}">
                                         <label class="form-label" for="company_id">Compañia</label>
-                                        <select class="form-control" name="companies[]"
-                                                id="companies"
-                                                placeholder="Selecciones Compañias " multiple>
+
+                                        <select required name="companies[]" id="companies" class="form-control companies" multiple="multiple" >
                                             @if($currentUser->hasAccess('sass.companies.index'))
-                                            @foreach($companies as $company)
-                                                <option value="{{$company->id}}"  {{in_array($company->id ,old('companies',[])) ? 'selected' : ''}} >{{$company->name}}</option>
-                                            @endforeach
+                                                @foreach(companies() as $company)
+                                                    <option value="{{$company->id}}" {{ in_array($company->id, old('companies', [])) ? 'selected' : '' }}>
+                                                        {{$company->name}}
+                                                    </option>
+                                                @endforeach
                                             @else
                                                 @foreach($companiesOld as $company)
                                                     <option value="{{$company->id}}"  {{in_array($company->id ,old('companies',[])) ? 'selected' : ''}} >{{$company->name}}</option>
                                                 @endforeach
                                             @endif
                                         </select>
-                                        {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
+                                        {!! $errors->first('company_id', '<div class="invalid-feedback">:message</div>') !!}
                                     </div>
 
                             </div>
@@ -158,15 +158,15 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>{{ trans('user::users.tabs.roles') }}</label>
-                                            <select class="form-control" multiple  data-trigger name="roles[]" id="roles">
+                                            <select class="form-control roles" multiple  data-trigger name="roles[]" id="roles" required>
                                                 @foreach ($roles as $role)
                                                     @if(!$currentUser->hasAccess('sass.companies.index') && ($role->id==1 || $role->id==5 ))
                                                         @php continue @endphp
                                                     @endif
                                                         <option value="{{ $role->id }}" {{in_array($role->id ,old('roles',[])) ? 'selected' : ''}}>{{ $role->name }}</option>
-
                                                 @endforeach
                                             </select>
+                                            {!! $errors->first('roles', '<div class="invalid-feedback">:message</div>') !!}
                                         </div>
                                     </div>
                                 </div>
@@ -200,8 +200,8 @@
         src="https://code.jquery.com/jquery-3.6.4.min.js"
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
         crossorigin="anonymous"></script>
-    <script src="{{ Theme::url('libs/choices.js/choices.js.min.js') }}"></script>
     <script src="{{ Theme::url('js/app.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.3/icheck.min.js"
             integrity="sha512-RGDpUuNPNGV62jwbX1n/jNVUuK/z/GRbasvukyOim4R8gUEXSAjB4o0gBplhpO8Mv9rr7HNtGzV508Q1LBGsfA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -216,19 +216,20 @@
         const loading = new Loader();
 
         document.addEventListener('DOMContentLoaded', function () {
-
             loading.hidden()
-            var multipleCancelButton = new Choices('#roles', {
-                removeItemButton: true
-            });
-            new Choices('#companies', {
-                removeItemButton: true,
-            });
         })
     </script>
     <script>
         $(function () {
             $(document).ready(function () {
+                $('.companies').select2({
+                    placeholder: "--Seleccione--",
+                    width: '100%'
+                });
+                $('.roles').select2({
+                    placeholder: "--Seleccione--",
+                    width: '100%'
+                });
                 $('.jsSelectAllAllow').on('click', function (event) {
                     event.preventDefault();
                     $(this).closest('.permissionGroup').find('.jsAllow').each(function (index, value) {

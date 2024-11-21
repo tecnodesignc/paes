@@ -80,7 +80,7 @@ class EloquentVehiclesRepository extends EloquentBaseRepository implements Vehic
      */
     public function destroy($model): bool
     {
-        event(new VehicleWasDeleted($model->id, get_class($model)));
+        // event(new VehicleWasDeleted($model->id, get_class($model)));
         return $model->delete();
     }
 

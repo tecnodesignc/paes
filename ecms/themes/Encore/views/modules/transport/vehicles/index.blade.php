@@ -62,6 +62,7 @@
                 'pagination': {
                     'previous': 'Prev.',
                     'next': 'Sig.',
+                    'to': 'de',
                     'showing': 'Mostrando',
                     'results': () => 'resultados'
                 }
@@ -74,33 +75,37 @@
                         sort: {
                             enabled: false
                         },
-                        formatter: (function (cell) {
-                            return gridjs.html('<div class="form-check font-size-16"><input class="form-check-input" type="checkbox" id="orderidcheck' + cell + '"><label class="form-check-label" for="orderidcheck' + cell + '">' + cell + '</label></div>');
-                        })
+                        width: '50px'
                     },
                     {
                         id: 'plate',
                         name: 'Placa',
-
+                        width: '120px'
                     },
                     {
                         id: 'brand',
                         name: 'Marca',
+                        width: '120px'
                     },
                     {
                         id: 'model',
                         name: 'Modelo',
+                        width: '120px'
                     },
                     {
                         id: 'class',
                         name: 'Clase',
-                    }, {
-                    id: 'imei',
-                    name: 'Dispositivo',
-                },
+                        width: '120px'
+                    },
+                    {
+                        id: 'imei',
+                        name: 'Dispositivo',
+                        width: '120px'
+                    },
                     {
                         id: 'capacity',
                         name: 'Capacidad',
+                        width: '120px'
                     },
                         @if($currentUser->hasAccess('sass.companies.index') && empty(company()->id))
                     {
@@ -108,23 +113,38 @@
                         name: 'Empresa asignada',
                         formatter: (function (cell) {
                             return cell.name
-                        })
+                        }),
+                        width: '350px'
                     },
                         @endif
                     {
                         id: "created_at",
                         name: "Creado el",
-                        formatter: (_, cell) => moment(cell).format('YYYY-MM-DD')
+                        formatter: (_, cell) => moment(cell).format('YYYY-MM-DD'),
+                        width: '150px'
                     },
                     {
                         id: "id",
-                        name: "Action",
+                        name: "Acciones",
                         sort: {
                             enabled: false
                         },
-                        formatter: (function (cell) {
-                            return gridjs.html('<div class="d-flex gap-3"><a href="/transport/vehicles/' + cell + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="text-success"><i class="mdi mdi-eye-outline font-size-18"></i></a><a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="text-danger"><i class="mdi mdi-delete font-size-18"></i></a></div>');
-                        })
+                        formatter: (function (cell, row) {
+                            let actionsHtml = '<div class="d-flex justify-content-center align-items-center gap-4">';
+                            let hasAccessEdit = {{$currentUser->hasAccess('transport.vehicles.edit') ? 'true' : 'false'}};
+                            let hasAccessDestroy = {{ $currentUser->hasAccess('transport.vehicles.destroy') ? 'true' : 'false' }};
+                            if (hasAccessEdit){
+                                actionsHtml +=
+                                '<a href="/transport/vehicles/' + row.cells[0].data + '/edit" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="text-success btn-lg"><i class="mdi mdi-clipboard-edit-outline mdi-24px"></i></a>';
+                            }
+                            if (hasAccessDestroy){
+                                actionsHtml += '<a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar" class="text-danger" onclick="softDelete(event, '+ row.cells[0].data +')" ><i class="mdi mdi-delete mdi-24px"></i></a>';
+                            }
+                            actionsHtml += '</div>';
+                            return gridjs.html(actionsHtml);
+
+                        }),
+                        width: '120px'
                     }
 
                 ],
@@ -135,11 +155,6 @@
                 }
             },
             sort: true,
-            search: {
-                server: {
-                    url: (prev, keyword) => `${prev}&search=${keyword}`
-                }
-            },
             server: {
                 @php
                     $companies=company()->id?company()->id:array_values(companies()->map(function ($company){
@@ -154,6 +169,12 @@
                 },
                 then: data => data.data,
                 total: data => data.meta.page.total
+            },
+            search: {
+                debounceTimeout: 1000,
+                server: {
+                    url: (prev, keyword) => `${prev}&search=${keyword}`
+                }
             }
         }).render(document.getElementById("table-vehicle"));
 
@@ -161,6 +182,52 @@
             defaultDate: new Date(),
             dateFormat: "d M, Y",
         });
+
+        function softDelete(event, id) {
+            event.preventDefault();
+            Swal.fire({
+                title: "¿Estás seguro de que quieres eliminar este registro?",
+                text: "Esta acción no se puede revertir!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Eliminar!",
+                cancelButtonText: "Cancelar"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    var route = `{{ route('api.transport.vehicles.destroy', ['vehicle' => ':id']) }}`.replace(':id', id);
+                    axios.delete(route, {
+                        headers: {
+                            'Authorization': `Bearer {{$currentUser->getFirstApiKey()}}`,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        // Verificar si la solicitud fue exitosa
+                        if (response.status === 200) {
+                            Swal.fire({
+                                title: "Eliminado!",
+                                text: "Registro eliminado exitosamente.",
+                                icon: "success"
+                            });
+                            // Actualizamos la tabla después de la eliminación
+                            mygrid.forceRender();
+                        } else {
+                            // Manejar el caso en que la solicitud no fue exitosa
+                            throw new Error('Error al eliminar el registro');
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: "Ops...",
+                            text: 'No se puede borrar un vehículo que ya tiene formularios, deshabilitelo!',
+                            icon: "warning"
+                        });
+                    });
+                }
+            });
+        }
 
     </script>
 

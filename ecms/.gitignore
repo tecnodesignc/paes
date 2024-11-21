@@ -17,3 +17,6 @@ yarn.lock
 .php_cs.cache
 .idea
 .git/
+vendor
+ngrok.exe
+

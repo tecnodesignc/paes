@@ -5,7 +5,7 @@
 
 @section('css')
    {!! Theme::style('libs/alertifyjs/alertifyjs.min.css') !!}
-
+   {!! Theme::style('libs/dropzone/dropzone.min.css?v='.config('app.version')) !!}
 @section('content')
     @component('components.breadcrumb')
         @slot('li_1')
@@ -74,6 +74,38 @@
                                 <label class="form-label" for="website">Sitio Web</label>
                                 {!! Form::text('website', old('website'), ['class' => 'form-control', 'placeholder' => 'Agrega Sitio Web']) !!}
                             </div>
+
+                            @if($currentUser->hasAccess('sass.companies.indexall') || companies()->count() > 1)
+                                <div class="mb-3 {{ $errors->has("parent") ? ' was-validated' : '' }}">
+                                    <label class="form-label" for="parent">Compañia padre</label>
+                                    <select class="form-control" data-trigger name="parent"
+                                            id="parent">
+                                        <option value="">Seleccione la compañia padre</option>
+                                        @foreach(companies() as $parent)
+                                            <option value="{{$parent->id}}">{{$parent->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    {!! $errors->first('parent', '<div class="invalid-feedback">:message</div>') !!}
+                                </div>
+                            @endif
+
+                            <div class="mb-3">
+                                <div class="dropzone" id="mainImage">
+                                    <input type="hidden" id="medias_single"
+                                        name="logo"
+                                        value="">
+                                    <div class="fallback">
+                                        <input name="file" type="file">
+                                    </div>
+                                    <div class="dz-message needsclick">
+                                        <div class="mb-3">
+                                            <i class="display-4 text-muted mdi mdi-cloud-upload"></i>
+                                        </div>
+                                        <h4>Haga clic para agregar imagen.</h4>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -351,7 +383,7 @@
             integrity="sha512-42PE0rd+wZ2hNXftlM78BSehIGzezNeQuzihiBCvUEB3CVxHvsShF86wBWwQORNxNINlBPuq7rG4WWhNiTVHFg=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+    <script src="{{ Theme::url('libs/dropzone/dropzone.min.js') }}"></script>
     <script type="application/javascript">
 
         const loading = new Loader();
@@ -427,6 +459,69 @@
             }
 
         }
+    </script>
+
+    <script type="application/javascript" async>
+        (function () {
+            'use strict';
+            Dropzone.autoDiscover = false;
+            let token = "{{$currentUser->getFirstApiKey() }}";
+            window.addEventListener('load', function () {
+                let company = document.getElementById('company_id').value;
+                if (!company) {
+                    document.getElementById('mainImage').style.display = "none";
+                    document.getElementById('company_id').onchange = function () {
+                        company = this.value;
+                        if (company) {
+                            document.getElementById('mainImage').style.display = "block";
+                            if (document.getElementById('mainImage')) {
+                                let myDropzone = new Dropzone("#mainImage", {
+                                    url: "{{route('api.media.store')}}",
+                                    headers: {
+                                        'Authorization': `Bearer ${token}`,
+                                        'X-CSRF-TOKEN': '{{csrf_token()}}',
+                                    },
+                                    method: 'post',
+                                    autoUpload: true,
+                                    uploadMultiple: false,
+                                    paramName: 'file',
+                                    params: {'parent_id': 1, 'company_id': company},
+                                })
+                                myDropzone.on("success", function (file, response) {
+                                    alertify.success('Archivo Guardado');
+                                    var relativeURL = response.path_string.split("/assets/")[1];
+                                    var modifiedURL = "/assets/" + relativeURL;
+                                    document.getElementById('medias_single').value = modifiedURL;
+                                });
+                            }
+                        } else {
+                            document.getElementById('mainImage').style.display = "none";
+                        }
+                    };
+                } else {
+                    if (document.getElementById('mainImage')) {
+                        let myDropzone = new Dropzone("#mainImage", {
+                            url: "{{route('api.media.store')}}",
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'X-CSRF-TOKEN': '{{csrf_token()}}',
+                            },
+                            method: 'post',
+                            autoUpload: true,
+                            uploadMultiple: false,
+                            paramName: 'file',
+                            params: {'parent_id': 1, 'company_id': company},
+                        })
+                        myDropzone.on("success", function (file, response) {
+                            alertify.success('Archivo Guardado');
+                            var relativeURL = response.path_string.split("/assets/")[1];
+                            var modifiedURL = "/assets/" + relativeURL;
+                            document.getElementById('medias_single').value = modifiedURL;
+                        });
+                    }
+                }
+            });
+        })();
     </script>
 @stop
 

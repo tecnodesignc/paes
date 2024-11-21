@@ -59,15 +59,21 @@ class DriverController extends AdminBaseController
      */
     public function store(CreateDriverRequest $request): mixed
     {
-        $data=$request->all();
-        $data['password']=$request->input('password')??$this->generatePassword();
-        dd($data);
-        $data['roles']=[4];
-        $data['is_activated']= $request->input('is_activated')??0;
-        $this->driver->create($data);
+        if (empty($request->company_id) && !session()->has('company')) {
+            return redirect()->back()->with("warning", "Selecciona una empresa");
+        }
+        try{
+            $data=$request->all();
+            $data['password']=$request->input('password')??$this->generatePassword();
+            $data['roles']=[4];
+            $data['is_activated']= $request->input('is_activated')??0;
 
-        return redirect()->route('transport.driver.index')
-            ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('transport::drivers.title.drivers')]));
+            $this->driver->create($data);
+            return redirect()->route('transport.driver.index')
+                ->withSuccess(trans('core::core.messages.resource created', ['name' => trans('transport::drivers.title.drivers')]));
+        } catch (Exception $e) {
+            return redirect()->back()->with("error", "Hubo un error al crear el colaborador: " . $e->getMessage());
+        }
     }
 
     /**
@@ -100,12 +106,21 @@ class DriverController extends AdminBaseController
     public function import(Request $request)
     {
 
+        if (!session()->has('company')) {
+            return redirect()->back()->with("warning", "Selecciona una empresa");
+        }
+
         $fileImport=$request->file('file');
 
-        Excel::Import(new ImportDrivers(),$fileImport);
+        try {
+            Excel::import(new ImportDrivers(), $fileImport);
 
-        return redirect()->route('transport.driver.index')
-            ->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('transport::passengers.title.passengers')]));
+            return redirect()->route('transport.driver.index')
+                ->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('transport::passengers.title.passengers')]));
+        } catch (Exception $e) {
+            return redirect()->back()->with("error", "Hubo un error al crear el colaborador: " . $e->getMessage());
+        }
+
     }
 
     /**
@@ -117,13 +132,20 @@ class DriverController extends AdminBaseController
      */
     public function update(Driver $driver, UpdateDriverRequest $request)
     {
-        $data=$request->all();
-        $data['roles']=[4];
-        if (empty($data['is_activated']))$data['is_activated']=false;
-        $this->driver->update($driver, $data);
+        if (empty($request->company_id) && !session()->has('company')) {
+            return redirect()->back()->with("warning", "Selecciona una empresa");
+        }
+        try {
+            $data=$request->all();
+            $data['roles']=[4];
+            if (empty($data['is_activated']))$data['is_activated']=false;
+            $this->driver->update($driver, $data);
 
-        return redirect()->route('transport.driver.index')
-            ->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('transport::drivers.title.drivers')]));
+            return redirect()->route('transport.driver.index')
+                ->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('transport::drivers.title.drivers')]));
+        } catch (Exception $e) {
+            return redirect()->back()->with("error", "Hubo un error al importar el archivo: " . $e->getMessage());
+        }
     }
 
     /**

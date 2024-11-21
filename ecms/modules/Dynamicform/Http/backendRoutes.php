@@ -6,9 +6,9 @@ use Illuminate\Routing\Router;
 $router->group(['prefix' =>'/dynamicform'], function (Router $router) {
 $router->group(['prefix' =>'/forms'], function (Router $router) {
 
-    $router->bind('form', function ($id) {
+   /* $router->bind('form', function ($id) {
         return app('Modules\Dynamicform\Repositories\FormRepository')->find($id);
-    });
+    });*/
 
     $router->get('/', [
         'as' => 'admin.dynamicform.form.index',

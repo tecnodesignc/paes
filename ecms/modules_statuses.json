@@ -15,6 +15,5 @@
     "Sass": true,
     "Transport": true,
     "Notification": true,
-    "Maintenance": true,
     "Dynamicform": true
 }

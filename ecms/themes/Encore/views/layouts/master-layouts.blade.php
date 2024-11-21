@@ -3,7 +3,7 @@
 
     <head>
         <meta charset="utf-8" />
-        <title> @yield('title') | Super - Control de pasajeros y Vehículos</title>
+        <title> @yield('title') | Forms Eje Satelital SAS</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Control de pasajeros y Vehículos" name="description" />
         <meta content="Themesbrand" name="author" />

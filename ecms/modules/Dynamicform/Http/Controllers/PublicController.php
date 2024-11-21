@@ -12,7 +12,7 @@ use Modules\Dynamicform\Repositories\FormRepository;
 use Modules\Dynamicform\Repositories\FormResponseRepository;
 use Modules\Dynamicform\Transformers\FormResponseTransformer;
 
-class PublicController extends PublicBaseController
+class PublicController extends AdminBaseController
 {
 
     private FormRepository $form;
@@ -25,8 +25,6 @@ class PublicController extends PublicBaseController
         $this->form_response = $formresponse;
         $this->form = $form;
     }
-
-
 
     /**
      * Display a listing of the resource.
@@ -59,19 +57,24 @@ class PublicController extends PublicBaseController
 
         $forms_response_count = $forms_response->count();
 
-        // filtramos los formularios que contengan 1 o mas respuestas negativas
-        $forms_response_negative = $forms_response->where('negative_num', '>=', 1);
-
         // ----- Cantidad formularios contestados hoy con hallazgos
-        $conteoPorEmpresa = $forms_response_negative->groupBy('company_id')
+        $countByCompany = $forms_response->groupBy('company_id')
         ->map(function ($items) {
             return [
+                'form_id' => $items->first()->form->id,
                 'name' => $items->first()->form->name,
-                'cantidad' => $items->count(),
+                'findings_sum' => $items->sum('negative_num'),
+                'finding_negative' => $items->filter(function ($item) {
+                    return $item->negative_num > 0;
+                })->count(),
+                'finding_positive' => $items->filter(function ($item) {
+                    return $item->negative_num == 0;
+                })->count(),
+                'total_count' => $items->count(),
             ];
         });
-
         // ----- Cantidad de respuestas negativas x dia
+        $forms_response_negative = $forms_response->where('negative_num', '>=', 1);
         $forms_response_negative_count_day = $forms_response_negative->count();
         // ----- Datos para cargar en la tabla respuestas negativas x dia
         $forms_response_negatives = [];
@@ -94,7 +97,7 @@ class PublicController extends PublicBaseController
         // -----todos los formularios activos total
         $forms_active_count=$forms->count();
 
-        return view('modules.dynamic-form.index', compact('forms_response_negatives', 'forms_active_count', 'forms_response_negative_count_day', 'conteoPorEmpresa', 'forms_response_count'));
+        return view('dynamicform::public.index', compact('forms_response_negatives', 'forms_active_count', 'forms_response_negative_count_day', 'countByCompany', 'forms_response_count'));
     }
 
 

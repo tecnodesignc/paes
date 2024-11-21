@@ -15,7 +15,7 @@ class DeviceService extends Connection
     private UserRepository $user;
 
 
-    public function GetDevices($params=[])
+    public function GetDevices($params = []): mixed
     {
         $this->params($params);
         $device = $this->get('/get_devices');
@@ -27,7 +27,7 @@ class DeviceService extends Connection
     public function GetDevice($device_id, $params)
     {
 
-        $this->params(array_merge(['device_id'=>$device_id],$params));
+        $this->params(array_merge(['device_id' => $device_id], $params));
         return $this->get('/edit_device_data');
 
     }

@@ -5,6 +5,7 @@ namespace Modules\Dynamicform\Http\Controllers;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 use Modules\Dynamicform\Entities\Form;
 use Modules\Dynamicform\Http\Requests\CreateFormRequest;
@@ -39,7 +40,7 @@ class FormController extends AdminBaseController
     public function index():Application|Factory|View
     {
 
-        return view('modules.dynamic-form.forms.index');
+        return view('dynamicform::public.forms.index');
     }
 
         /**
@@ -58,8 +59,7 @@ class FormController extends AdminBaseController
         ]));
 
         $forms=$this->form->getItemsBy($params_form);
-
-        return view('modules.dynamic-form.forms.indexcolaboradoresform', compact('forms'));
+        return view('dynamicform::public.forms.indexcolaboradoresform', compact('forms'));
     }
 
        /**
@@ -81,7 +81,7 @@ class FormController extends AdminBaseController
 
         $datos = $this->field->getItemsBy($params);
         $datos = $datos->items();
-        return view('modules.dynamic-form.forms.show', compact('form','datos'));
+        return view('dynamicform::public.forms.show', compact('form','datos'));
     }
 
     /**
@@ -89,9 +89,9 @@ class FormController extends AdminBaseController
      *
      * @return Application|Factory|View
      */
-    public function create():Application|Factory|View
+    public function create():Application|Factory|View|RedirectResponse
     {
-        return view('modules.dynamic-form.forms.create');
+        return view('dynamicform::public.forms.create');
     }
 
     /**
@@ -118,9 +118,13 @@ class FormController extends AdminBaseController
      * @param  Form $form
      * @return Response
      */
-    public function edit(Form $form) :Factory|View
+    public function edit(Form $form) :Factory|View|RedirectResponse
     {
-        return view('modules.dynamic-form.forms.edit', compact('form'));
+        if (!session()->has('company')) {
+            return redirect()->route('dynamicform.form.index')->with("warning", "Selecciona una empresa");
+        }
+
+        return view('dynamicform::public.forms.edit', compact('form'));
     }
 
     /**
@@ -132,20 +136,8 @@ class FormController extends AdminBaseController
      */
     public function update(Form $form, UpdateFormRequest $request)
     {
-        // $this->form->update($form, $request->all());
-
+        $this->form->update($form, $request->all());
         return redirect()->route('dynamicform.form.index')->withSuccess(trans('core::core.messages.resource updated', ['name' => trans('dynamicform::forms.title.forms')]));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  Form $form
-     * @return Response
-     */
-    public function destroy(Form $form)
-    {
-        $form->update(['active' => 0]);
-        return redirect()->route('dynamicform.form.index')->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('dynamicform::forms.title.forms')]));
-    }
 }

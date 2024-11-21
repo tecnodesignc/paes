@@ -56,25 +56,47 @@
             </div>
 
             <div class="dropdown d-inline-block language-switch">
-                <button type="button" class="btn header-item"
-                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     <strong>{{company()->name}}</strong>
+                <button type="button" class="btn header-item" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <strong>{{ company()->name }}</strong>
                 </button>
-              <div class="dropdown-menu dropdown-menu-end">
-                  @if($currentUser->hasAccess('sass.companies.indexall'))
-                  <a href="{{ route('sass.company.set',['0']) }}" class="dropdown-item notify-item language" data-lang="eng">
-                      <span class="align-middle">Ver Todas</span>
-                  </a>
-                  @endif
-                  @foreach(companies() as $company)
-                      <!-- item-->
-                      <a href="{{ route('sass.company.set',[$company->id]) }}" class="dropdown-item notify-item language" data-lang="eng">
-                           <span class="align-middle">{{$company->name}}</span>
-                      </a>
-                  @endforeach
+                <div class="dropdown-menu dropdown-menu-end" style="max-height: 400px; overflow-y: auto;">
+                    @if(companies()->count() > 1 && !empty(companies()))
+                        <a href="{{ route('sass.company.set', ['0']) }}" class="dropdown-item notify-item language" data-lang="eng">
+                        <span class="align-middle">Ver Todas</span>
+                        </a>
+                        <input type="text" class="form-control my-2" id="companySearch" placeholder="Buscar empresa...">
+                    @endif
+                    <div id="companyList">
+                        @foreach(companies() as $company)
+                        <a href="{{ route('sass.company.set', [$company->id]) }}" class="dropdown-item notify-item language" data-lang="eng">
+                            <span class="align-middle">{{ $company->name }}</span>
+                        </a>
+                        @endforeach
+                    </div>
                 </div>
             </div>
 
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    if (document.getElementById('companySearch')) {
+                        const companySearch = document.getElementById('companySearch');
+                        companySearch.addEventListener('keyup', function () {
+                            const filter = companySearch.value.toLowerCase();
+                            const companyList = document.getElementById('companyList');
+                            const companies = companyList.getElementsByTagName('a');
+
+                            for (let i = 0; i < companies.length; i++) {
+                                const txtValue = companies[i].textContent || companies[i].innerText;
+                                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                                companies[i].style.display = "";
+                                } else {
+                                companies[i].style.display = "none";
+                                }
+                            }
+                        });
+                    }
+                });
+            </script>
 
             @include('partials.top-nav')
 
@@ -94,9 +116,9 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end pt-0">
                     <a class="dropdown-item" href="{{route('account.profile.view')}}"><i class='bx bx-user-circle text-muted font-size-18 align-middle me-1'></i> <span class="align-middle">Mi cuenta </span></a>
-                    <a class="dropdown-item" href="{{url('#')}}"><i class='bx bx-buoy text-muted font-size-18 align-middle me-1'></i> <span class="align-middle">Soporte</span></a>
+                    {{-- <a class="dropdown-item" href="{{url('#')}}"><i class='bx bx-buoy text-muted font-size-18 align-middle me-1'></i> <span class="align-middle">Soporte</span></a> --}}
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item d-flex align-items-center" href="#"><i class='bx bx-cog text-muted font-size-18 align-middle me-1'></i> <span class="align-middle me-3">Configuración</span></a>
+                    {{-- <a class="dropdown-item d-flex align-items-center" href="#"><i class='bx bx-cog text-muted font-size-18 align-middle me-1'></i> <span class="align-middle me-3">Configuración</span></a> --}}
                     <a class="dropdown-item" href="{{route('account.profile.view')}}#notification"><i class='bx bx-lock text-muted font-size-18 align-middle me-1'></i> <span class="align-middle">Notificaciones</span></a>
                     <a class="dropdown-item"  href="{{ route('logout') }}"><i class="bx bx-power-off font-size-16 align-middle me-1"></i> <span key="t-logout">{{ trans('core::core.general.sign out') }}</span></a>
                 </div>

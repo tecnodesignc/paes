@@ -84,12 +84,12 @@ $router->group(['prefix' => '/transport'], function (Router $router) {
         $router->get('/import', [
             'as' => 'transport.driver.import-view',
             'uses' => 'DriverController@importView',
-            'middleware' => 'can:transport.passengers.create'
+            'middleware' => 'can:transport.drivers.create'
         ]);
         $router->post('/import', [
             'as' => 'transport.driver.import',
             'uses' => 'DriverController@import',
-            'middleware' => 'can:transport.passengers.create'
+            'middleware' => 'can:transport.drivers.create'
         ]);
     });
 

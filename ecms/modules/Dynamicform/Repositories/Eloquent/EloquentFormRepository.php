@@ -94,12 +94,15 @@ class EloquentFormRepository extends EloquentBaseRepository implements FormRepos
                 });
                 $query->where('active', $filter->status);
             }
-            
-            //add filter by search
+
+            // add filter by search
             if (isset($filter->search) && $filter->search) {
-                //find search in columns
+                // find search in columns using LIKE
                 $term = $filter->search;
-                $query->where('name',$term)->orWhere('id', $term);
+                $query->where(function ($query) use ($term) {
+                    $query->where('name', 'LIKE', "%{$term}%")
+                        ->orWhere('id', $term);
+                });
             }
         }
 

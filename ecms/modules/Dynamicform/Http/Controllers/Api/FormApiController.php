@@ -11,8 +11,6 @@ use Modules\Dynamicform\Http\Requests\CreateFormRequest;
 use Modules\Dynamicform\Http\Requests\UpdateFormRequest;
 use Modules\Dynamicform\Repositories\FormRepository;
 use Modules\Dynamicform\Transformers\FormTransformer;
-use Modules\Core\Http\Controllers\Api\BaseApiController;
-use Modules\User\Contracts\Authentication;
 
 class FormApiController extends Controller
 {
@@ -37,19 +35,18 @@ class FormApiController extends Controller
             $includes = explode(',', $request->input('include'));
 
             $params = json_decode(json_encode(
-                ['filter' => 
+                ['filter' =>
                     [
-                        'search' => $request->input('search'), 
+                        'search' => $request->input('search'),
                         'companies' => $request->input('companies')
-                    ], 
-                'include' => $includes, 
-                'page' => $request->input('page'), 
+                    ],
+                'include' => $includes,
+                'page' => $request->input('page'),
                 'take' => $request->input('limit')
                 ]));
             $forms = $this->form->getItemsBy($params);
 
             $response = ["data" => FormTransformer::collection($forms)];
-
             $response["meta"] = ["page" => $this->pageTransformer($forms)];
 
         } catch (Exception $e) {
@@ -169,15 +166,11 @@ class FormApiController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function destroy(string $criteria, Request $request): JsonResponse
+    public function destroy($form): JsonResponse
     {
         \DB::beginTransaction();
 
         try {
-
-            $params = $this->getParamsRequest($request);
-
-            $form = $this->form->getItem($params);
 
             if (!$form) throw new Exception(trans('core::core.exceptions.item no found', ['item' => trans('dynamicform::forms.title.forms')]), 404);
 
@@ -198,6 +191,22 @@ class FormApiController extends Controller
 
         return response()->json($response ?? ["data" => "Request successful"], $status ?? 200);
 
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  Form $form
+     * @return JsonResponse
+     */
+    public function state(Form $form): JsonResponse
+    {
+        if (!$form) {
+            return response()->json(['message' => 'Registro no encontrado'], 404);
+        }
+        $form->active = $form->active == 0 ? 1 : 0;
+        $form->save();
+        return response()->json(['message' => 'Registro borrado exitosamente'], 200);
     }
 
     protected function pageTransformer($data): array

@@ -23,6 +23,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
+                @include('partials.notifications')
                 <div class="card-body">
                     <div class="position-relative">
                         <div class="modal-button mt-2">
@@ -197,7 +198,7 @@
                             return cell;
                         })
                     },
-                        @if($currentUser->hasAccess('sass.companies.index') && empty(company()->id))
+                        @if($currentUser->hasAccess('sass.companies.index') || empty(company()->id))
                     {
                         id: 'companies',
                         name: 'Empresas asignadas',
@@ -206,13 +207,15 @@
                                 return   '<span class="badge badge-pill badge-soft-success font-size-12">'+item.name+'</span>'
                             })
                             return gridjs.html(bussisnes)
-                        })
+                        }),
+                        width: '300px',
                     },
                         @endif
                     {
                         id: "created_at",
                         name: "Creado el",
-                        formatter: (_, cell) => moment(cell).format('YYYY-MM-DD')
+                        formatter: (_, cell) => moment(cell).format('YYYY-MM-DD'),
+                        width: '250px'
                     },
                     {
                         id: "id",
@@ -241,11 +244,18 @@
 
             server: {
                 @php
-                    $params=['include'=>"companies",'roles'=>[1,4,5]];
-                        if(!$currentUser->hasAccess('sass.companies.index') || company()->id){
-                             $params=['include'=>"companies",'companies'=>[company()->id],'roles'=>[1,4,5]];
-                        }
+                    if($currentUser->hasAccess('sass.companies.indexall')){
+                        $companies=company()->id?[company()->id]:null;
+                    }else{
+                        $companies=company()->id?[company()->id]:array_values(companies()->map(function ($company){
+                            return $company->id;
+                        })->toArray());
+                    }
+                    $params=['include'=>'companies','companies'=>$companies,'roles'=>[1,2,3,5]];
+
                 @endphp
+
+
                 url: '{!!route('api.user.user.index',$params)!!}',
                 headers: {
                     Authorization: `Bearer {{$currentUser->getFirstApiKey()}}`,

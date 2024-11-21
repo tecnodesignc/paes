@@ -64,14 +64,18 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
                 $query->where('form_id', $filter->form_id);
             }
 
+            // Filter by user id
+            if(isset($filter->user_id)){
+                $query->where('user_id', $filter->user_id);
+            }
+
             //add filter by search
             if (isset($filter->search) && $filter->search) {
                 //find search in columns
                 $term = $filter->search;
                 $query->where(function ($subQuery) use ($term) {
-                    $subQuery->whereHas('translations', function ($q) use ($term) {
-                        $q->where('title', 'LIKE', "%{$term}%");
-                    })->orWhere('id', $term);
+                    // $subQuery->whereHas('translations', function ($q) use ($term) {
+                        $subQuery->where('data', 'LIKE', "%{$term}%")->orWhere('id', $term);
                 });
             }
         }
@@ -96,7 +100,7 @@ class EloquentFormResponseRepository extends EloquentBaseRepository implements F
      */
     public function create($data): Model|Collection|Builder|array|null
     {
-        \Log::info('error en eloquent repository');
+        // \Log::info('error en eloquent repository');
         $formresponse = $this->model->create($data);
         event(new FormResponsesWasCreated($formresponse, $data));
         return $formresponse;

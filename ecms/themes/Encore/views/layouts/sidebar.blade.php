@@ -34,32 +34,24 @@
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
+                @if($currentUser->hasAccess('dynamicform.forms.index'))
+                {{-- dashboard forms--}}
                 <li class="menu-title" data-key="t-menu">Menu</li>
-
                 <li>
-                    <a href="{{ url('/') }}">
+                    <a href="{{ route('dynamicform.dashboard') }}">
                         <i class="bx bx-tachometer icon nav-icon"></i>
                         <span class="menu-item" data-key="t-dashboards">{{ trans('dashboard::dashboard.name') }}</span>
                     </a>
                 </li>
-
+                @endif
+                {{-- Fin dashboard forms--}}
                 {{-- Inicio componentes de formularios --}}
                 @if($currentUser->hasAccess('dynamicform.forms.index') || $currentUser->hasAccess('dynamicform.formresponses.index') )
 
                 <li class="menu-title" data-key="t-menu">Formularios</li>
                 @endif
-                {{-- dashboard forms--}}
-                @if($currentUser->hasAccess('dynamicform.forms.index'))
-                <li>
-                    <a href="{{ route('dynamicform.dashboard') }}">
-                        <i class="mdi mdi-chart-bar icon nav-icon"></i>
-                        <span class="menu-item" data-key="t-dashboards">Dashboard</span>
-                    </a>
-                </li>
-                @endif
-                {{-- Fin dashboard forms--}}
                 {{-- Formularios de colaboradores --}}
-                @if($currentUser->hasAccess('dynamicform.formresponses.index'))
+                @if($currentUser->hasAccess('dynamicform.formresponses.index') && $currentUser->driver)
                 <li>
                     <a href="{{ route('dynamicform.form.indexcolaboradoresform') }}">
                         <i class="mdi mdi-notebook icon nav-icon"></i>
@@ -78,6 +70,25 @@
                 </li>
                 @endif
                 {{-- Fin de componentes de Admin de formularios --}}
+                {{-- Admin de formularios --}}
+                @if($currentUser->hasAccess('dynamicform.forms.index'))
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i class="mdi mdi-file-chart icon nav-icon"></i>
+                        <span class="menu-item" data-key="t-business">Reportes</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li class="menu-title" data-key="t-applications">Vehículos</li>
+                        <li>
+                            <a href="{{ route('dynamicform.form.reports_vehicles') }}"><i class="mdi mdi-file-chart icon nav-icon"></i>
+                                <span class="menu-item text-truncate" data-key="t-business">Reportes</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                @endif
+
+                {{-- Fin de componentes de Admin de formularios --}}
 
                 @if($currentUser->hasAccess('sass.companies.index'))
 
@@ -90,33 +101,21 @@
                         </li>
                     @endif
                 @endif
-                @if($currentUser->hasAccess('maintenance.events.index'))
-
-                    <li class="menu-title" data-key="t-applications">Eventos</li>
-
-                    @if($currentUser->hasAccess('maintenance.events.index'))
-                        <li><a href="{{route('maintenance.event.index')}}">
-                                <i class="mdi mdi-account-group icon nav-icon"></i>
-                                <span class="menu-item" data-key="t-business">Eventos</span>
-                            </a>
-                        </li>
-                    @endif
-                @endif
                 @if($currentUser->hasAccess('transport.vehicles.index') || $currentUser->hasAccess('transport.drivers.index'))
                 <li class="menu-title" data-key="t-applications">Transporte</li>
                 @if($currentUser->hasAccess('transport.vehicles.index'))
                 <li>
                     <a href="{{route('transport.vehicles.index')}}">
                         <i class="bx bx-car icon nav-icon"></i>
-                        <span class="menu-item" data-key="t-chat">Vehiculos</span>
+                        <span class="menu-item" data-key="t-chat">Vehículos</span>
                     </a>
                 </li>
                 @endif
                 @if($currentUser->hasAccess('transport.drivers.index'))
                 <li>
                     <a href="{{route('transport.driver.index')}}">
-                        <i class="bx bxs-bus icon nav-icon"></i>
-                        <span class="menu-item" data-key="t-chat">Conductor</span>
+                        <i class="mdi mdi-card-account-details-outline icon nav-icon"></i>
+                        <span class="menu-item" data-key="t-chat">Colaboradores</span>
                     </a>
                 </li>
                 @endif
@@ -127,8 +126,8 @@
                             <span class="menu-item" data-key="t-ecommerce">Importar</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
-                            @if($currentUser->hasAccess('user.roles.index'))
-                                <li><a href="{{route('transport.driver.import')}}" data-key="t-user">Conductores y Vehículos</a></li>
+                            @if($currentUser->hasAccess('transport.drivers.index')|| $currentUser->hasAccess('user.roles.index'))
+                                <li><a href="{{route('transport.driver.import')}}" data-key="t-user">Colaboradores y Vehículos</a></li>
                             @endif
                             <!--                        <li><a href="ecommerce-orders" data-key="t-orders">Api KEYS</a></li>-->
                         </ul>

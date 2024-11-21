@@ -38,6 +38,12 @@ $router->group(['prefix' => '/dynamicform/v1', 'middleware' => ['api.token', 'au
             'middleware' => ['token-can:dynamicform.forms.destroy']
         ]);
 
+        $router->put('/{form}/state', [
+            'as' => 'api.dynamicform.form.state',
+            'uses' => 'FormApiController@state',
+            'middleware' => ['token-can:dynamicform.forms.edit']
+        ]);
+
         $router->group(['prefix' => '/{form}/fields'], function (Router $router) {
             $router->bind('field', function ($id) {
                 return app('Modules\Dynamicform\Repositories\FieldRepository')->find($id);
@@ -104,7 +110,7 @@ $router->group(['prefix' => '/dynamicform/v1', 'middleware' => ['api.token', 'au
         $router->delete('/{responses}', [
             'as' => 'api.dynamicform.formresponse.destroy',
             'uses' => 'FormResponseApiController@destroy',
-            'middleware' => ['token-can:dynamicform.formresponses.create']
+            'middleware' => ['token-can:dynamicform.formresponses.destroy']
         ]);
 
     });

@@ -21,12 +21,9 @@ class Company extends Model
     use PresentableTrait;
 
     protected $table = 'sass__companies';
-    protected $fillable = ['logo','name','nit','address','email','identification','phone','website','type','token','settings'];
-
-
+    protected $fillable = ['logo','name','nit','address','email','identification','phone','website','type','token','settings', 'parent'];
 
     protected $presenter = CompanyPresenter::class;
-
 
     public function drivers():hasMany {
         return $this->hasMany(Driver::class);

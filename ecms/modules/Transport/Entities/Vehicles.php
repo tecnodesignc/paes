@@ -20,7 +20,7 @@ class Vehicles extends Model
     use  MediaRelation;
 
     protected $table = 'transport__vehicles';
-    protected $fillable = ['brand', 'plate', 'model', 'class',  'capacity', 'millage', 'device_id', 'device', 'company_id', 'type', 'reference', 'property_card', 'displacement', 'color', 'box_type', 'transmission_type', 'shielding', 'doors', 'serial_number', 'chassis_number', 'engine_number', 'accessories', 'axles','fixed_asset_num','transfers','cda_route_municipality','fines'
+    protected $fillable = ['brand', 'plate', 'model', 'class',  'capacity', 'millage', 'device_id', 'device', 'company_id', 'type', 'reference', 'property_card', 'displacement', 'color', 'box_type', 'transmission_type', 'shielding', 'doors', 'serial_number', 'chassis_number', 'engine_number', 'accessories', 'axles'
     ];
 
     protected $casts = [

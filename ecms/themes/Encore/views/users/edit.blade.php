@@ -7,6 +7,7 @@
     <link href="{{ Theme::url('libs/choices.js/choices.js.min.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{Theme::url('/libs/@simonwep/@simonwep.min.css') }}"/>
     <link rel="stylesheet" href="{{Theme::url('libs/flatpickr/flatpickr.min.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @stop
 
 @section('content')
@@ -125,12 +126,13 @@
                                         return $company->id;
                                     })->toArray();
                                 @endphp
-                                @if($currentUser->hasAccess('sass.companies.index'))
+
+                                @if($currentUser->hasAccess('sass.companies.indexall'))
                                     <div class="mb-3 {{ $errors->has("company_id") ? ' was-validated' : '' }}">
                                         <label class="form-label" for="company_id">Compañias asignadas</label>
-                                        <select class="form-control" name="companies[]"
+                                        <select class="form-control companies" name="companies[]"
                                                 id="companies"
-                                                placeholder="Selecciones Compañias" multiple>
+                                                placeholder="Seleccione Compañias" multiple>
                                             @foreach($companies as $company)
                                                 <option value="{{$company->id}}" {{in_array($company->id ,old('companies',$companiesOld)) ? 'selected' : ''}} >{{$company->name}}</option>
                                             @endforeach
@@ -138,13 +140,18 @@
                                         {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
                                     </div>
                                 @else
-                                    <select class="form-control" name="companies[]"
-                                            placeholder="Selecciones Compañias" multiple style="display: none">
-                                        @foreach($companies as $company)
-                                            <option value="{{$company->id}}" {{in_array($company->id ,old('companies',$companiesOld)) ? 'selected' : ''}} >{{$company->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <div class="mb-3 {{ $errors->has("company_id") ? ' was-validated' : '' }}">
+                                        <label class="form-label" for="company_id">Compañias asignadas</label>
+                                        <select class="form-control companies" name="companies[]"
+                                                placeholder="Seleccione Compañias" multiple>
+                                                @foreach(companies() as $company)
+                                                    <option value="{{$company->id}}" {{in_array($company->id ,old('companies',$companiesOld)) ? 'selected' : ''}} >{{$company->name}}</option>
+                                                @endforeach
+                                        </select>
+                                        {!! $errors->first('route_id', '<div class="invalid-feedback">:message</div>') !!}
+                                    </div>
                                 @endif
+
                                 <div class="row mb-3">
                                     <div class="col-md-3">
                                         <div class="checkbox{{ $errors->has('activated') ? ' has-error' : '' }}">
@@ -172,7 +179,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>{{ trans('user::users.tabs.roles') }}</label>
-                                            <select class="form-control" multiple  data-trigger name="roles[]" id="roles">
+                                            <select class="form-control roles" multiple  data-trigger name="roles[]" id="roles">
                                                 @foreach ($roles as $role)
                                                     @if(!$currentUser->hasAccess('sass.companies.index') && ($role->id==1 || $role->id==5 ))
                                                         @php continue @endphp
@@ -181,6 +188,7 @@
 
                                                 @endforeach
                                             </select>
+                                            {!! $errors->first('roles', '<div class="invalid-feedback">:message</div>') !!}
                                         </div>
                                     </div>
                                 </div>
@@ -240,7 +248,7 @@
         src="https://code.jquery.com/jquery-3.6.4.min.js"
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
         crossorigin="anonymous"></script>
-    <script src="{{ Theme::url('libs/choices.js/choices.js.min.js') }}"></script>
+    {{-- <script src="{{ Theme::url('libs/choices.js/choices.js.min.js') }}"></script> --}}
     <script src="{{ Theme::url('js/app.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.3/icheck.min.js"
             integrity="sha512-RGDpUuNPNGV62jwbX1n/jNVUuK/z/GRbasvukyOim4R8gUEXSAjB4o0gBplhpO8Mv9rr7HNtGzV508Q1LBGsfA=="
@@ -251,6 +259,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.3/skins/flat/blue.min.css"
           integrity="sha512-NFzPiFD5sIrKyFzW9/n3DgL45vt0/5SL5KbQXsHyf63cQOXR5jjWBvU9mY3A80LOGPJSGApK8rNwk++RwZAS6Q=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script type="application/javascript" async>
         const loading = new Loader();
@@ -258,17 +267,25 @@
         document.addEventListener('DOMContentLoaded', function () {
 
             loading.hidden()
-            var multipleCancelButton = new Choices('#roles', {
-                removeItemButton: true
-            });
-            new Choices('#companies', {
-                removeItemButton: true,
-            });
+            // var multipleCancelButton = new Choices('#roles', {
+            //     removeItemButton: true
+            // });
+            // new Choices('#companies', {
+            //     removeItemButton: true,
+            // });
         })
     </script>
     <script>
         $(function () {
             $(document).ready(function () {
+                $('.companies').select2({
+                    placeholder: "--Seleccione--",
+                    width: '100%'
+                });
+                $('.roles').select2({
+                    placeholder: "--Seleccione--",
+                    width: '100%'
+                });
                 $('.jsSelectAllAllow').on('click', function (event) {
                     event.preventDefault();
                     $(this).closest('.permissionGroup').find('.jsAllow').each(function (index, value) {

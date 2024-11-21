@@ -16,6 +16,7 @@ class VehiclesSheetImport implements ToCollection
 
     public function collection(Collection $rows)
     {
+        $rows->forget(0);
         try {
             $vehicle = app(VehiclesRepository::class);
             \DB::beginTransaction();
@@ -30,11 +31,11 @@ class VehiclesSheetImport implements ToCollection
                     'plate'=>strtoupper(str_replace(' ', '-', $row[2])),
                     'model'=>$row[3],
                     'class'=>$row[4],
-                    'imei'=>$row[5],
+                    'imei'=>$row[5]??'',
                     'capacity'=>$row[6],
-                    'company_id'=>$row[7]
-
+                    'company_id'=> session()->get('company')
                 ];
+
                 $old= $vehicle->find($row[0]);
                 if (isset($old)  && !empty($old)){
                     $vehicle->update($old,$data);
